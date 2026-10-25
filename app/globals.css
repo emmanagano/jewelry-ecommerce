@@ -1,38 +1,51 @@
 @import "tailwindcss";
 
 :root {
-    --background: #ffffff;
-    --foreground: #171717;
+  /* LIGHT THEME */
+    --bg-base: #f4f6f8;            /* Crisp clean editorial canvas */
+    --card-main: #dbe5ee;          /* Soft French slate/powder blue */
+    --card-sub: #eef2f6;           /* Light plaster tint */
+    --card-wide: #e3ebf2;          /* Subtle neutral blue */
+
+    --accent-blue: #360a11;        /* Deep wine for contrast links */
+    --accent-light: #360a11;       /* Deep wine button background */
+
+    --text-headline: #1e060a;      /* Deep wine near-black text */
+    --text-body: #4a2027;          /* Muted wine body text */
+    --text-muted: rgba(74, 32, 39, 0.6);
+
+    --border-color: rgba(125, 159, 195, 0.35); /* Subtle border lines */
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
+/*
+DARK THEME (To switch back to dark, just swap :root values with these):
+:root {
+    --bg-base: #0e0c0d;
+    --card-main: #360a11;
+    --card-sub: #22080d;
+    --card-wide: #1a060a;
+    --accent-blue: #7d9fc3;
+    --accent-light: #d5e0eb;
+    --text-headline: #ffffff;
+    --text-body: #d5e0eb;
+    --text-muted: rgba(213, 224, 235, 0.5);
+    --border-color: rgba(125, 159, 195, 0.2);
 }
+*/
 
-    @theme {
-    /* Default Colors */
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-
-    /* Next.js Default Fonts */
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
-
-    /* Your Custom Fonts */
+@theme {
+    /* Custom Fonts */
     --font-primary: var(--font-primary);
     --font-secondary: var(--font-secondary);
     --font-body: var(--font-body);
 
-    /* Your Custom Sizes */
+    /* Custom Sizes */
     --text-small: 0.875rem;
     --text-base: 1rem;
     --text-large: 2rem;
-    }
+}
 
 body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--bg-base);
+    color: var(--text-headline);
 }
