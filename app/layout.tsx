@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter, Roboto } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 // 1. Configure your three fonts
 const fontPrimary = Playfair_Display({
@@ -16,13 +17,13 @@ const fontSecondary = Inter({
 
 const fontBody = Roboto({
 	variable: "--font-body",
-	weight: ["400", "700"], // Roboto requires you to specify weights
+	weight: ["400", "700"],
 	subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-	title: "Your Store Name",
-	description: "Your store description",
+	title: "BrandLogo | Fine Jewelry & Heirlooms",
+	description: "Handcrafted fine jewelry designed for modern longevity.",
 };
 
 export default function RootLayout({
@@ -33,13 +34,12 @@ export default function RootLayout({
 	return (
 		<html
 			lang="en"
-			// 2. Inject all three variables into the HTML
 			className={`${fontPrimary.variable} ${fontSecondary.variable} ${fontBody.variable} h-full antialiased`}
 		>
-			<body>
-				{/* 3. Navbar goes INSIDE the body, right above your page content */}
+			<body className="min-h-full flex flex-col bg-(--bg-base) text-(--text-headline)">
 				<Navbar />
 				<main className="grow">{children}</main>
+				<Footer />
 			</body>
 		</html>
 	);
