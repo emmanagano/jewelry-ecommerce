@@ -8,17 +8,14 @@ export default function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const categories = [
-		"Holiday",
 		"New & featured",
-		"Charms",
 		"Bracelets",
 		"Rings",
 		"Necklaces",
 		"Earrings",
-		"Lab-grown diamonds",
 		"Engraving",
 		"Gifts",
-		"Jewelry guide",
+		"Blogs"
 	];
 
 	return (
