@@ -2,13 +2,13 @@
 
 import React from "react";
 import Link from "next/link";
-import { Heart, ShoppingBag } from "lucide-react";
+import { Heart } from "lucide-react";
 
 export interface Product {
 	id: string;
 	name: string;
 	category: string;
-	price: string;
+	price: number;
 	badge?: string | null;
 	slug: string;
 	imageUrl?: string;
@@ -99,8 +99,11 @@ export default function ProductCard({
 					<h3 className="font-primary text-base text-(--text-headline) group-hover:opacity-75 transition-opacity truncate">
 						{product.name}
 					</h3>
-					<span className="font-secondary text-sm text-(--text-headline) font-medium pt-0.5 block">
-						{product.price}
+					<span className="font-medium text-gray-900">
+						{(product.price / 100).toLocaleString("en-US", {
+							style: "currency",
+							currency: "USD",
+						})}
 					</span>
 				</Link>
 
@@ -114,7 +117,9 @@ export default function ProductCard({
 					aria-label={`Add ${product.name} to bag`}
 					className="flex items-center text-(--text-headline) hover:opacity-70 transition-opacity cursor-pointer shrink-0 underline underline-offset-4 decoration-1"
 				>
-					<span className="text-[10px] uppercase font-secondary tracking-widest font-semibold">Add to bag</span>
+					<span className="text-[10px] uppercase font-secondary tracking-widest font-semibold">
+						Add to bag
+					</span>
 				</button>
 			</div>
 		</div>

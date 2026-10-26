@@ -1,81 +1,49 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { supabase } from "@/app/lib/supabase";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import ProductCard, { Product } from "./ProductCard";
+import ProductCard from "./ProductCard";
 
-const MOCK_PRODUCTS: Product[] = [
-	{
-		id: "prod-1",
-		name: "Celestial Diamond Solitaire Ring",
-		category: "18k Solid Yellow Gold",
-		price: "$1,250",
-		badge: "Best Seller",
-		slug: "celestial-diamond-solitaire-ring",
-	},
-	{
-		id: "prod-2",
-		name: "Cascade Herringbone Chain",
-		category: "Recycled Sterling Silver",
-		price: "$340",
-		badge: "Trending",
-		slug: "cascade-herringbone-chain",
-	},
-	{
-		id: "prod-3",
-		name: "Lumière Baguette Huggie Hoops",
-		category: "Lab-Grown Diamond & 14k Gold",
-		price: "$580",
-		badge: "Best Seller",
-		slug: "lumiere-baguette-huggie-hoops",
-	},
-	{
-		id: "prod-4",
-		name: "Solstice Oval Pendant Necklace",
-		category: "18k Gold Vermeil",
-		price: "$420",
-		badge: "Few Left",
-		slug: "solstice-oval-pendant-necklace",
-	},
-	{
-		id: "prod-5",
-		name: "Elysian Emerald Cut Band",
-		category: "Platinum & Lab-Grown Emerald",
-		price: "$1,890",
-		badge: "New",
-		slug: "elysian-emerald-cut-band",
-	},
-	{
-		id: "prod-6",
-		name: "Aura Freshwater Pearl Choker",
-		category: "14k Solid Yellow Gold",
-		price: "$490",
-		badge: null,
-		slug: "aura-freshwater-pearl-choker",
-	},
-	{
-		id: "prod-7",
-		name: "Vesper Pavé Diamond Cuff",
-		category: "18k White Gold",
-		price: "$2,100",
-		badge: "Iconic",
-		slug: "vesper-pave-diamond-cuff",
-	},
-	{
-		id: "prod-8",
-		name: "Serpentine Spiral Drop Earrings",
-		category: "18k Gold Vermeil",
-		price: "$310",
-		badge: null,
-		slug: "serpentine-spiral-drop-earrings",
-	},
-];
+export interface Product {
+	id: string;
+	name: string;
+	slug: string;
+	subtitle: string;
+	badge: string;
+	category: string;
+	price: number;
+	images: string[];
+	description: string;
+}
 
 export default function BestSellers() {
+	const [products, setProducts] = useState<Product[]>([]);
+	const [loading, setLoading] = useState(true);
 	const sliderRef = useRef<HTMLDivElement>(null);
 	const [canScrollLeft, setCanScrollLeft] = useState(false);
 	const [canScrollRight, setCanScrollRight] = useState(true);
+
+	// Fetch live items from Supabase
+	useEffect(() => {
+		async function fetchProducts() {
+			const { data, error } = await supabase
+				.from("products")
+				.select("*")
+				.ilike("badge", "%BEST SELLER%") // Matches any badge containing "BEST SELLER"
+				.order("created_at", { ascending: false });
+
+			if (error) {
+				console.error("Error fetching best sellers:", error);
+			} else if (data) {
+				setProducts(data);
+			}
+			setLoading(false);
+		}
+
+		fetchProducts();
+	}, []);
 
 	const checkScroll = () => {
 		if (!sliderRef.current) return;
@@ -88,7 +56,7 @@ export default function BestSellers() {
 		checkScroll();
 		window.addEventListener("resize", checkScroll);
 		return () => window.removeEventListener("resize", checkScroll);
-	}, []);
+	}, [products]);
 
 	const scroll = (direction: "left" | "right") => {
 		if (!sliderRef.current) return;
@@ -118,7 +86,7 @@ export default function BestSellers() {
 						href="/collections/best-sellers"
 						className="hidden sm:inline-block font-secondary text-xs uppercase tracking-widest text-(--accent-blue) hover:text-(--text-headline) transition-colors underline underline-offset-4"
 					>
-						View All (24)
+						View All ({products.length})
 					</Link>
 
 					<div className="flex items-center space-x-2">
@@ -149,13 +117,19 @@ export default function BestSellers() {
 				className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory hide-scrollbar pb-4"
 				style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
 			>
-				{MOCK_PRODUCTS.map((product) => (
-					<ProductCard
-						key={product.id}
-						product={product}
-						className="flex-none w-[75vw] sm:w-[45vw] md:w-[30vw] lg:w-[calc(25%-18px)] snap-start"
-					/>
-				))}
+				{loading ? (
+					<div className="w-full py-12 text-center text-(--text-muted)">
+						Loading collection...
+					</div>
+				) : (
+					products.map((product) => (
+						<ProductCard
+							key={product.id}
+							product={product}
+							className="flex-none w-[75vw] sm:w-[45vw] md:w-[30vw] lg:w-[calc(25%-18px)] snap-start"
+						/>
+					))
+				)}
 			</div>
 		</section>
 	);
