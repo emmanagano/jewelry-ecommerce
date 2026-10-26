@@ -104,7 +104,7 @@ export default function ProductCard({
 					</span>
 				</Link>
 
-				{/* Static + Add to Bag Button on bottom-right */}
+				{/* Editorial + Add to Bag Button on bottom-right */}
 				<button
 					type="button"
 					onClick={(e) => {
@@ -112,10 +112,9 @@ export default function ProductCard({
 						onAddToCart?.(product);
 					}}
 					aria-label={`Add ${product.name} to bag`}
-					className="flex items-center space-x-2 border border-(--border-color) bg-transparent text-(--text-headline) px-4 py-2.5 text-xs font-secondary uppercase tracking-widest hover:bg-(--accent-light) hover:text-(--card-main) hover:border-(--accent-light) transition-all duration-200 cursor-pointer shrink-0"
+					className="flex items-center text-(--text-headline) hover:opacity-70 transition-opacity cursor-pointer shrink-0 underline underline-offset-4 decoration-1"
 				>
-					<ShoppingBag className="w-3.5 h-3.5 stroke-[1.5]" />
-					<span>+ Add</span>
+					<span className="text-[10px] uppercase font-secondary tracking-widest font-semibold">Add to bag</span>
 				</button>
 			</div>
 		</div>

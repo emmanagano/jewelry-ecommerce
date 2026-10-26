@@ -15,7 +15,7 @@ export default function Navbar() {
 		"Earrings",
 		"Engraving",
 		"Gifts",
-		"Blogs"
+		"Blog"
 	];
 
 	return (
@@ -86,10 +86,6 @@ export default function Navbar() {
 							</Link>
 						</li>
 					))}
-					<li className="flex items-center cursor-pointer hover:text-(--text-headline) transition-colors group">
-						<span>More</span>
-						<ChevronDown className="w-3.5 h-3.5 ml-1 group-hover:translate-y-0.5 transition-transform" />
-					</li>
 				</ul>
 			</nav>
 
