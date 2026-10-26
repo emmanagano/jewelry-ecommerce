@@ -18,7 +18,7 @@ export default function Hero() {
 						</p>
 						<Link
 							href="/collections/new"
-							className="inline-block font-secondary text-sm uppercase tracking-widest bg-(--accent-light) text-(--card-main) font-semibold px-8 py-4 hover:bg-white transition-colors"
+							className="inline-block font-secondary text-sm uppercase tracking-widest bg-(--accent-light) text-(--card-main) font-semibold px-8 py-4 hover:opacity-80 transition-opacity duration-300"
 						>
 							Shop the Collection
 						</Link>
