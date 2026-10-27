@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, Heart, ShoppingBag, ChevronDown, Menu, X } from "lucide-react";
+import { Search, Heart, ShoppingBag, Menu, X } from "lucide-react";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -15,7 +15,7 @@ export default function Navbar() {
 		"Earrings",
 		"Engraving",
 		"Gifts",
-		"Blog"
+		"Blog",
 	];
 
 	return (
