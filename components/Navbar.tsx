@@ -7,15 +7,19 @@ import Link from "next/link";
 export default function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
 
-	const categories = [
-		"New & featured",
-		"Bracelets",
-		"Rings",
-		"Necklaces",
-		"Earrings",
-		"Engraving",
-		"Gifts",
-		"Blog",
+	// Explicitly assign the correct route to each link
+	const navItems = [
+		{
+			name: "New & featured",
+			href: "/coming-soon?feature=new-and-featured",
+		},
+		{ name: "Bracelets", href: "/category/bracelets" },
+		{ name: "Rings", href: "/category/rings" },
+		{ name: "Necklaces", href: "/category/necklaces" },
+		{ name: "Earrings", href: "/category/earrings" },
+		{ name: "Engraving", href: "/coming-soon?feature=engraving" },
+		{ name: "Gifts", href: "/coming-soon?feature=gifts" },
+		{ name: "Blog", href: "/coming-soon?feature=blog" },
 	];
 
 	return (
@@ -76,13 +80,13 @@ export default function Navbar() {
 			{/* --- DESKTOP CATEGORY NAVBAR (Hidden on mobile) --- */}
 			<nav className="hidden md:block w-full px-8 pb-4">
 				<ul className="flex items-center justify-center space-x-8 overflow-x-auto whitespace-nowrap text-xs uppercase tracking-widest font-secondary text-(--text-muted) hide-scrollbar">
-					{categories.map((category) => (
-						<li key={category}>
+					{navItems.map((item) => (
+						<li key={item.name}>
 							<Link
-								href={`/category/${category.toLowerCase().replace(/ /g, "-")}`}
+								href={item.href}
 								className="hover:text-(--text-headline) transition-colors"
 							>
-								{category}
+								{item.name}
 							</Link>
 						</li>
 					))}
@@ -135,14 +139,14 @@ export default function Navbar() {
 
 					{/* Category Links */}
 					<ul className="flex flex-col space-y-4 py-2">
-						{categories.map((category) => (
-							<li key={category}>
+						{navItems.map((item) => (
+							<li key={item.name}>
 								<Link
-									href={`/category/${category.toLowerCase().replace(/ /g, "-")}`}
+									href={item.href}
 									onClick={() => setIsOpen(false)}
 									className="block text-sm uppercase tracking-widest font-secondary text-(--text-headline) hover:text-(--accent-blue) transition-colors py-1"
 								>
-									{category}
+									{item.name}
 								</Link>
 							</li>
 						))}
