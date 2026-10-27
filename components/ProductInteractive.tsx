@@ -157,7 +157,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
                 >
                     <Heart
                         className={`w-5 h-5 transition-colors duration-200 ${
-                            isLiked
+                            liked
                                 ? "fill-[#f43f5e] text-[#f43f5e]"
                                 : "text-[var(--text-headline)] stroke-[1.5] group-hover:text-[#f43f5e] group-hover:fill-[#f43f5e]/30"
                         }`}
