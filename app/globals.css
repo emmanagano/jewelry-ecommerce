@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  /* LIGHT THEME */
-    --bg-base: #f4f6f8;            /* Crisp clean editorial canvas */
-    --card-main: #dbe5ee;          /* Soft French slate/powder blue */
-    --card-sub: #eef2f6;           /* Light plaster tint */
-    --card-wide: #e3ebf2;          /* Subtle neutral blue */
+	/* LIGHT THEME */
+	--bg-base: #f4f6f8; /* Crisp clean editorial canvas */
+	--card-main: #dbe5ee; /* Soft French slate/powder blue */
+	--card-sub: #eef2f6; /* Light plaster tint */
+	--card-wide: #e3ebf2; /* Subtle neutral blue */
 
-    --accent-blue: #360a11;        /* Deep wine for contrast links */
-    --accent-light: #360a11;       /* Deep wine button background */
+	--accent-blue: #360a11; /* Deep wine for contrast links */
+	--accent-light: #360a11; /* Deep wine button background */
 
-    --text-headline: #1e060a;      /* Deep wine near-black text */
-    --text-body: #4a2027;          /* Muted wine body text */
-    --text-muted: rgba(74, 32, 39, 0.6);
+	--text-headline: #1e060a; /* Deep wine near-black text */
+	--text-body: #4a2027; /* Muted wine body text */
+	--text-muted: rgba(74, 32, 39, 0.6);
 
-    --border-color: rgba(125, 159, 195, 0.35); /* Subtle border lines */
+	--border-color: rgba(125, 159, 195, 0.35); /* Subtle border lines */
 }
 
 /*
@@ -34,18 +34,18 @@ DARK THEME (To switch back to dark, just swap :root values with these):
 */
 
 @theme {
-    /* Custom Fonts */
-    --font-primary: var(--font-primary);
-    --font-secondary: var(--font-secondary);
-    --font-body: var(--font-body);
+	/* Custom Fonts */
+	--font-primary: var(--font-primary);
+	--font-secondary: var(--font-secondary);
+	--font-body: var(--font-body);
 
-    /* Custom Sizes */
-    --text-small: 0.875rem;
-    --text-base: 1rem;
-    --text-large: 2rem;
+	/* Custom Sizes */
+	--text-small: 0.875rem;
+	--text-base: 1rem;
+	--text-large: 2rem;
 }
 
 body {
-    background-color: var(--bg-base);
-    color: var(--text-headline);
+	background-color: var(--bg-base);
+	color: var(--text-headline);
 }
