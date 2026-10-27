@@ -55,7 +55,7 @@ export default function ProductCard({
 
 				{/* Image Container / Placeholder */}
 				<Link
-					href={`/products/${product.slug}`}
+					href={`/product/${product.slug}`}
 					className="w-full h-full flex items-center justify-center"
 				>
 					{product.imageUrl ? (
@@ -90,7 +90,7 @@ export default function ProductCard({
 			<div className="mt-4 flex justify-between items-end">
 				{/* Info block */}
 				<Link
-					href={`/products/${product.slug}`}
+					href={`/product/${product.slug}`}
 					className="flex-1 min-w-0 pr-4 flex flex-col space-y-1"
 				>
 					<span className="font-secondary text-[11px] text-(--text-muted) uppercase tracking-wider block truncate">
