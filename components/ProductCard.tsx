@@ -12,8 +12,9 @@ export interface Product {
 	price: number;
 	badge?: string | null;
 	slug: string;
-	imageUrl?: string;
 	subtitle?: string;
+	imageUrl?: string;
+	images?: string[];
 }
 
 interface ProductCardProps {
@@ -34,6 +35,9 @@ export default function ProductCard({
 	className = "",
 	onQuickView,
 }: ProductCardProps) {
+	const displayImage = product.imageUrl || product.images?.[0];
+	const [imgError, setImgError] = useState(false);
+
 	const { addToCart, toggleWishlist, isLiked } = useStore();
 	const liked = isLiked(product.id);
 
@@ -108,10 +112,11 @@ export default function ProductCard({
 					href={`/product/${product.slug}`}
 					className="w-full h-full flex items-center justify-center"
 				>
-					{product.imageUrl ? (
+					{displayImage && !imgError ? (
 						<img
-							src={product.imageUrl}
+							src={displayImage}
 							alt={product.name}
+							onError={() => setImgError(true)}
 							className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
 						/>
 					) : (
