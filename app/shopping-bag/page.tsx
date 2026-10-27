@@ -212,7 +212,7 @@ export default function BagPage() {
 								{/* 4:5 Editorial Image Frame */}
 								<Link
 									href={`/product/${item.slug}`}
-									className="w-24 sm:w-28 aspect-[4/5] border shrink-0 flex flex-col items-center justify-center relative overflow-hidden transition-opacity hover:opacity-85"
+									className="w-24 sm:w-28 aspect-4/5 border shrink-0 flex flex-col items-center justify-center relative overflow-hidden transition-opacity hover:opacity-85"
 									style={{
 										backgroundColor: "var(--card-sub)",
 										borderColor: "var(--border-color)",
@@ -436,7 +436,7 @@ export default function BagPage() {
 												e.target.checked,
 											)
 										}
-										className="w-4 h-4 cursor-pointer accent-[var(--accent-light)] mt-1"
+										className="w-4 h-4 cursor-pointer accent-(--accent-light) mt-1"
 									/>
 								</div>
 
@@ -466,7 +466,7 @@ export default function BagPage() {
 												setGiftNote(e.target.value)
 											}
 											placeholder="Write your note to be handwritten by our studio..."
-											className="w-full text-xs p-2.5 bg-transparent border rounded-xs focus:outline-none focus:border-[var(--text-headline)]"
+											className="w-full text-xs p-2.5 bg-transparent border rounded-xs focus:outline-none focus:border-(--text-headline)"
 											style={{
 												borderColor:
 													"var(--border-color)",

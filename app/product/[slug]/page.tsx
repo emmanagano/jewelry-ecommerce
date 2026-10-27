@@ -38,8 +38,8 @@ function ProductSkeleton() {
 			<div className="h-4 w-48 bg-gray-200 rounded mb-8" />
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
 				<div className="lg:col-span-7 flex flex-col gap-4">
-					<div className="aspect-[4/5] bg-gray-200 rounded-sm" />
-					<div className="aspect-[4/5] bg-gray-200 rounded-sm" />
+					<div className="aspect-4/5 bg-gray-200 rounded-sm" />
+					<div className="aspect-4/5 bg-gray-200 rounded-sm" />
 				</div>
 				<div className="lg:col-span-5 space-y-4">
 					<div className="h-8 w-3/4 bg-gray-200 rounded" />
@@ -63,13 +63,13 @@ async function ProductContent({ params }: PageProps) {
 
 	// Guarantee 3 images in the stack
 	// Uses images[0], images[1], and creates a 3rd focused perspective
-	const rawImages: string[] = product.images ?? [];
-	const galleryImages = [
-		rawImages[0] ??
-			"https://images.unsplash.com/photo-1611591475152-47354c5ce794?auto=format&fit=crop&w=800&q=80",
-		rawImages[1] ?? rawImages[0],
-		rawImages[0] ?? rawImages[1], // 3rd stack angle
-	];
+	// const rawImages: string[] = product.images ?? [];
+	// const galleryImages = [
+	// 	rawImages[0] ??
+	// 		"https://images.unsplash.com/photo-1611591475152-47354c5ce794?auto=format&fit=crop&w=800&q=80",
+	// 	rawImages[1] ?? rawImages[0],
+	// 	rawImages[0] ?? rawImages[1], // 3rd stack angle
+	// ];
 
 	return (
 		<div className="max-w-7xl mx-auto px-6 py-8">
@@ -104,7 +104,7 @@ async function ProductContent({ params }: PageProps) {
 					{[1, 2, 3].map((num) => (
 						<div
 							key={num}
-							className="relative w-full aspect-[4/5] flex flex-col items-center justify-center border transition-all select-none"
+							className="relative w-full aspect-4/5 flex flex-col items-center justify-center border transition-all select-none"
 							style={{
 								backgroundColor: "var(--card-sub)",
 								borderColor: "var(--border-color)",

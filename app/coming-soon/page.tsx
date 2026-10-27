@@ -44,7 +44,7 @@ async function ComingSoonContent({ searchParams }: ComingSoonProps) {
 
 			{/* Minimalist hairline divider */}
 			<div
-				className="w-16 h-[1px] mb-12"
+				className="w-16 h-px mb-12"
 				style={{ backgroundColor: "var(--border-color)" }}
 			/>
 
