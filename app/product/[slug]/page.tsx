@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
 import ProductInteractive from "@/components/ProductInteractive";
