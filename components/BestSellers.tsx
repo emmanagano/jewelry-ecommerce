@@ -2,8 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { supabase } from "@/app/lib/supabase";
-import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import ProductCard from "./ProductCard";
 
 export interface Product {
@@ -31,7 +30,7 @@ export default function BestSellers() {
 			const { data, error } = await supabase
 				.from("products")
 				.select("*")
-				.ilike("badge", "%BEST SELLER%") // Matches any badge containing "BEST SELLER"
+				.ilike("badge", "%BEST SELLER%")
 				.order("created_at", { ascending: false });
 
 			if (error) {
@@ -68,45 +67,36 @@ export default function BestSellers() {
 	};
 
 	return (
-		<section className="w-full px-8 py-16 max-w-screen-2xl mx-auto">
+		<section className="w-full px-4 sm:px-8 py-20 max-w-screen-2xl mx-auto">
 			{/* Section Header */}
-			<div className="flex items-end justify-between mb-8 pb-4 border-b border-(--border-color)">
+			<div className="flex items-end justify-between mb-10 pb-5 border-b border-(--border-color)">
 				<div>
-					<span className="font-secondary text-xs uppercase tracking-widest text-(--text-muted) block mb-2">
+					<span className="text-[10px] uppercase tracking-[0.28em] font-medium text-(--text-muted) block mb-2">
 						Curated Essentials
 					</span>
-					<h2 className="font-primary text-2xl sm:text-3xl text-(--text-headline)">
+					<h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl tracking-tight text-(--text-headline)">
 						Most Coveted Pieces
 					</h2>
 				</div>
 
-				{/* Arrow Controls & View All */}
-				<div className="flex items-center space-x-6">
-					<Link
-						href="/collections/best-sellers"
-						className="hidden sm:inline-block font-secondary text-xs uppercase tracking-widest text-(--accent-blue) hover:text-(--text-headline) transition-colors underline underline-offset-4"
+				{/* Minimal Editorial Arrow Controls */}
+				<div className="flex items-center space-x-2">
+					<button
+						onClick={() => scroll("left")}
+						disabled={!canScrollLeft}
+						aria-label="Previous pieces"
+						className="w-10 h-10 rounded-full border border-(--border-color) flex items-center justify-center text-(--text-headline) disabled:opacity-20 disabled:cursor-not-allowed hover:border-(--text-headline) transition-all duration-300 active:scale-95 cursor-pointer"
 					>
-						View All ({products.length})
-					</Link>
-
-					<div className="flex items-center space-x-2">
-						<button
-							onClick={() => scroll("left")}
-							disabled={!canScrollLeft}
-							aria-label="Previous items"
-							className="p-2.5 border border-(--border-color) text-(--text-headline) disabled:opacity-25 disabled:cursor-not-allowed hover:bg-(--card-main) hover:text-(--accent-light) transition-colors"
-						>
-							<ChevronLeft className="w-4 h-4 stroke-[1.5]" />
-						</button>
-						<button
-							onClick={() => scroll("right")}
-							disabled={!canScrollRight}
-							aria-label="Next items"
-							className="p-2.5 border border-(--border-color) text-(--text-headline) disabled:opacity-25 disabled:cursor-not-allowed hover:bg-(--card-main) hover:text-(--accent-light) transition-colors"
-						>
-							<ChevronRight className="w-4 h-4 stroke-[1.5]" />
-						</button>
-					</div>
+						<ArrowLeft className="w-4 h-4 stroke-[1.5]" />
+					</button>
+					<button
+						onClick={() => scroll("right")}
+						disabled={!canScrollRight}
+						aria-label="Next pieces"
+						className="w-10 h-10 rounded-full border border-(--border-color) flex items-center justify-center text-(--text-headline) disabled:opacity-20 disabled:cursor-not-allowed hover:border-(--text-headline) transition-all duration-300 active:scale-95 cursor-pointer"
+					>
+						<ArrowRight className="w-4 h-4 stroke-[1.5]" />
+					</button>
 				</div>
 			</div>
 
@@ -114,12 +104,23 @@ export default function BestSellers() {
 			<div
 				ref={sliderRef}
 				onScroll={checkScroll}
-				className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory hide-scrollbar pb-4"
+				className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 hide-scrollbar"
 				style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
 			>
 				{loading ? (
-					<div className="w-full py-12 text-center text-(--text-muted)">
-						Loading collection...
+					// Subtle luxury skeleton loading cards
+					<div className="flex gap-6 w-full">
+						{[1, 2, 3, 4].map((i) => (
+							<div
+								key={i}
+								className="flex-none w-[75vw] sm:w-[45vw] md:w-[30vw] lg:w-[calc(25%-18px)] animate-pulse"
+							>
+								<div className="aspect-4/5 bg-(--card-sub) rounded-xs mb-4" />
+								<div className="h-3 w-1/3 bg-(--card-sub) rounded-xs mb-2" />
+								<div className="h-4 w-2/3 bg-(--card-sub) rounded-xs mb-2" />
+								<div className="h-4 w-1/4 bg-(--card-sub) rounded-xs" />
+							</div>
+						))}
 					</div>
 				) : (
 					products.map((product) => (

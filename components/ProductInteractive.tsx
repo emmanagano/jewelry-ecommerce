@@ -13,6 +13,8 @@ interface Product {
 	category: string;
 	price: number;
 	description: string;
+	images?: string[];
+	imageUrl?: string;
 }
 
 // 4. Expanded size variety across all categories
@@ -52,6 +54,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 			subtitle: product.subtitle,
 			price: product.price,
 			size: selectedSize,
+			image: product.images?.[0] || product.imageUrl,
 		});
 		setAddedNotice(true);
 		setTimeout(() => setAddedNotice(false), 2000);

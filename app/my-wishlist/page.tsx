@@ -35,6 +35,8 @@ export default function WishlistPage() {
 			if (!isMounted) return;
 
 			if (!error && data) {
+				// We pass the full `images` array here so the ProductCard's
+				// editorial hover reveal works perfectly in the wishlist too.
 				const formatted: Product[] = data.map((item) => ({
 					id: item.id,
 					name: item.name,
@@ -43,14 +45,13 @@ export default function WishlistPage() {
 					badge: item.badge,
 					slug: item.slug,
 					subtitle: item.subtitle,
-					imageUrl: item.images?.[0] ?? undefined,
+					images: item.images,
 				}));
 				setProducts(formatted);
 			}
 			setIsLoading(false);
 		}
 
-		// Run asynchronously to avoid synchronous setState inside the effect body
 		fetchWishlistItems();
 
 		return () => {
@@ -60,15 +61,15 @@ export default function WishlistPage() {
 
 	if (!isHydrated) {
 		return (
-			<main className="min-h-screen py-16 px-6 sm:px-12 max-w-7xl mx-auto animate-pulse">
-				<div className="h-4 w-32 bg-gray-200 rounded mb-4" />
-				<div className="h-8 w-64 bg-gray-200 rounded mb-12" />
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+			<main className="min-h-screen py-12 lg:py-16 px-4 sm:px-8 max-w-screen-2xl mx-auto animate-pulse">
+				<div className="h-4 w-32 bg-(--card-sub) rounded-xs mb-4" />
+				<div className="h-8 w-64 bg-(--card-sub) rounded-xs mb-12" />
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-12">
 					{[1, 2, 3, 4].map((n) => (
 						<div key={n} className="space-y-4">
-							<div className="aspect-4/5 bg-gray-100 rounded-xs" />
-							<div className="h-4 w-2/3 bg-gray-100 rounded-xs" />
-							<div className="h-4 w-1/3 bg-gray-100 rounded-xs" />
+							<div className="aspect-4/5 bg-(--card-sub) rounded-xs" />
+							<div className="h-4 w-2/3 bg-(--card-sub) rounded-xs" />
+							<div className="h-4 w-1/3 bg-(--card-sub) rounded-xs" />
 						</div>
 					))}
 				</div>
@@ -77,57 +78,39 @@ export default function WishlistPage() {
 	}
 
 	return (
-		<main
-			className="min-h-screen py-12 px-6 sm:px-12 max-w-7xl mx-auto"
-			style={{ backgroundColor: "var(--bg-base)" }}
-		>
+		<main className="min-h-screen py-12 lg:py-16 px-4 sm:px-8 max-w-screen-2xl mx-auto bg-(--bg-base)">
 			{/* Editorial Header */}
-			<div
-				className="mb-10 pb-6 border-b flex flex-col sm:flex-row sm:items-baseline justify-between gap-4"
-				style={{ borderColor: "var(--border-color)" }}
-			>
+			<div className="mb-12 pb-6 border-b border-(--border-color)/60 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
 				<div>
-					<span
-						className="text-[10px] uppercase tracking-[0.25em] font-semibold block mb-2"
-						style={{ color: "var(--text-muted)" }}
-					>
+					<span className="text-[10px] uppercase tracking-[0.25em] font-medium text-(--text-muted) block mb-3">
 						Curated Pieces
 					</span>
-					<h1
-						className="font-serif text-3xl sm:text-4xl tracking-tight"
-						style={{ color: "var(--text-headline)" }}
-					>
-						Saved Pieces ({totalWishlistCount})
+					<h1 className="font-serif text-3xl sm:text-4xl tracking-tight text-(--text-headline)">
+						Saved Pieces{" "}
+						{totalWishlistCount > 0 && `(${totalWishlistCount})`}
 					</h1>
 				</div>
 
 				<Link
 					href="/"
-					className="text-xs uppercase tracking-widest font-semibold hover:opacity-70 transition-opacity flex items-center gap-2"
-					style={{ color: "var(--accent-blue)" }}
+					className="group flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline) hover:text-(--text-muted) transition-colors pb-1 border-b border-transparent hover:border-(--text-muted)"
 				>
-					<ArrowLeft size={13} />
+					<ArrowLeft
+						size={12}
+						className="stroke-[1.5] transition-transform group-hover:-translate-x-1"
+					/>
 					<span>Continue Exploring</span>
 				</Link>
 			</div>
 
 			{/* Loading State */}
 			{isLoading && (
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate-pulse">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-12 animate-pulse">
 					{[1, 2, 3, 4].map((n) => (
 						<div key={n} className="space-y-4">
-							<div
-								className="aspect-4/5 rounded-xs"
-								style={{ backgroundColor: "var(--card-sub)" }}
-							/>
-							<div
-								className="h-3 w-1/3 rounded-xs"
-								style={{ backgroundColor: "var(--card-sub)" }}
-							/>
-							<div
-								className="h-4 w-2/3 rounded-xs"
-								style={{ backgroundColor: "var(--card-sub)" }}
-							/>
+							<div className="aspect-4/5 bg-(--card-sub) rounded-xs" />
+							<div className="h-3 w-1/3 bg-(--card-sub) rounded-xs" />
+							<div className="h-4 w-2/3 bg-(--card-sub) rounded-xs" />
 						</div>
 					))}
 				</div>
@@ -135,46 +118,32 @@ export default function WishlistPage() {
 
 			{/* Empty State */}
 			{!isLoading && products.length === 0 && (
-				<div className="py-24 text-center flex flex-col items-center justify-center">
-					<div
-						className="w-16 h-16 rounded-full border flex items-center justify-center mb-6"
-						style={{
-							borderColor: "var(--border-color)",
-							backgroundColor: "var(--card-sub)",
-						}}
-					>
+				<div className="py-32 text-center flex flex-col items-center justify-center">
+					<div className="w-16 h-16 rounded-full border border-(--border-color) bg-(--card-sub)/50 flex items-center justify-center mb-6">
 						<Heart
 							size={20}
-							className="stroke-[1.5]"
-							style={{ color: "var(--text-muted)" }}
+							className="stroke-[1.5] text-(--text-muted)"
 						/>
 					</div>
-					<h2
-						className="font-serif text-2xl tracking-tight mb-2"
-						style={{ color: "var(--text-headline)" }}
-					>
+					<h2 className="font-serif text-2xl tracking-tight mb-3 text-(--text-headline)">
 						Your Wishlist is Empty
 					</h2>
-					<p
-						className="text-xs uppercase tracking-wider max-w-sm mb-8 leading-relaxed"
-						style={{ color: "var(--text-muted)" }}
-					>
+					<p className="text-xs uppercase tracking-widest max-w-md mb-10 leading-relaxed text-(--text-muted) font-light">
 						Select the heart icon on any piece across our collection
 						to save your personal curation for later acquisition.
 					</p>
 					<Link
 						href="/"
-						className="py-3.5 px-8 text-xs uppercase tracking-[0.2em] font-semibold text-white transition-opacity hover:opacity-90 rounded-xs"
-						style={{ backgroundColor: "var(--accent-light)" }}
+						className="py-3.5 px-10 text-[10px] uppercase tracking-[0.2em] font-semibold bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs shadow-xs"
 					>
-						Discover Pieces
+						Discover The Collection
 					</Link>
 				</div>
 			)}
 
 			{/* Populated Wishlist Grid */}
 			{!isLoading && products.length > 0 && (
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-12">
 					{products.map((product) => (
 						<ProductCard key={product.id} product={product} />
 					))}

@@ -7,12 +7,12 @@ import { useStore } from "@/context/StoreContext";
 
 export default function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
 	const { totalCartCount, totalWishlistCount } = useStore();
 
-	// Explicitly assign the correct route to each link
 	const navItems = [
 		{
-			name: "New & featured",
+			name: "New & Featured",
 			href: "/coming-soon?feature=new-and-featured",
 		},
 		{ name: "Bracelets", href: "/category/bracelets" },
@@ -25,74 +25,68 @@ export default function Navbar() {
 	];
 
 	return (
-		<header className="w-full bg-(--bg-base) text-(--text-headline) border-b border-(--border-color) relative z-50">
-			{/* --- TOP NAVBAR --- */}
-			<div className="flex items-center justify-between px-4 sm:px-8 py-4 sm:py-5">
+		<header className="w-full bg-(--bg-base) text-(--text-headline) border-b border-(--border-color) sticky top-0 z-50 backdrop-blur-md bg-opacity-95">
+			{/* --- TOP ROW: LOGO, SEARCH PILL, ACTIONS --- */}
+			<div className="max-w-screen-2xl mx-auto flex items-center justify-between px-4 sm:px-8 py-3.5 sm:py-4">
 				{/* Mobile: Hamburger Button */}
 				<div className="flex items-center md:hidden">
 					<button
 						onClick={() => setIsOpen(true)}
-						aria-label="Open menu"
-						className="p-1 -ml-1 text-(--text-headline) hover:opacity-70 transition-opacity"
+						aria-label="Open navigation menu"
+						className="p-1 -ml-1 text-(--text-headline) hover:opacity-60 transition-opacity cursor-pointer"
 					>
-						<Menu className="w-6 h-6 stroke-[1.5]" />
+						<Menu className="w-5 h-5 stroke-[1.5]" />
 					</button>
 				</div>
 
-				{/* Brand/Logo */}
+				{/* Brand Logo */}
 				<div className="shrink-0">
 					<Link href="/">
-						<span className="font-primary text-xl sm:text-2xl font-bold tracking-widest uppercase cursor-pointer">
+						<span className="font-serif text-lg sm:text-2xl tracking-[0.2em] font-medium uppercase text-(--text-headline)">
 							BrandLogo
 						</span>
 					</Link>
 				</div>
 
-				{/* Desktop: Centered Search Bar */}
+				{/* Desktop: Enclosed Search Pill */}
 				<div className="hidden md:flex flex-1 justify-center px-8">
-					<div className="relative w-full max-w-md flex items-center group">
-						<Search className="absolute left-0 w-4 h-4 text-(--text-muted) group-focus-within:text-(--text-headline) transition-colors" />
+					<div className="relative w-full max-w-sm flex items-center group">
+						<Search className="absolute left-3.5 w-3.5 h-3.5 text-(--text-muted) group-focus-within:text-(--text-headline) transition-colors pointer-events-none" />
 						<input
 							type="text"
-							placeholder="Search"
-							className="w-full bg-transparent border-b border-(--border-color) py-1 pl-7 pr-4 text-sm text-(--text-headline) placeholder-(--text-muted) focus:outline-none focus:border-(--text-headline) transition-colors"
+							value={searchQuery}
+							onChange={(e) => setSearchQuery(e.target.value)}
+							placeholder="Search by collection or stone..."
+							className="w-full bg-(--card-sub)/70 border border-(--border-color) rounded-full py-1.5 pl-9 pr-4 text-xs text-(--text-headline) placeholder-(--text-muted) tracking-wide transition-all duration-300 focus:outline-none focus:bg-white focus:border-(--text-headline)/40 focus:ring-1 focus:ring-(--text-headline)/20"
 						/>
 					</div>
 				</div>
 
-				{/* Right: Actions (Likes & Cart) */}
-				<div className="flex items-center space-x-4 sm:space-x-6 shrink-0">
-					{/* Wishlist Link with dynamic badge */}
+				{/* Right Actions: Wishlist & Bag */}
+				<div className="flex items-center space-x-5 sm:space-x-6 shrink-0">
+					{/* Wishlist Link */}
 					<Link
 						href="/my-wishlist"
-						className="text-(--text-headline) hover:opacity-70 transition-opacity relative"
+						className="text-(--text-headline) hover:opacity-60 transition-opacity relative p-1 cursor-pointer"
 						aria-label="Wishlist"
 					>
-						<Heart className="w-5 h-5 stroke-[1.5]" />
+						<Heart className="w-4.5 h-4.5 stroke-[1.5]" />
 						{totalWishlistCount > 0 && (
-							<span
-								className="absolute -top-1.5 -right-2 w-4 h-4 text-[9px] font-bold rounded-full flex items-center justify-center text-white"
-								style={{ backgroundColor: "#f43f5e" }}
-							>
+							<span className="absolute 0 right-0 translate-x-1/3 -translate-y-1/3 min-w-4 h-4 px-1 text-[8px] font-semibold rounded-full flex items-center justify-center bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 shadow-xs">
 								{totalWishlistCount}
 							</span>
 						)}
 					</Link>
 
-					{/* Shopping Bag Button with dynamic badge */}
+					{/* Shopping Bag Link */}
 					<Link
-						className="text-(--text-headline) hover:opacity-70 transition-opacity relative cursor-pointer"
+						href="/shopping-bag"
+						className="text-(--text-headline) hover:opacity-60 transition-opacity relative p-1 cursor-pointer"
 						aria-label="Shopping Bag"
-						href={"/shopping-bag"}
 					>
-						<ShoppingBag className="w-5 h-5 stroke-[1.5]" />
+						<ShoppingBag className="w-4.5 h-4.5 stroke-[1.5]" />
 						{totalCartCount > 0 && (
-							<span
-								className="absolute -top-1.5 -right-2 w-4 h-4 text-[9px] font-bold rounded-full flex items-center justify-center text-white"
-								style={{
-									backgroundColor: "var(--accent-blue)",
-								}}
-							>
+							<span className="absolute 0 right-0 translate-x-1/3 -translate-y-1/3 min-w-4 h-4 px-1 text-[8px] font-semibold rounded-full flex items-center justify-center bg-(--text-headline) text-(--bg-base) shadow-xs">
 								{totalCartCount}
 							</span>
 						)}
@@ -100,20 +94,23 @@ export default function Navbar() {
 				</div>
 			</div>
 
-			{/* --- DESKTOP CATEGORY NAVBAR (Hidden on mobile) --- */}
-			<nav className="hidden md:block w-full px-8 pb-4">
-				<ul className="flex items-center justify-center space-x-8 overflow-x-auto whitespace-nowrap text-xs uppercase tracking-widest font-secondary text-(--text-muted) hide-scrollbar">
-					{navItems.map((item) => (
-						<li key={item.name}>
-							<Link
-								href={item.href}
-								className="hover:text-(--text-headline) transition-colors"
-							>
-								{item.name}
-							</Link>
-						</li>
-					))}
-				</ul>
+			{/* --- DESKTOP CATEGORY NAVIGATION STRIP --- */}
+			<nav className="hidden md:block w-full border-t border-(--border-color)/60 py-2.5">
+				<div className="max-w-screen-2xl mx-auto px-8">
+					<ul className="flex items-center justify-center space-x-9 overflow-x-auto whitespace-nowrap text-[11px] uppercase tracking-[0.22em] font-medium text-(--text-muted) hide-scrollbar">
+						{navItems.map((item) => (
+							<li key={item.name}>
+								<Link
+									href={item.href}
+									className="relative py-1 hover:text-(--text-headline) transition-colors group inline-block"
+								>
+									<span>{item.name}</span>
+									<span className="absolute inset-x-0 bottom-0 h-px bg-(--text-headline) scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center" />
+								</Link>
+							</li>
+						))}
+					</ul>
+				</div>
 			</nav>
 
 			{/* --- MOBILE DRAWER OVERLAY --- */}
@@ -126,47 +123,47 @@ export default function Navbar() {
 				onClick={() => setIsOpen(false)}
 			/>
 
-			{/* Slide-out Menu Panel */}
+			{/* Mobile Slide-out Menu */}
 			<div
-				className={`fixed top-0 left-0 bottom-0 w-[82vw] max-w-sm bg-(--bg-base) border-r border-(--border-color) p-6 flex flex-col justify-between transition-transform duration-300 ease-out md:hidden shadow-2xl ${
+				className={`fixed top-0 left-0 bottom-0 w-[84vw] max-w-xs bg-(--bg-base) border-r border-(--border-color) p-6 flex flex-col justify-between transition-transform duration-300 ease-out md:hidden shadow-2xl ${
 					isOpen ? "translate-x-0" : "-translate-x-full"
 				}`}
 			>
 				<div>
-					{/* Header inside drawer */}
-					<div className="flex items-center justify-between pb-6 border-b border-(--border-color)">
-						<span className="font-primary text-lg font-bold tracking-widest uppercase">
-							Menu
+					{/* Drawer Header */}
+					<div className="flex items-center justify-between pb-5 border-b border-(--border-color)">
+						<span className="font-serif text-base tracking-[0.2em] font-medium uppercase">
+							Navigation
 						</span>
 						<button
 							onClick={() => setIsOpen(false)}
 							aria-label="Close menu"
-							className="p-1 -mr-1 text-(--text-headline) hover:opacity-70 transition-opacity"
+							className="p-1 -mr-1 text-(--text-headline) hover:opacity-60 transition-opacity cursor-pointer"
 						>
 							<X className="w-5 h-5 stroke-[1.5]" />
 						</button>
 					</div>
 
-					{/* Mobile Search Bar */}
-					<div className="mt-6 mb-6">
+					{/* Mobile Enclosed Search */}
+					<div className="mt-5 mb-6">
 						<div className="relative flex items-center">
-							<Search className="absolute left-0 w-4 h-4 text-(--text-muted)" />
+							<Search className="absolute left-3.5 w-3.5 h-3.5 text-(--text-muted)" />
 							<input
 								type="text"
 								placeholder="Search pieces..."
-								className="w-full bg-transparent border-b border-(--border-color) py-1.5 pl-7 pr-2 text-sm text-(--text-headline) placeholder-(--text-muted) focus:outline-none focus:border-(--text-headline)"
+								className="w-full bg-(--card-sub)/70 border border-(--border-color) rounded-full py-2 pl-9 pr-3 text-xs text-(--text-headline) placeholder-(--text-muted) focus:outline-none focus:border-(--text-headline)"
 							/>
 						</div>
 					</div>
 
 					{/* Category Links */}
-					<ul className="flex flex-col space-y-4 py-2">
+					<ul className="flex flex-col space-y-3.5 py-1">
 						{navItems.map((item) => (
 							<li key={item.name}>
 								<Link
 									href={item.href}
 									onClick={() => setIsOpen(false)}
-									className="block text-sm uppercase tracking-widest font-secondary text-(--text-headline) hover:text-(--accent-blue) transition-colors py-1"
+									className="block text-xs uppercase tracking-[0.2em] font-medium text-(--text-headline) hover:text-(--text-muted) transition-colors py-1"
 								>
 									{item.name}
 								</Link>
@@ -175,21 +172,16 @@ export default function Navbar() {
 					</ul>
 				</div>
 
-				{/* Bottom of drawer: Account & Customer Care */}
-				<div className="pt-6 border-t border-(--border-color) flex flex-col space-y-3 text-xs tracking-wider font-secondary text-(--text-muted)">
+				{/* Mobile Drawer Footer */}
+				<div className="pt-6 border-t border-(--border-color) flex flex-col space-y-3 text-xs tracking-wider font-light text-(--text-muted)">
 					<Link
 						href="/shopping-bag"
 						onClick={() => setIsOpen(false)}
-						className="flex items-center justify-between text-(--text-headline) font-medium"
+						className="flex items-center justify-between text-(--text-headline)"
 					>
 						<span>Shopping Bag</span>
 						{totalCartCount > 0 && (
-							<span
-								className="text-[10px] px-2 py-0.5 rounded-full text-white"
-								style={{
-									backgroundColor: "var(--accent-blue)",
-								}}
-							>
+							<span className="text-[9px] px-2 py-0.5 rounded-full bg-(--text-headline) text-(--bg-base) font-semibold">
 								{totalCartCount}
 							</span>
 						)}
@@ -197,20 +189,26 @@ export default function Navbar() {
 					<Link
 						href="/my-wishlist"
 						onClick={() => setIsOpen(false)}
-						className="flex items-center justify-between"
+						className="flex items-center justify-between text-(--text-headline)"
 					>
 						<span>Saved Pieces</span>
 						{totalWishlistCount > 0 && (
-							<span className="text-[10px] px-2 py-0.5 rounded-full text-white bg-[#f43f5e]">
+							<span className="text-[9px] px-2 py-0.5 rounded-full bg-stone-900 text-white font-semibold">
 								{totalWishlistCount}
 							</span>
 						)}
 					</Link>
-					<Link href="/account" onClick={() => setIsOpen(false)}>
-						My Account
+					<Link
+						href="/coming-soon?feature=account"
+						onClick={() => setIsOpen(false)}
+					>
+						Client Account
 					</Link>
-					<Link href="/contact" onClick={() => setIsOpen(false)}>
-						Customer Care
+					<Link
+						href="/coming-soon?feature=concierge"
+						onClick={() => setIsOpen(false)}
+					>
+						Concierge & Care
 					</Link>
 				</div>
 			</div>
