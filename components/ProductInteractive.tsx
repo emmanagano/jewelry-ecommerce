@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Heart, ChevronDown, ShieldCheck, Gift, Truck } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Product {
 	id: string;
@@ -17,12 +18,33 @@ interface Product {
 	imageUrl?: string;
 }
 
-// 4. Expanded size variety across all categories
 const CATEGORY_SIZES: Record<string, string[]> = {
 	Rings: ["4", "5", "6", "7", "8", "9", "10"],
 	Bracelets: ["15 CM", "16 CM", "17.5 CM", "19 CM", "20.5 CM"],
 	Necklaces: ["14 IN", "16 IN", "18 IN", "20 IN", "22 IN"],
 	Earrings: ["Standard"],
+};
+
+// Standard luxury physics
+const luxurySpring = {
+	type: "spring" as const,
+	damping: 30,
+	stiffness: 100,
+	mass: 0.8,
+};
+
+// Entrance stagger configuration
+const staggerContainer = {
+	hidden: { opacity: 0 },
+	show: {
+		opacity: 1,
+		transition: { staggerChildren: 0.1 },
+	},
+};
+
+const staggerItem = {
+	hidden: { opacity: 0, y: 15 },
+	show: { opacity: 1, y: 0, transition: luxurySpring },
 };
 
 export default function ProductInteractive({ product }: { product: Product }) {
@@ -61,51 +83,49 @@ export default function ProductInteractive({ product }: { product: Product }) {
 	};
 
 	return (
-		<div className="flex flex-col">
+		<motion.div
+			variants={staggerContainer}
+			initial="hidden"
+			animate="show"
+			className="flex flex-col select-none"
+		>
 			{/* Badge */}
-			{product.badge && (
-				<span
-					className="text-[10px] tracking-[0.25em] font-semibold uppercase mb-3 inline-block"
-					style={{ color: "var(--accent-blue)" }}
-				>
-					{product.badge}
-				</span>
-			)}
+			<motion.div variants={staggerItem}>
+				{product.badge && (
+					<span className="font-secondary text-[10px] tracking-[0.25em] font-semibold uppercase mb-3 inline-block text-(--accent-blue)">
+						{product.badge}
+					</span>
+				)}
+			</motion.div>
 
 			{/* Title */}
-			<h1
-				className="font-serif text-3xl sm:text-4xl tracking-tight leading-tight mb-2"
-				style={{ color: "var(--text-headline)" }}
+			<motion.h1
+				variants={staggerItem}
+				className="font-primary text-3xl sm:text-4xl tracking-tight leading-tight mb-2 text-(--text-headline)"
 			>
 				{product.name}
-			</h1>
+			</motion.h1>
 
 			{/* Subtitle / Material */}
-			<p
-				className="text-xs uppercase tracking-widest font-medium mb-4"
-				style={{ color: "var(--text-muted)" }}
+			<motion.p
+				variants={staggerItem}
+				className="font-secondary text-[10px] uppercase tracking-widest font-medium mb-4 text-(--text-muted)"
 			>
 				{product.subtitle}
-			</p>
+			</motion.p>
 
 			{/* Main Display Price */}
-			<div
-				className="text-2xl font-serif mb-8 pb-6 border-b"
-				style={{
-					color: "var(--text-headline)",
-					borderColor: "var(--border-color)",
-				}}
+			<motion.div
+				variants={staggerItem}
+				className="font-serif text-2xl mb-8 pb-6 border-b border-(--border-color) text-(--text-headline)"
 			>
 				{formattedPrice}
-			</div>
+			</motion.div>
 
-			{/* 3 & 4. Size Selector (Removed Size Guide link, added more sizes) */}
+			{/* Size Selector with Sliding Layout Indicator */}
 			{sizes.length > 1 && (
-				<div className="mb-8">
-					<div
-						className="text-xs tracking-wider uppercase mb-3 font-semibold"
-						style={{ color: "var(--text-headline)" }}
-					>
+				<motion.div variants={staggerItem} className="mb-8">
+					<div className="font-secondary text-[10px] tracking-[0.25em] uppercase mb-4 font-semibold text-(--text-headline)">
 						Select Size
 					</div>
 					<div className="flex flex-wrap gap-2">
@@ -114,202 +134,239 @@ export default function ProductInteractive({ product }: { product: Product }) {
 								key={size}
 								type="button"
 								onClick={() => setSelectedSize(size)}
-								className="px-4 py-2.5 text-xs uppercase tracking-wider rounded-md border transition-all duration-150"
+								className="relative px-5 py-2.5 font-secondary text-[10px] uppercase tracking-wider rounded-xs border border-(--border-color) transition-colors cursor-pointer"
 								style={{
+									color:
+										selectedSize === size
+											? "var(--bg-base)"
+											: "var(--text-headline)",
 									borderColor:
 										selectedSize === size
 											? "var(--text-headline)"
 											: "var(--border-color)",
-									backgroundColor:
-										selectedSize === size
-											? "var(--card-sub)"
-											: "transparent",
-									color: "var(--text-headline)",
-									fontWeight:
-										selectedSize === size ? "600" : "400",
 								}}
 							>
-								{size}
+								{/* The sliding background pill */}
+								{selectedSize === size && (
+									<motion.div
+										layoutId="activeSize"
+										className="absolute inset-0 bg-(--text-headline) rounded-xs -z-10"
+										transition={luxurySpring}
+									/>
+								)}
+								<span className="relative z-10">{size}</span>
 							</button>
 						))}
 					</div>
-				</div>
+				</motion.div>
 			)}
 
-			{/* 1 & 5. Button Actions: Split Add to Bag & Interactive Pink Wishlist */}
-			<div className="flex items-center gap-3 mb-10">
-				<button
+			{/* Button Actions: Split Add to Bag & Interactive Pink Wishlist */}
+			<motion.div
+				variants={staggerItem}
+				className="flex items-center gap-3 mb-10"
+			>
+				<motion.button
+					whileHover={{ scale: 1.01 }}
+					whileTap={{ scale: 0.98 }}
+					transition={luxurySpring}
 					type="button"
 					onClick={handleAddToBag}
-					className="flex-1 py-4 px-6 flex items-center justify-between text-xs uppercase tracking-[0.2em] font-semibold text-white transition-opacity hover:opacity-90 active:scale-[0.99] rounded-sm"
-					style={{ backgroundColor: "var(--accent-light)" }}
+					className="flex-1 py-4 px-6 flex items-center justify-between font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold text-white transition-opacity hover:opacity-95 rounded-xs cursor-pointer shadow-xs bg-(--text-headline)"
 				>
 					<span>{formattedPrice}</span>
-					<span>{addedNotice ? "Added to Bag ✓" : "Add to Bag"}</span>
-				</button>
+					<AnimatePresence mode="wait">
+						{addedNotice ? (
+							<motion.span
+								key="added"
+								initial={{ opacity: 0, y: 5 }}
+								animate={{ opacity: 1, y: 0 }}
+								exit={{ opacity: 0, y: -5 }}
+								className="flex items-center gap-2"
+							>
+								<span>Added to Bag</span>
+							</motion.span>
+						) : (
+							<motion.span
+								key="add"
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+							>
+								Add to Bag
+							</motion.span>
+						)}
+					</AnimatePresence>
+				</motion.button>
 
-				<button
+				<motion.button
+					whileHover={{ scale: 1.05 }}
+					whileTap={{ scale: 0.95 }}
+					transition={luxurySpring}
 					type="button"
 					onClick={() => toggleWishlist(product.id)}
 					aria-label="Save to Wishlist"
-					className="group p-4 rounded-sm border transition-colors flex items-center justify-center cursor-pointer"
-					style={{
-						borderColor: "var(--border-color)",
-						backgroundColor: "var(--card-sub)",
-					}}
+					className="group p-4 rounded-xs border border-(--border-color) bg-(--card-sub)/50 transition-colors flex items-center justify-center cursor-pointer shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]"
 				>
 					<Heart
-						className={`w-5 h-5 transition-colors duration-200 ${
+						className={`w-4 h-4 transition-colors duration-200 ${
 							liked
 								? "fill-[#f43f5e] text-[#f43f5e]"
-								: "text-(--text-headline) stroke-[1.5] group-hover:text-[#f43f5e] group-hover:fill-[#f43f5e]/30"
+								: "text-(--text-headline) stroke-[1.5] group-hover:text-[#f43f5e] group-hover:fill-[#f43f5e]/20"
 						}`}
 					/>
-				</button>
-			</div>
+				</motion.button>
+			</motion.div>
 
 			{/* Horizontal 3-Column Value Guarantees */}
-			<div
-				className="grid grid-cols-3 gap-2 py-6 mb-8 border-y text-center"
-				style={{
-					borderColor: "var(--border-color)",
-				}}
+			<motion.div
+				variants={staggerItem}
+				className="grid grid-cols-3 gap-2 py-6 mb-8 border-y border-(--border-color)/60 text-center"
 			>
 				<div className="flex flex-col items-center justify-center gap-2">
 					<Truck
-						size={18}
-						style={{ color: "var(--accent-blue)" }}
-						strokeWidth={1.5}
+						size={17}
+						className="text-(--accent-blue) stroke-[1.5]"
 					/>
-					<span
-						className="text-[10px] uppercase tracking-wider font-medium max-w-27.5 leading-tight"
-						style={{ color: "var(--text-muted)" }}
-					>
+					<span className="font-secondary text-[9px] uppercase tracking-[0.2em] font-medium max-w-[100px] leading-tight text-(--text-muted)">
 						Complimentary Shipping
 					</span>
 				</div>
-
 				<div className="flex flex-col items-center justify-center gap-2">
 					<Gift
-						size={18}
-						style={{ color: "var(--accent-blue)" }}
-						strokeWidth={1.5}
+						size={17}
+						className="text-(--accent-blue) stroke-[1.5]"
 					/>
-					<span
-						className="text-[10px] uppercase tracking-wider font-medium max-w-27.5 leading-tight"
-						style={{ color: "var(--text-muted)" }}
-					>
+					<span className="font-secondary text-[9px] uppercase tracking-[0.2em] font-medium max-w-[100px] leading-tight text-(--text-muted)">
 						Signature Packaging
 					</span>
 				</div>
-
 				<div className="flex flex-col items-center justify-center gap-2">
 					<ShieldCheck
-						size={18}
-						style={{ color: "var(--accent-blue)" }}
-						strokeWidth={1.5}
+						size={17}
+						className="text-(--accent-blue) stroke-[1.5]"
 					/>
-					<span
-						className="text-[10px] uppercase tracking-wider font-medium max-w-27.5 leading-tight"
-						style={{ color: "var(--text-muted)" }}
-					>
+					<span className="font-secondary text-[9px] uppercase tracking-[0.2em] font-medium max-w-[100px] leading-tight text-(--text-muted)">
 						Lifetime Warranty
 					</span>
 				</div>
-			</div>
+			</motion.div>
 
-			{/* Accordions */}
-			<div
-				className="flex flex-col divide-y text-sm"
-				style={{ borderColor: "var(--border-color)" }}
+			{/* Fluid Accordions */}
+			<motion.div
+				variants={staggerItem}
+				className="flex flex-col divide-y divide-(--border-color)/60 border-b border-(--border-color)/60"
 			>
 				{/* Description */}
-				<div className="py-4">
+				<div className="py-1">
 					<button
 						type="button"
 						onClick={() => toggleAccordion("description")}
-						className="w-full flex items-center justify-between text-xs uppercase tracking-widest font-semibold text-left"
-						style={{ color: "var(--text-headline)" }}
+						className="w-full py-4 flex items-center justify-between font-secondary text-[10px] uppercase tracking-[0.25em] font-medium text-left text-(--text-headline) cursor-pointer hover:opacity-70 transition-opacity"
 					>
 						<span>Description & Details</span>
-						<ChevronDown
-							size={14}
-							className={`transition-transform duration-200 ${
-								openSection === "description"
-									? "rotate-180"
-									: ""
-							}`}
-						/>
-					</button>
-					{openSection === "description" && (
-						<p
-							className="mt-3 text-xs leading-relaxed font-light"
-							style={{ color: "var(--text-body)" }}
+						<motion.div
+							animate={{
+								rotate: openSection === "description" ? 180 : 0,
+							}}
+							transition={{ duration: 0.3, ease: "easeInOut" }}
 						>
-							{product.description}
-						</p>
-					)}
+							<ChevronDown size={14} className="stroke-[1.5]" />
+						</motion.div>
+					</button>
+					<AnimatePresence>
+						{openSection === "description" && (
+							<motion.div
+								initial={{ height: 0, opacity: 0 }}
+								animate={{ height: "auto", opacity: 1 }}
+								exit={{ height: 0, opacity: 0 }}
+								transition={luxurySpring}
+								className="overflow-hidden"
+							>
+								<p className="pb-5 font-body text-[11px] leading-relaxed font-light text-(--text-muted) pr-6">
+									{product.description}
+								</p>
+							</motion.div>
+						)}
+					</AnimatePresence>
 				</div>
 
 				{/* Materials */}
-				<div className="py-4">
+				<div className="py-1">
 					<button
 						type="button"
 						onClick={() => toggleAccordion("materials")}
-						className="w-full flex items-center justify-between text-xs uppercase tracking-widest font-semibold text-left"
-						style={{ color: "var(--text-headline)" }}
+						className="w-full py-4 flex items-center justify-between font-secondary text-[10px] uppercase tracking-[0.25em] font-medium text-left text-(--text-headline) cursor-pointer hover:opacity-70 transition-opacity"
 					>
 						<span>Materials & Care</span>
-						<ChevronDown
-							size={14}
-							className={`transition-transform duration-200 ${
-								openSection === "materials" ? "rotate-180" : ""
-							}`}
-						/>
-					</button>
-					{openSection === "materials" && (
-						<p
-							className="mt-3 text-xs leading-relaxed font-light"
-							style={{ color: "var(--text-body)" }}
+						<motion.div
+							animate={{
+								rotate: openSection === "materials" ? 180 : 0,
+							}}
+							transition={{ duration: 0.3, ease: "easeInOut" }}
 						>
-							Hand-finished in {product.subtitle}. Each piece is
-							crafted using recycled precious metals and certified
-							conflict-free stones. Store in the provided
-							anti-tarnish pouch away from water and direct
-							cosmetic application.
-						</p>
-					)}
+							<ChevronDown size={14} className="stroke-[1.5]" />
+						</motion.div>
+					</button>
+					<AnimatePresence>
+						{openSection === "materials" && (
+							<motion.div
+								initial={{ height: 0, opacity: 0 }}
+								animate={{ height: "auto", opacity: 1 }}
+								exit={{ height: 0, opacity: 0 }}
+								transition={luxurySpring}
+								className="overflow-hidden"
+							>
+								<p className="pb-5 font-body text-[11px] leading-relaxed font-light text-(--text-muted) pr-6">
+									Hand-finished in {product.subtitle}. Each
+									piece is crafted using recycled precious
+									metals and certified conflict-free stones.
+									Store in the provided anti-tarnish pouch
+									away from water and direct cosmetic
+									application.
+								</p>
+							</motion.div>
+						)}
+					</AnimatePresence>
 				</div>
 
 				{/* Delivery & Returns */}
-				<div className="py-4">
+				<div className="py-1">
 					<button
 						type="button"
 						onClick={() => toggleAccordion("shipping")}
-						className="w-full flex items-center justify-between text-xs uppercase tracking-widest font-semibold text-left"
-						style={{ color: "var(--text-headline)" }}
+						className="w-full py-4 flex items-center justify-between font-secondary text-[10px] uppercase tracking-[0.25em] font-medium text-left text-(--text-headline) cursor-pointer hover:opacity-70 transition-opacity"
 					>
 						<span>Delivery & Returns</span>
-						<ChevronDown
-							size={14}
-							className={`transition-transform duration-200 ${
-								openSection === "shipping" ? "rotate-180" : ""
-							}`}
-						/>
-					</button>
-					{openSection === "shipping" && (
-						<p
-							className="mt-3 text-xs leading-relaxed font-light"
-							style={{ color: "var(--text-body)" }}
+						<motion.div
+							animate={{
+								rotate: openSection === "shipping" ? 180 : 0,
+							}}
+							transition={{ duration: 0.3, ease: "easeInOut" }}
 						>
-							Orders are packaged by hand and dispatched via
-							insured courier in 1–2 business days. We gladly
-							offer complimentary 30-day returns and exchanges on
-							unworn pieces.
-						</p>
-					)}
+							<ChevronDown size={14} className="stroke-[1.5]" />
+						</motion.div>
+					</button>
+					<AnimatePresence>
+						{openSection === "shipping" && (
+							<motion.div
+								initial={{ height: 0, opacity: 0 }}
+								animate={{ height: "auto", opacity: 1 }}
+								exit={{ height: 0, opacity: 0 }}
+								transition={luxurySpring}
+								className="overflow-hidden"
+							>
+								<p className="pb-5 font-body text-[11px] leading-relaxed font-light text-(--text-muted) pr-6">
+									Orders are packaged by hand and dispatched
+									via insured courier in 1–2 business days. We
+									gladly offer complimentary 30-day returns
+									and exchanges on unworn pieces.
+								</p>
+							</motion.div>
+						)}
+					</AnimatePresence>
 				</div>
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	);
 }

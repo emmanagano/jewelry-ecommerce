@@ -1,53 +1,142 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+// Bespoke "Quiet Luxury" physics
+const luxurySpring = {
+	type: "spring" as const,
+	damping: 30,
+	stiffness: 100,
+	mass: 0.8,
+};
+
+const footerContainer = {
+	hidden: { opacity: 0 },
+	show: {
+		opacity: 1,
+		transition: {
+			staggerChildren: 0.12,
+			delayChildren: 0.1,
+		},
+	},
+};
+
+const footerColumn = {
+	hidden: { opacity: 0, y: 24 },
+	show: {
+		opacity: 1,
+		y: 0,
+		transition: { ...luxurySpring, duration: 1.1 },
+	},
+};
 
 export default function Footer() {
+	const [email, setEmail] = useState("");
+	const [subscribed, setSubscribed] = useState(false);
+
+	const handleSubscribe = (e: React.FormEvent) => {
+		e.preventDefault();
+		if (!email.trim()) return;
+		setSubscribed(true);
+		setEmail("");
+		setTimeout(() => setSubscribed(false), 3000);
+	};
+
 	return (
 		<footer className="w-full bg-(--card-wide) text-(--text-headline) border-t border-(--border-color) mt-24">
-			<div className="max-w-screen-2xl mx-auto px-6 sm:px-8 py-16 lg:py-20">
+			<motion.div
+				variants={footerContainer}
+				initial="hidden"
+				whileInView="show"
+				viewport={{ once: true, margin: "-60px" }}
+				className="max-w-screen-2xl mx-auto px-6 sm:px-8 py-16 lg:py-20"
+			>
 				{/* Top Grid: Newsletter + Navigation Columns */}
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 pb-16 border-b border-(--border-color)/60">
 					{/* Brand & Newsletter Column (Spans 5 columns on desktop) */}
-					<div className="lg:col-span-5 pr-0 lg:pr-12 flex flex-col space-y-6">
-						<span className="font-serif text-2xl font-medium tracking-[0.2em] uppercase text-(--text-headline)">
+					<motion.div
+						variants={footerColumn}
+						className="lg:col-span-5 pr-0 lg:pr-12 flex flex-col space-y-6"
+					>
+						<span className="font-primary text-2xl font-medium tracking-[0.2em] uppercase text-(--text-headline)">
 							BrandLogo
 						</span>
-						<p className="text-xs text-(--text-muted) max-w-sm leading-relaxed font-light">
+						<p className="font-body text-xs text-(--text-muted) max-w-sm leading-relaxed font-light">
 							Handcrafted heirlooms designed for modern longevity.
 							Subscribe to receive private collection previews and
 							editorial journals.
 						</p>
 
 						{/* Enclosed Newsletter Signup Form */}
-						<form className="relative max-w-sm flex w-full group mt-2">
+						<form
+							onSubmit={handleSubscribe}
+							className="relative max-w-sm flex w-full group mt-2"
+						>
 							<input
 								type="email"
+								required
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
 								placeholder="Enter your email address"
-								className="w-full bg-transparent border border-(--border-color) py-2.5 pl-4 pr-32 text-xs text-(--text-headline) placeholder-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 transition-colors rounded-xs"
+								className="w-full bg-transparent border border-(--border-color) py-2.5 pl-4 pr-32 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 transition-colors rounded-xs"
 							/>
-							<button
+							<motion.button
+								whileHover={{ scale: 1.02 }}
+								whileTap={{ scale: 0.96 }}
+								transition={luxurySpring}
 								type="submit"
 								aria-label="Join private client list"
-								className="absolute right-1 top-1 bottom-1 px-4 bg-(--bg-base) hover:bg-(--text-headline) hover:text-(--bg-base) text-(--text-headline) text-[9px] uppercase tracking-[0.2em] font-medium transition-colors border border-(--border-color) cursor-pointer flex items-center gap-1.5 rounded-xs"
+								className="absolute right-1 top-1 bottom-1 px-4 bg-(--bg-base) hover:bg-(--text-headline) hover:text-(--bg-base) text-(--text-headline) font-secondary text-[9px] uppercase tracking-[0.2em] font-medium transition-colors border border-(--border-color) cursor-pointer flex items-center gap-1.5 rounded-xs"
 							>
-								<span>Subscribe</span>
-								<ArrowRight
-									size={10}
-									className="stroke-[1.5]"
-								/>
-							</button>
+								<AnimatePresence mode="wait">
+									{subscribed ? (
+										<motion.span
+											key="confirmed"
+											initial={{ opacity: 0, y: 3 }}
+											animate={{ opacity: 1, y: 0 }}
+											exit={{ opacity: 0, y: -3 }}
+											className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold"
+										>
+											<Check
+												size={10}
+												className="stroke-[2]"
+											/>
+											<span>Joined</span>
+										</motion.span>
+									) : (
+										<motion.span
+											key="default"
+											initial={{ opacity: 0 }}
+											animate={{ opacity: 1 }}
+											exit={{ opacity: 0 }}
+											className="flex items-center gap-1.5"
+										>
+											<span>Subscribe</span>
+											<ArrowRight
+												size={10}
+												className="stroke-[1.5] transition-transform duration-200 group-hover:translate-x-0.5"
+											/>
+										</motion.span>
+									)}
+								</AnimatePresence>
+							</motion.button>
 						</form>
-					</div>
+					</motion.div>
 
 					{/* Navigation Links Container (Spans 7 columns) */}
 					<div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8 lg:gap-12">
 						{/* Column 1: Client Care */}
-						<div className="flex flex-col space-y-5">
-							<span className="text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
+						<motion.div
+							variants={footerColumn}
+							className="flex flex-col space-y-5"
+						>
+							<span className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
 								Client Care
 							</span>
-							<ul className="flex flex-col space-y-3.5 text-[11px] tracking-wide text-(--text-muted) font-light">
+							<ul className="flex flex-col space-y-3.5 font-secondary text-[11px] tracking-wide text-(--text-muted) font-light">
 								<li>
 									<Link
 										href="/coming-soon?feature=concierge"
@@ -89,14 +178,17 @@ export default function Footer() {
 									</Link>
 								</li>
 							</ul>
-						</div>
+						</motion.div>
 
 						{/* Column 2: The Maison */}
-						<div className="flex flex-col space-y-5">
-							<span className="text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
+						<motion.div
+							variants={footerColumn}
+							className="flex flex-col space-y-5"
+						>
+							<span className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
 								The Maison
 							</span>
-							<ul className="flex flex-col space-y-3.5 text-[11px] tracking-wide text-(--text-muted) font-light">
+							<ul className="flex flex-col space-y-3.5 font-secondary text-[11px] tracking-wide text-(--text-muted) font-light">
 								<li>
 									<Link
 										href="/coming-soon?feature=about"
@@ -130,14 +222,17 @@ export default function Footer() {
 									</Link>
 								</li>
 							</ul>
-						</div>
+						</motion.div>
 
 						{/* Column 3: Boutiques & Services */}
-						<div className="flex flex-col space-y-5">
-							<span className="text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
+						<motion.div
+							variants={footerColumn}
+							className="flex flex-col space-y-5"
+						>
+							<span className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
 								Services
 							</span>
-							<ul className="flex flex-col space-y-3.5 text-[11px] tracking-wide text-(--text-muted) font-light">
+							<ul className="flex flex-col space-y-3.5 font-secondary text-[11px] tracking-wide text-(--text-muted) font-light">
 								<li>
 									<Link
 										href="/coming-soon?feature=custom"
@@ -171,12 +266,15 @@ export default function Footer() {
 									</Link>
 								</li>
 							</ul>
-						</div>
+						</motion.div>
 					</div>
 				</div>
 
 				{/* Bottom Bar: Copyright, Region, Legal */}
-				<div className="pt-8 flex flex-col md:flex-row items-center justify-between text-[10px] uppercase tracking-widest text-(--text-muted) font-medium space-y-4 md:space-y-0">
+				<motion.div
+					variants={footerColumn}
+					className="pt-8 flex flex-col md:flex-row items-center justify-between font-secondary text-[10px] uppercase tracking-widest text-(--text-muted) font-medium space-y-4 md:space-y-0"
+				>
 					<div>
 						<span>© 2026 BrandLogo Inc. All rights reserved.</span>
 					</div>
@@ -199,8 +297,8 @@ export default function Footer() {
 							Terms of Use
 						</Link>
 					</div>
-				</div>
-			</div>
+				</motion.div>
+			</motion.div>
 		</footer>
 	);
 }
