@@ -5,6 +5,7 @@ import { Search, Heart, ShoppingBag, Menu, X, User } from "lucide-react";
 import Link from "next/link";
 import Form from "next/form";
 import type { Category } from "@/app/lib/products";
+import { SITE_NAME } from "@/app/lib/site";
 import { useStore } from "@/context/StoreContext";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -116,7 +117,7 @@ export default function Navbar({ categories }: NavbarProps) {
 				<div className="shrink-0">
 					<Link href="/">
 						<span className="font-primary text-xl sm:text-2xl tracking-[0.2em] font-medium uppercase text-(--text-headline)">
-							BrandLogo
+							{SITE_NAME}
 						</span>
 					</Link>
 				</div>

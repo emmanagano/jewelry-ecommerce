@@ -1,13 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 
 // A light fade-and-rise on each route change. Keyed on the pathname only, so
 // changing filters or sort (search params) doesn't replay the transition or
 // remount the page. Opacity/transform only — animating blur is costly.
-export default function Template({ children }: { children: React.ReactNode }) {
+function AnimatedTemplate({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
 
 	return (
@@ -20,5 +20,16 @@ export default function Template({ children }: { children: React.ReactNode }) {
 		>
 			{children}
 		</motion.div>
+	);
+}
+
+export default function Template({ children }: { children: React.ReactNode }) {
+	return (
+		// usePathname() is URL data, so it needs a Suspense boundary on routes
+		// whose paths aren't known at build time (e.g. /orders/[id]). The
+		// fallback renders the page without the animation.
+		<Suspense fallback={<div className="w-full h-full">{children}</div>}>
+			<AnimatedTemplate>{children}</AnimatedTemplate>
+		</Suspense>
 	);
 }

@@ -6,6 +6,12 @@ import Footer from "../components/Footer";
 import { AuthProvider } from "../context/AuthContext";
 import { StoreProvider } from "../context/StoreContext";
 import { getCategories } from "./lib/data/products";
+import {
+	SITE_DESCRIPTION,
+	SITE_NAME,
+	SITE_TAGLINE,
+	getSiteUrl,
+} from "./lib/site";
 
 const serifFont = Playfair_Display({
 	variable: "--font-serif",
@@ -18,11 +24,20 @@ const sansFont = Inter({
 });
 
 export const metadata: Metadata = {
+	// Lets pages use relative URLs for canonical links and social images
+	metadataBase: new URL(getSiteUrl()),
 	title: {
-		default: "BrandLogo | Fine Jewelry & Heirlooms",
-		template: "%s | BrandLogo",
+		default: `${SITE_NAME} | ${SITE_TAGLINE}`,
+		template: `%s | ${SITE_NAME}`,
 	},
-	description: "Handcrafted fine jewelry designed for modern longevity.",
+	description: SITE_DESCRIPTION,
+	applicationName: SITE_NAME,
+	openGraph: {
+		type: "website",
+		siteName: SITE_NAME,
+		locale: "en_US",
+	},
+	twitter: { card: "summary_large_image" },
 };
 
 export default async function RootLayout({

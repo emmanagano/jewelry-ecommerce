@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -25,6 +25,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { luxurySpring, staggerContainer, fadeSlide } from "@/app/lib/motion";
 import { formatPrice } from "@/app/lib/format";
 import { applyPromoCode } from "@/app/lib/store-actions";
+import {
+	COURIER_CENTS,
+	FREE_COURIER_THRESHOLD_CENTS,
+	GIFT_PACKAGING_CENTS,
+	computeTotals,
+} from "@/app/lib/pricing";
+import {
+	DEFAULT_CHECKOUT_OPTIONS,
+	readCheckoutOptions,
+	saveCheckoutOptions,
+} from "@/app/lib/checkout-options";
 
 const staggerContainerVariants = staggerContainer(0.1);
 const staggerItem = fadeSlide(20);
@@ -40,36 +51,46 @@ export default function BagPage() {
 		isHydrated,
 	} = useStore();
 
-	const [includeGiftPackaging, setIncludeGiftPackaging] = useState(false);
-	const [giftNote, setGiftNote] = useState("");
+	// Gift and promo choices persist for this tab and carry into checkout
+	const [initialOptions] = useState(() =>
+		typeof window === "undefined"
+			? DEFAULT_CHECKOUT_OPTIONS
+			: readCheckoutOptions(),
+	);
+	const [includeGiftPackaging, setIncludeGiftPackaging] = useState(
+		initialOptions.giftPackaging,
+	);
+	const [giftNote, setGiftNote] = useState(initialOptions.giftNote);
 	const [promoCode, setPromoCode] = useState("");
 	const [appliedPromo, setAppliedPromo] = useState<{
 		code: string;
 		percentOff: number;
-	} | null>(null);
+	} | null>(initialOptions.promo);
+
+	useEffect(() => {
+		saveCheckoutOptions({
+			giftPackaging: includeGiftPackaging,
+			giftNote,
+			promo: appliedPromo,
+		});
+	}, [includeGiftPackaging, giftNote, appliedPromo]);
 	const [promoError, setPromoError] = useState<string | null>(null);
 	const [isCheckingPromo, startPromoCheck] = useTransition();
 	const discountPercent = (appliedPromo?.percentOff ?? 0) / 100;
 
-	// Calculations (cents)
-	const GIFT_PACKAGING_FEE_CENTS = 500; // $5.00
-	const FREE_SHIPPING_THRESHOLD_CENTS = 20000; // $200.00 complimentary courier threshold
-
+	// Calculations (cents), shared with checkout and the server's place_order
 	const subtotalCents = cart.reduce(
 		(acc, item) => acc + item.price * item.quantity,
 		0,
 	);
-	const packagingCents = includeGiftPackaging ? GIFT_PACKAGING_FEE_CENTS : 0;
-	const discountCents = Math.round(subtotalCents * discountPercent);
-	const qualifiesForFreeCourier =
-		subtotalCents >= FREE_SHIPPING_THRESHOLD_CENTS;
+	const totals = computeTotals(subtotalCents, {
+		giftPackaging: includeGiftPackaging,
+		percentOff: appliedPromo?.percentOff ?? 0,
+	});
+	const { discountCents, qualifiesForFreeCourier } = totals;
 	const shippingProgress = Math.min(
-		(subtotalCents / FREE_SHIPPING_THRESHOLD_CENTS) * 100,
+		(subtotalCents / FREE_COURIER_THRESHOLD_CENTS) * 100,
 		100,
-	);
-	const finalTotalCents = Math.max(
-		0,
-		subtotalCents - discountCents + packagingCents,
 	);
 
 	// Codes are checked on the server against the promo_codes table
@@ -158,7 +179,7 @@ export default function BagPage() {
 								<span className="text-(--text-muted)">
 									{qualifiesForFreeCourier
 										? "Your order qualifies for complimentary insured courier delivery"
-										: `Add ${formatPrice(FREE_SHIPPING_THRESHOLD_CENTS - subtotalCents)} more for complimentary courier delivery`}
+										: `Add ${formatPrice(FREE_COURIER_THRESHOLD_CENTS - subtotalCents)} more for complimentary courier delivery`}
 								</span>
 								<span className="font-mono text-(--text-headline) tracking-tight">
 									{Math.round(shippingProgress)}%
@@ -580,7 +601,7 @@ export default function BagPage() {
 											<span>Gift Presentation</span>
 											<span className="text-(--text-headline)">
 												{formatPrice(
-													GIFT_PACKAGING_FEE_CENTS,
+													GIFT_PACKAGING_CENTS,
 												)}
 											</span>
 										</motion.div>
@@ -612,7 +633,7 @@ export default function BagPage() {
 									<span className="text-(--text-headline)">
 										{qualifiesForFreeCourier
 											? "Complimentary"
-											: formatPrice(1500)}
+											: formatPrice(COURIER_CENTS)}
 									</span>
 								</div>
 
@@ -636,18 +657,12 @@ export default function BagPage() {
 									layout="position"
 									className="font-primary text-3xl font-medium tracking-tight text-(--text-headline)"
 								>
-									{formatPrice(
-										finalTotalCents +
-											(qualifiesForFreeCourier
-												? 0
-												: 1500),
-									)}
+									{formatPrice(totals.totalCents)}
 								</motion.span>
 							</motion.div>
 
-							{/* Checkout isn't built yet (no payments); the bag is the end of the flow */}
 							<Link
-								href="/coming-soon?feature=checkout"
+								href="/checkout"
 								className="w-full py-4 font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold bg-(--text-headline) text-(--bg-base) hover:opacity-95 transition-opacity rounded-xs cursor-pointer flex items-center justify-center gap-2 shadow-xs"
 							>
 								<span>Proceed to Checkout</span>

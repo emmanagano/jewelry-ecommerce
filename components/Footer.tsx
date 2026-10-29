@@ -6,6 +6,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { luxurySpring, staggerContainer, fadeSlide } from "@/app/lib/motion";
 import { subscribeToNewsletter } from "@/app/lib/store-actions";
+import { SITE_NAME } from "@/app/lib/site";
 
 const footerContainer = staggerContainer(0.12, 0.1);
 const footerColumn = fadeSlide(24, { duration: 1.1 });
@@ -52,7 +53,7 @@ export default function Footer() {
 						className="lg:col-span-5 pr-0 lg:pr-12 flex flex-col space-y-6"
 					>
 						<span className="font-primary text-2xl font-medium tracking-[0.2em] uppercase text-(--text-headline)">
-							BrandLogo
+							{SITE_NAME}
 						</span>
 						<p className="font-body text-xs text-(--text-muted) max-w-sm leading-relaxed font-light">
 							Handcrafted heirlooms designed for modern longevity.
@@ -280,7 +281,7 @@ export default function Footer() {
 					className="pt-8 flex flex-col md:flex-row items-center justify-between font-secondary text-[10px] uppercase tracking-widest text-(--text-muted) font-medium space-y-4 md:space-y-0"
 				>
 					<div>
-						<span>© 2026 BrandLogo Inc. All rights reserved.</span>
+						<span>© 2026 {SITE_NAME} Inc. All rights reserved.</span>
 					</div>
 
 					{/* Region / Currency */}

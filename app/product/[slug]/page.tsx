@@ -5,6 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductBySlug, getProductSlugs } from "@/app/lib/data/products";
 import ProductInteractive from "@/components/ProductInteractive";
+import { SITE_NAME, getSiteUrl } from "@/app/lib/site";
 
 interface PageProps {
 	params: Promise<{ slug: string }>;
@@ -27,6 +28,7 @@ export async function generateMetadata({
 	return {
 		title: product.name,
 		description,
+		alternates: { canonical: `/product/${product.slug}` },
 		openGraph: {
 			title: product.name,
 			description,
@@ -74,8 +76,11 @@ async function ProductContent({ params }: PageProps) {
 		image: product.images ?? [],
 		category: category.name,
 		material: product.metal ?? undefined,
+		brand: { "@type": "Brand", name: SITE_NAME },
+		url: `${getSiteUrl()}/product/${product.slug}`,
 		offers: {
 			"@type": "Offer",
+			url: `${getSiteUrl()}/product/${product.slug}`,
 			price: (product.price / 100).toFixed(2),
 			priceCurrency: "USD",
 			availability: "https://schema.org/InStock",

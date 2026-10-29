@@ -550,3 +550,62 @@ export function SecurityCard() {
 		</AccountCard>
 	);
 }
+
+// ---------------------------------------------------------------------------
+// Order history
+// ---------------------------------------------------------------------------
+
+export interface OrderSummary {
+	id: string;
+	orderNumber: string;
+	createdAt: string;
+	totalCents: number;
+	itemCount: number;
+}
+
+export function OrderHistoryCard({ orders }: { orders: OrderSummary[] }) {
+	return (
+		<AccountCard title="Order History">
+			{orders.length === 0 ? (
+				<EmptyPreview
+					icon={<ShoppingBag size={16} className="stroke-[1.5]" />}
+					text="Orders you place while signed in appear here."
+					href="/shopping-bag"
+					cta="Go to Bag"
+				/>
+			) : (
+				<ul className="divide-y divide-(--border-color)/60">
+					{orders.map((order) => (
+						<li key={order.id}>
+							<Link
+								href={`/orders/${order.id}`}
+								className="group py-3.5 first:pt-0 flex items-center justify-between gap-4"
+							>
+								<div>
+									<p className="font-secondary text-[11px] uppercase tracking-[0.15em] font-semibold text-(--text-headline) group-hover:opacity-70 transition-opacity">
+										{order.orderNumber}
+									</p>
+									<p className="font-body text-[11px] text-(--text-muted)">
+										{new Date(order.createdAt).toLocaleDateString("en-US", {
+											month: "short",
+											day: "numeric",
+											year: "numeric",
+										})}{" "}
+										· {order.itemCount} {order.itemCount === 1 ? "piece" : "pieces"}
+									</p>
+								</div>
+								<span className="flex items-center gap-3 font-serif text-sm text-(--text-headline)">
+									{formatPrice(order.totalCents)}
+									<ArrowRight
+										size={12}
+										className="stroke-[1.5] text-(--text-muted) transition-transform group-hover:translate-x-0.5"
+									/>
+								</span>
+							</Link>
+						</li>
+					))}
+				</ul>
+			)}
+		</AccountCard>
+	);
+}

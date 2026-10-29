@@ -20,6 +20,7 @@ export type PreferredSizes = Record<string, string>;
 interface AuthContextType {
 	user: AuthUser | null;
 	preferredSizes: PreferredSizes;
+	fullName: string | null;
 	refreshProfile: () => Promise<void>;
 	// False until the initial session check finishes, so UI doesn't flash the
 	// signed-out state for a signed-in visitor
@@ -32,7 +33,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 async function loadProfile(userId: string) {
 	const { data, error } = await createSupabaseBrowserClient()
 		.from("profiles")
-		.select("preferred_sizes")
+		.select("full_name, preferred_sizes")
 		.eq("id", userId)
 		.maybeSingle();
 	if (error) {
@@ -41,6 +42,7 @@ async function loadProfile(userId: string) {
 	}
 	return {
 		userId,
+		fullName: (data?.full_name as string | null) ?? null,
 		preferredSizes: (data?.preferred_sizes as PreferredSizes) ?? {},
 	};
 }
@@ -54,6 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [isAuthReady, setIsAuthReady] = useState(false);
 	const [profile, setProfile] = useState<{
 		userId: string;
+		fullName: string | null;
 		preferredSizes: PreferredSizes;
 	} | null>(null);
 
@@ -88,8 +91,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	}, [user]);
 
 	// Only trust the profile if it belongs to the current user
-	const preferredSizes =
-		user && profile?.userId === user.id ? profile.preferredSizes : {};
+	const ownProfile = user && profile?.userId === user.id ? profile : null;
+	const preferredSizes = ownProfile?.preferredSizes ?? {};
+	const fullName = ownProfile?.fullName ?? null;
 
 	const signOut = useCallback(async () => {
 		await createSupabaseBrowserClient().auth.signOut();
@@ -97,7 +101,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 	return (
 		<AuthContext.Provider
-			value={{ user, isAuthReady, preferredSizes, refreshProfile, signOut }}
+			value={{
+				user,
+				isAuthReady,
+				preferredSizes,
+				fullName,
+				refreshProfile,
+				signOut,
+			}}
 		>
 			{children}
 		</AuthContext.Provider>

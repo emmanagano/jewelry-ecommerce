@@ -29,6 +29,9 @@ interface StoreContextType {
 	addToCart: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
 	removeFromCart: (id: string, size: string) => void;
 	updateQuantity: (id: string, size: string, quantity: number) => void;
+	// After an order: empties the guest bag, or reloads the account bag
+	// (place_order already removed the ordered lines from it)
+	clearCart: () => void;
 	toggleWishlist: (productId: string) => void;
 	isLiked: (productId: string) => boolean;
 	totalCartCount: number;
@@ -445,6 +448,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 		saveToStorage(CART_KEY, setLine(guestCart));
 	};
 
+	const clearCart = () => {
+		if (user) {
+			refreshAccount(user.id);
+			return;
+		}
+		saveToStorage(CART_KEY, []);
+	};
+
 	const cart = user ? (account?.cart ?? []) : pricedGuestCart;
 	const wishlist = user ? (account?.wishlist ?? []) : guestWishlist;
 
@@ -501,6 +512,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 				addToCart,
 				removeFromCart,
 				updateQuantity,
+				clearCart,
 				toggleWishlist,
 				isLiked,
 				totalCartCount,

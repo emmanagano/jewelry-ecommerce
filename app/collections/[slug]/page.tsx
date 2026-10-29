@@ -25,6 +25,7 @@ export async function generateMetadata({
 	return {
 		title: collection.name,
 		description: collection.description ?? undefined,
+		alternates: { canonical: `/collections/${collection.slug}` },
 		openGraph: {
 			title: collection.name,
 			description: collection.description ?? undefined,

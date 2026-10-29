@@ -8,6 +8,7 @@ import { getSizeOptions } from "@/app/lib/data/products";
 import {
 	BagPreview,
 	NewsletterCard,
+	OrderHistoryCard,
 	ProfileCard,
 	SavedPiecesPreview,
 	SecurityCard,
@@ -38,8 +39,13 @@ async function AccountContent({ searchParams }: PageProps) {
 		redirect("/login?next=/account");
 	}
 
-	const [profileResult, newsletterResult, sizeOptions, { password }] =
-		await Promise.all([
+	const [
+		profileResult,
+		newsletterResult,
+		sizeOptions,
+		ordersResult,
+		{ password },
+	] = await Promise.all([
 			supabase
 				.from("profiles")
 				.select("full_name, birthday, preferred_sizes")
@@ -50,12 +56,38 @@ async function AccountContent({ searchParams }: PageProps) {
 				console.error(error);
 				return [];
 			}),
+			// RLS limits this to the user's own orders
+			supabase
+				.from("orders")
+				.select("id, order_number, created_at, total_cents, order_items(quantity)")
+				.order("created_at", { ascending: false })
+				.limit(5)
+				.overrideTypes<
+					{
+						id: string;
+						order_number: string;
+						created_at: string;
+						total_cents: number;
+						order_items: { quantity: number }[];
+					}[],
+					{ merge: false }
+				>(),
 			searchParams,
 		]);
 
 	if (profileResult.error) {
 		console.error("Failed to load profile:", profileResult.error.message);
 	}
+	if (ordersResult.error) {
+		console.error("Failed to load orders:", ordersResult.error.message);
+	}
+	const orders = (ordersResult.data ?? []).map((order) => ({
+		id: order.id,
+		orderNumber: order.order_number,
+		createdAt: order.created_at,
+		totalCents: order.total_cents,
+		itemCount: order.order_items.reduce((sum, item) => sum + item.quantity, 0),
+	}));
 	if (newsletterResult.error) {
 		console.error(
 			"Failed to load newsletter preference:",
@@ -107,6 +139,7 @@ async function AccountContent({ searchParams }: PageProps) {
 				<div className="lg:col-span-7 space-y-6">
 					<SavedPiecesPreview />
 					<BagPreview />
+					<OrderHistoryCard orders={orders} />
 				</div>
 
 				{/* Same 5/7 split as the cards above, so the columns line up */}

@@ -16,12 +16,15 @@ There are no tests and no test runner.
 
 ## Environment
 
-`.env.local` must define `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. The app has a single Supabase client in `app/lib/supabase.ts`, which uses the anon key and is shared by server and client code.
+Variables are listed in `.env.example`: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL` (absolute URLs for sitemap/robots/social previews; falls back to the Vercel production domain, then localhost), and `REVALIDATE_SECRET` (guards `/api/revalidate`). Deployment steps are in `docs/DEPLOY.md`.
+
+Brand name, tagline and description live in `app/lib/site.ts` (`SITE_NAME` etc.); use them instead of hard-coding the brand. The localStorage keys (`brandlogo_*`) intentionally don't follow the brand, so renaming it doesn't empty guests' bags.
 
 ## Architecture
 
 **Data: Supabase catalog tables.** `categories`, `products` (with `category_id`, `metal`, `stone`, `materials_care`, generated `search` tsvector), `product_variants` (sizes, optional `stock` / `price_override`), `collections` + `product_collections` (curated, ordered groups such as `best-sellers`). Schema lives in `supabase/migrations/`; the user runs migrations by pasting them into the Supabase SQL Editor. RLS makes the catalog public read-only.
 - Types and the column lists (`PRODUCT_SUMMARY_COLUMNS`, `PRODUCT_DETAIL_COLUMNS`) live in `app/lib/products.ts`. Embedded joins use aliases (`category:categories!inner(...)`, `variants:product_variants(...)`); select explicit columns, never `*`, because the legacy text column `products.category` would collide with the `category` alias.
+- Catalog cache tags are cleared by `app/api/revalidate/route.ts`, which Supabase Database Webhooks call on catalog table changes (`supabase/templates/revalidate_webhooks.sql`). If you add a cached fetcher, give it an existing tag (`products`, `categories`, `collections`) or add the table to `TABLE_TAGS` there.
 - Server reads go through the cached, tagged fetchers in `app/lib/data/products.ts` (`"use cache"` + `cacheLife` + `cacheTag`). Add new server queries there. With `cacheComponents: true`, dynamic routes follow one pattern: `generateStaticParams` → a sync default export that wraps an async `*Content` component in `<Suspense fallback={...}>` → `*Content` awaits `params` and calls a fetcher.
 - Only `my-wishlist` queries Supabase from the browser (its IDs live in localStorage).
 - Category and collection pages render `components/ProductListing.tsx`. Filtering and sorting happen client-side in `FilterableProductGrid` over the prerendered list, with state in URL search params (`app/lib/listing.ts`).
@@ -40,6 +43,8 @@ There are no tests and no test runner.
 - Signed in (`useAuth()` from `context/AuthContext.tsx`): Supabase `cart_items` (variant + quantity, no price) and `wishlist_items`, owner-only RLS. Cart writes go through the `add_to_cart` / `set_cart_quantity` RPCs, which resolve product id + size to a variant. On sign-in, `merge_guest_items` moves localStorage items into the account and localStorage is cleared. Writes are optimistic and reload from the database on failure.
 - A cart line's identity is product `id` + `size`. Quantity is capped at `MAX_QUANTITY` (10), matching the DB check constraint. Prices shown for signed-in carts come from the catalog.
 - Check `isHydrated` before rendering cart/wishlist contents; it stays false until auth is known and, when signed in, the account items have loaded.
+
+**Checkout and orders (demo, no real payments).** This is a portfolio site: `/checkout` has a "Fill Demo Details" button and a Luhn-checked demo card form (`app/lib/demo-card.ts`). Card numbers never leave the browser; only brand + last 4 are sent. `placeOrder` (`app/lib/checkout-actions.ts`) calls the `place_order` RPC, which prices everything from the catalog, re-validates the promo code and stores an `orders` + `order_items` snapshot. Bag/checkout pricing rules live in `app/lib/pricing.ts` and are duplicated in `place_order`; change both together. Orders are read via RLS (owner) or `get_order(id, token)` (guest confirmation link `/orders/[id]?token=`). Gift/promo choices travel from the bag to checkout in sessionStorage (`app/lib/checkout-options.ts`).
 
 **Animation:** Framer Motion. `app/template.tsx` runs a light fade on route changes, keyed on pathname only so search-param changes (filters) don't remount the page. Import `luxurySpring`, `staggerContainer()` and `fadeSlide()` from `app/lib/motion.ts` rather than defining animation configs per component.
 

@@ -99,6 +99,27 @@ Decision: no orders yet; "Proceed to Checkout" links to the coming-soon page.
 - [x] "Proceed to Checkout" links to `/coming-soon?feature=checkout`
 - Later: orders + payments (server-side totals at order time), double opt-in for the newsletter, rate limiting on promo checks
 
+## Next: go-live readiness (code done 2026-10-30)
+
+- [x] `/api/revalidate` route (shared secret, constant-time check) clearing catalog cache tags; webhook SQL template in `supabase/templates/`
+- [x] `sitemap.xml` (home, categories, collections, products), `robots.txt` (disallows account/auth/bag/search/etc.)
+- [x] `metadataBase` from `NEXT_PUBLIC_SITE_URL`, Open Graph/Twitter defaults, generated default social image, canonical URLs, brand in product JSON-LD
+- [x] Brand name centralized in `app/lib/site.ts`; `.env.example`; `docs/DEPLOY.md`
+- [ ] Deploy to Vercel, set env vars, point Supabase auth URLs/templates at the domain, run the webhook template
+- [ ] Choose the real brand name (one line in `app/lib/site.ts`)
+- Later: load Playfair Display into the social image (it currently renders in a fallback sans-serif)
+
+## Demo checkout (done 2026-10-30)
+
+Decisions: portfolio site, so no real payment provider; guests and signed-in users can check out; orders are saved; same pricing rules as the bag.
+
+- [x] Run `supabase/migrations/20261030000006_orders.sql` (orders, order_items, `place_order`, `get_order`; tested locally)
+- [x] `/checkout`: contact, shipping, demo payment with "Fill Demo Details"; client-side Luhn/expiry/CVC checks; only brand + last 4 sent
+- [x] Server-priced `place_order` (catalog prices, promo re-check, courier/gift rules, line snapshots, signed-in bag lines cleared)
+- [x] `/orders/[id]` confirmation (owner, or guest with token), demo labelling
+- [x] Account Order History card (last 5)
+- [x] Shared pricing helper `app/lib/pricing.ts`; bag gift/promo choices carried to checkout via sessionStorage
+
 ## Open questions
 
 - Run migrations via Supabase dashboard SQL editor, or install the Supabase CLI?
