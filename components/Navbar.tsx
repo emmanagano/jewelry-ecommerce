@@ -82,9 +82,7 @@ export default function Navbar({ categories }: NavbarProps) {
 			name: c.name,
 			href: `/category/${c.slug}`,
 		})),
-		{ name: "Engraving", href: "/coming-soon?feature=engraving" },
 		{ name: "Gifts", href: "/collections/gifts" },
-		{ name: "Blog", href: "/coming-soon?feature=blog" },
 	];
 
 	return (
@@ -364,13 +362,6 @@ export default function Navbar({ categories }: NavbarProps) {
 									className="hover:text-(--text-headline) transition-colors"
 								>
 									{user ? "Client Account" : "Sign In"}
-								</Link>
-								<Link
-									href="/coming-soon?feature=concierge"
-									onClick={() => setIsOpen(false)}
-									className="hover:text-(--text-headline) transition-colors"
-								>
-									Concierge & Care
 								</Link>
 							</motion.div>
 						</motion.div>

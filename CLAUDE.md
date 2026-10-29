@@ -46,6 +46,8 @@ Brand name, tagline and description live in `app/lib/site.ts` (`SITE_NAME` etc.)
 
 **Checkout and orders (demo, no real payments).** This is a portfolio site: `/checkout` has a "Fill Demo Details" button and a Luhn-checked demo card form (`app/lib/demo-card.ts`). Card numbers never leave the browser; only brand + last 4 are sent. `placeOrder` (`app/lib/checkout-actions.ts`) calls the `place_order` RPC, which prices everything from the catalog, re-validates the promo code and stores an `orders` + `order_items` snapshot. Bag/checkout pricing rules live in `app/lib/pricing.ts` and are duplicated in `place_order`; change both together. Orders are read via RLS (owner) or `get_order(id, token)` (guest confirmation link `/orders/[id]?token=`). Gift/promo choices travel from the bag to checkout in sessionStorage (`app/lib/checkout-options.ts`).
 
+**Demo account.** `NEXT_PUBLIC_DEMO_EMAIL` / `NEXT_PUBLIC_DEMO_PASSWORD` (public by design) enable a "Fill Demo Login" button on the sign-in card (`app/lib/demo-account.ts`). The account is shared, so password changes are hidden/refused for it (`isDemoAccount`); keep that guard on any new account-security UI.
+
 **Animation:** Framer Motion. `app/template.tsx` runs a light fade on route changes, keyed on pathname only so search-param changes (filters) don't remount the page. Import `luxurySpring`, `staggerContainer()` and `fadeSlide()` from `app/lib/motion.ts` rather than defining animation configs per component.
 
 ## Styling

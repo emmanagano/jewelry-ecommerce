@@ -7,6 +7,7 @@ import { ArrowRight, Lock, Mail, Eye, EyeOff, User } from "lucide-react";
 import { AuthError } from "@supabase/supabase-js";
 import { createSupabaseBrowserClient } from "@/app/lib/supabase-browser";
 import { safeNextPath } from "@/app/lib/safe-redirect";
+import { DEMO_ACCOUNT } from "@/app/lib/demo-account";
 import { motion, AnimatePresence } from "framer-motion";
 import { luxurySpring } from "@/app/lib/motion";
 
@@ -52,6 +53,18 @@ export default function GlassAuthCard() {
 			setNeedsConfirmation(false);
 			setSuccessMessage("A new confirmation email is on its way.");
 		}
+	};
+
+	// Fills the shared demo login (and switches to sign-in) so visitors don't
+	// need to use a real email
+	const fillDemoLogin = () => {
+		if (!DEMO_ACCOUNT) return;
+		setIsSignUp(false);
+		setEmail(DEMO_ACCOUNT.email);
+		setPassword(DEMO_ACCOUNT.password);
+		setErrorMessage(null);
+		setSuccessMessage(null);
+		setNeedsConfirmation(false);
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -182,6 +195,28 @@ export default function GlassAuthCard() {
 						</motion.div>
 					)}
 				</AnimatePresence>
+
+				{/* Demo login for visitors exploring the site */}
+				{DEMO_ACCOUNT && (
+					<motion.div
+						layout
+						transition={luxurySpring}
+						className="mb-6 p-4 rounded-xs border border-(--border-color) bg-(--card-main)/40 text-center"
+					>
+						<p className="font-body text-[11px] leading-relaxed text-(--text-body) mb-3">
+							{isSignUp
+								? "Just exploring? Skip sign-up and use the shared demo account. No real email needed."
+								: "Just exploring? Use the shared demo account. No real email needed."}
+						</p>
+						<button
+							type="button"
+							onClick={fillDemoLogin}
+							className="py-2.5 px-5 rounded-xs border border-(--text-headline) font-secondary text-[9px] uppercase tracking-[0.2em] font-semibold text-(--text-headline) hover:bg-(--text-headline) hover:text-(--bg-base) transition-colors cursor-pointer"
+						>
+							Fill Demo Login
+						</button>
+					</motion.div>
+				)}
 
 				{/* Authentication Form - layout prop enables smooth shifting */}
 				<motion.form

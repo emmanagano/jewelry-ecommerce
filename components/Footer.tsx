@@ -7,11 +7,48 @@ import { motion, AnimatePresence } from "framer-motion";
 import { luxurySpring, staggerContainer, fadeSlide } from "@/app/lib/motion";
 import { subscribeToNewsletter } from "@/app/lib/store-actions";
 import { SITE_NAME } from "@/app/lib/site";
+import { useAuth } from "@/context/AuthContext";
+import type { Category } from "@/app/lib/products";
 
 const footerContainer = staggerContainer(0.12, 0.1);
 const footerColumn = fadeSlide(24, { duration: 1.1 });
 
-export default function Footer() {
+interface FooterProps {
+	categories: Pick<Category, "slug" | "name">[];
+}
+
+export default function Footer({ categories }: FooterProps) {
+	const { user } = useAuth();
+
+	const columns = [
+		{
+			title: "Shop",
+			links: [
+				{ name: "New & Featured", href: "/collections/new-and-featured" },
+				{ name: "Best Sellers", href: "/collections/best-sellers" },
+				{ name: "Gifts", href: "/collections/gifts" },
+				{ name: "Search", href: "/search" },
+			],
+		},
+		{
+			title: "Collections",
+			links: categories.map((c) => ({
+				name: c.name,
+				href: `/category/${c.slug}`,
+			})),
+		},
+		{
+			title: "Your Account",
+			links: [
+				user
+					? { name: "Account & Orders", href: "/account" }
+					: { name: "Sign In", href: "/login" },
+				{ name: "Saved Pieces", href: "/my-wishlist" },
+				{ name: "Shopping Bag", href: "/shopping-bag" },
+			],
+		},
+	].filter((column) => column.links.length > 0);
+
 	const [email, setEmail] = useState("");
 	const [subscribed, setSubscribed] = useState(false);
 	const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(
@@ -131,176 +168,43 @@ export default function Footer() {
 						)}
 					</motion.div>
 
-					{/* Navigation Links Container (Spans 7 columns) */}
+					{/* Navigation Links (Spans 7 columns); every link goes to a real page */}
 					<div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8 lg:gap-12">
-						{/* Column 1: Client Care */}
-						<motion.div
-							variants={footerColumn}
-							className="flex flex-col space-y-5"
-						>
-							<span className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
-								Client Care
-							</span>
-							<ul className="flex flex-col space-y-3.5 font-secondary text-[11px] tracking-wide text-(--text-muted) font-light">
-								<li>
-									<Link
-										href="/coming-soon?feature=concierge"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Concierge & Appointments
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/coming-soon?feature=ring-sizer"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Ring Size Guide
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/coming-soon?feature=shipping"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Insured Shipping & Delivery
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/coming-soon?feature=returns"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Returns & Lifetime Warranty
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/coming-soon?feature=care"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Jewelry Care & Cleaning
-									</Link>
-								</li>
-							</ul>
-						</motion.div>
-
-						{/* Column 2: The Maison */}
-						<motion.div
-							variants={footerColumn}
-							className="flex flex-col space-y-5"
-						>
-							<span className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
-								The Maison
-							</span>
-							<ul className="flex flex-col space-y-3.5 font-secondary text-[11px] tracking-wide text-(--text-muted) font-light">
-								<li>
-									<Link
-										href="/coming-soon?feature=about"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Our Philosophy
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/coming-soon?feature=sustainability"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Ethical Craft & Traceability
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/coming-soon?feature=materials"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Solid Gold & Lab Diamonds
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/coming-soon?feature=press"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Press & Editorial
-									</Link>
-								</li>
-							</ul>
-						</motion.div>
-
-						{/* Column 3: Boutiques & Services */}
-						<motion.div
-							variants={footerColumn}
-							className="flex flex-col space-y-5"
-						>
-							<span className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
-								Services
-							</span>
-							<ul className="flex flex-col space-y-3.5 font-secondary text-[11px] tracking-wide text-(--text-muted) font-light">
-								<li>
-									<Link
-										href="/coming-soon?feature=custom"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Bespoke Commissions
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/coming-soon?feature=engraving"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Custom Engraving
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/coming-soon?feature=stores"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Locate a Boutique
-									</Link>
-								</li>
-								<li>
-									<Link
-										href="/coming-soon?feature=corporate"
-										className="hover:text-(--text-headline) transition-colors"
-									>
-										Corporate Gifting
-									</Link>
-								</li>
-							</ul>
-						</motion.div>
+						{columns.map((column) => (
+							<motion.div
+								key={column.title}
+								variants={footerColumn}
+								className="flex flex-col space-y-5"
+							>
+								<span className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
+									{column.title}
+								</span>
+								<ul className="flex flex-col space-y-3.5 font-secondary text-[11px] tracking-wide text-(--text-muted) font-light">
+									{column.links.map((link) => (
+										<li key={link.href}>
+											<Link
+												href={link.href}
+												className="hover:text-(--text-headline) transition-colors"
+											>
+												{link.name}
+											</Link>
+										</li>
+									))}
+								</ul>
+							</motion.div>
+						))}
 					</div>
 				</div>
 
-				{/* Bottom Bar: Copyright, Region, Legal */}
+				{/* Bottom Bar: Copyright, Region */}
 				<motion.div
 					variants={footerColumn}
 					className="pt-8 flex flex-col md:flex-row items-center justify-between font-secondary text-[10px] uppercase tracking-widest text-(--text-muted) font-medium space-y-4 md:space-y-0"
 				>
-					<div>
-						<span>© 2026 {SITE_NAME} Inc. All rights reserved.</span>
-					</div>
-
-					{/* Region / Currency */}
+					<span>© 2026 {SITE_NAME}. All rights reserved.</span>
 					<div className="flex items-center space-x-6 md:space-x-8">
-						<span className="hover:text-(--text-headline) cursor-pointer transition-colors">
-							United States (USD $)
-						</span>
-						<Link
-							href="/coming-soon?feature=privacy"
-							className="hover:text-(--text-headline) transition-colors"
-						>
-							Privacy Policy
-						</Link>
-						<Link
-							href="/coming-soon?feature=terms"
-							className="hover:text-(--text-headline) transition-colors"
-						>
-							Terms of Use
-						</Link>
+						<span>Demo storefront · No real orders ship</span>
+						<span>United States (USD $)</span>
 					</div>
 				</motion.div>
 			</motion.div>

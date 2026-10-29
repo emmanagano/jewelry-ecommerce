@@ -8,6 +8,7 @@ import { ArrowRight, Heart, ShoppingBag } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useStore } from "@/context/StoreContext";
 import { useWishlistProducts } from "@/app/lib/use-wishlist-products";
+import { isDemoAccount } from "@/app/lib/demo-account";
 import { formatPrice } from "@/app/lib/format";
 import type { SizeOption } from "@/app/lib/data/products";
 import { ONE_SIZE } from "@/app/lib/products";
@@ -524,15 +525,25 @@ export function NewsletterCard({ initial }: { initial: boolean }) {
 
 export function SecurityCard() {
 	const router = useRouter();
-	const { signOut } = useAuth();
+	const { user, signOut } = useAuth();
 	const [signingOut, setSigningOut] = useState(false);
+	// The demo login is shared, so its password stays fixed
+	const isDemo = isDemoAccount(user?.email);
 
 	return (
 		<AccountCard title="Security" className="h-full">
+			{isDemo && (
+				<p className="mb-4 font-body text-[11px] leading-relaxed text-(--text-muted)">
+					You&rsquo;re using the shared demo account, so the password
+					can&rsquo;t be changed. Everything else works as usual.
+				</p>
+			)}
 			<div className="flex flex-wrap items-center justify-between gap-4">
-				<Link href="/reset-password" className={TEXT_LINK_CLASS}>
-					Change Password
-				</Link>
+				{!isDemo && (
+					<Link href="/reset-password" className={TEXT_LINK_CLASS}>
+						Change Password
+					</Link>
+				)}
 				<button
 					type="button"
 					disabled={signingOut}

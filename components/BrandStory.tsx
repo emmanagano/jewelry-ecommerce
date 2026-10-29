@@ -2,14 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import {
-	ArrowRight,
-	ShieldCheck,
-	Sparkles,
-	Truck,
-	RotateCcw,
-} from "lucide-react";
+import { ShieldCheck, Sparkles, Truck, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 import { luxurySpring } from "@/app/lib/motion";
 
@@ -131,20 +124,6 @@ export default function BrandStory() {
 								pieces with complete traceability from stone to
 								setting.
 							</p>
-						</div>
-
-						{/* Action */}
-						<div className="pt-2">
-							<Link
-								href="/coming-soon?feature=about-maison"
-								className="inline-flex items-center gap-2.5 font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold text-(--text-headline) pb-1 border-b border-(--text-headline) hover:opacity-60 transition-opacity group"
-							>
-								<span>Read The Maison Journal</span>
-								<ArrowRight
-									size={12}
-									className="transition-transform group-hover:translate-x-1 stroke-[1.5]"
-								/>
-							</Link>
 						</div>
 					</motion.div>
 				</div>

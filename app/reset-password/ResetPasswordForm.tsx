@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { isDemoAccount } from "@/app/lib/demo-account";
 import { createSupabaseBrowserClient } from "@/app/lib/supabase-browser";
 import {
 	AUTH_BUTTON_CLASS,
@@ -39,6 +40,22 @@ export default function ResetPasswordForm() {
 					className="font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold underline underline-offset-4 text-(--text-headline)"
 				>
 					Request a new link
+				</Link>
+			</div>
+		);
+	}
+
+	if (isDemoAccount(user.email)) {
+		return (
+			<div className="text-center">
+				<AuthMessage tone="error">
+					The shared demo account&rsquo;s password can&rsquo;t be changed.
+				</AuthMessage>
+				<Link
+					href="/account"
+					className="font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold underline underline-offset-4 text-(--text-headline)"
+				>
+					Back to your account
 				</Link>
 			</div>
 		);

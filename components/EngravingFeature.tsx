@@ -2,8 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { luxurySpring } from "@/app/lib/motion";
 
@@ -34,17 +32,6 @@ export default function EngravingFeature() {
 							Every stroke is hand-carved to transform fine
 							jewelry into an enduring heirloom.
 						</p>
-
-						<Link
-							href="/coming-soon?feature=engraving"
-							className="group inline-flex items-center gap-2.5 font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold text-(--text-headline) pb-1 border-b border-(--text-headline) hover:opacity-60 transition-opacity"
-						>
-							<span>Explore Engravable Pieces</span>
-							<ArrowRight
-								size={12}
-								className="transition-transform group-hover:translate-x-1 stroke-[1.5]"
-							/>
-						</Link>
 					</motion.div>
 
 					{/* Editorial Visual */}

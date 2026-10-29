@@ -8,6 +8,7 @@
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `NEXT_PUBLIC_SITE_URL`: your real domain, e.g. `https://example.com`. Optional on Vercel (it falls back to the production domain), but set it once you have a custom domain.
    - `REVALIDATE_SECRET`: a fresh value from `openssl rand -hex 32`. Use a different one from your local `.env.local`.
+   - `NEXT_PUBLIC_DEMO_EMAIL` / `NEXT_PUBLIC_DEMO_PASSWORD`: the shared demo login (see section 2). These are public by design.
 3. Deploy. After adding a custom domain (**Settings → Domains**), update `NEXT_PUBLIC_SITE_URL` and redeploy.
 
 ## 2. Supabase Auth (point it at the real domain)
@@ -23,6 +24,8 @@
   - Reset password: `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password`
 
 **Authentication → Sign In / Providers → Email:** Confirm email on; minimum password length 8.
+
+**Demo account** (for visitors who don't want to use a real email): **Authentication → Users → Add user → Create new user**, with an address you don't use (e.g. `demo@example.com`), a password, and **Auto Confirm User** checked. Put the same values in `NEXT_PUBLIC_DEMO_EMAIL` / `NEXT_PUBLIC_DEMO_PASSWORD`. The site hides "Change Password" for this account, but Supabase can't lock it, so if someone changes it anyway, delete the user and create it again with the same email and password.
 
 ## 3. Catalog cache webhooks
 

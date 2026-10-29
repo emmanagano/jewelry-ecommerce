@@ -51,6 +51,8 @@ export default async function RootLayout({
 		return [];
 	});
 
+	const navCategories = categories.map(({ slug, name }) => ({ slug, name }));
+
 	return (
 		<html
 			lang="en"
@@ -59,11 +61,9 @@ export default async function RootLayout({
 			<body className="font-sans min-h-full flex flex-col bg-(--bg-base) text-(--text-headline)">
 				<AuthProvider>
 					<StoreProvider>
-						<Navbar
-							categories={categories.map(({ slug, name }) => ({ slug, name }))}
-						/>
+						<Navbar categories={navCategories} />
 						<main className="grow">{children}</main>
-						<Footer />
+						<Footer categories={navCategories} />
 					</StoreProvider>
 				</AuthProvider>
 			</body>
