@@ -17,7 +17,7 @@ export default function Error({
 
 	return (
 		<section className="min-h-[60vh] max-w-xl mx-auto px-6 py-24 flex flex-col items-center justify-center text-center">
-			<span className="font-secondary text-[11px] tracking-[0.35em] uppercase font-medium mb-6 text-(--text-muted)">
+			<span className="eyebrow font-medium mb-6 text-(--text-muted)">
 				A Brief Pause
 			</span>
 			<h1 className="font-serif text-3xl sm:text-4xl tracking-tight leading-tight mb-5 text-balance text-(--text-headline)">
@@ -26,7 +26,7 @@ export default function Error({
 			<p className="text-sm leading-relaxed mb-10 font-light text-(--text-body)">
 				Please try again in a moment.
 			</p>
-			<div className="flex items-center gap-8 font-secondary text-[11px] tracking-[0.25em] uppercase">
+			<div className="flex items-center gap-8 eyebrow">
 				<button
 					type="button"
 					onClick={() => retry()}

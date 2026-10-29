@@ -30,7 +30,7 @@ async function SearchResults({ searchParams }: PageProps) {
 
 	return (
 		<>
-			<p className="mb-8 pb-4 border-b border-(--border-color) font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline)">
+			<p className="mb-8 pb-4 border-b border-(--border-color) text-label uppercase font-medium text-(--text-headline)">
 				{products.length} {products.length === 1 ? "Result" : "Results"}{" "}
 				for &ldquo;{query}&rdquo;
 			</p>
@@ -68,7 +68,7 @@ function SearchForm({ defaultValue = "" }: { defaultValue?: string }) {
 export default function SearchPage({ searchParams }: PageProps) {
 	return (
 		<div className="min-h-screen max-w-screen-2xl mx-auto px-4 sm:px-8 py-12 lg:py-16 bg-(--bg-base)">
-			<span className="font-secondary text-[10px] uppercase tracking-[0.25em] font-medium text-(--text-muted) block mb-3">
+			<span className="eyebrow text-(--text-muted) block mb-3">
 				The Archive
 			</span>
 			<h1 className="font-primary text-3xl sm:text-4xl tracking-tight text-(--text-headline) mb-8">

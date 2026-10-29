@@ -52,8 +52,12 @@ Brand name, tagline and description live in `app/lib/site.ts` (`SITE_NAME` etc.)
 
 ## Styling
 
-- Tailwind v4 is loaded through a Turbopack CSS loader rule in `next.config.ts`. There is no `tailwind.config` file. Theme tokens live in `@theme` in `app/globals.css`.
-- Colors come from CSS variables on `:root` (`--bg-base`, `--card-*`, `--accent-*`, `--text-*`, `--border-color`, plus status colors `--accent-love`, `--success`, `--error-*`). Reference them with Tailwind v4's variable shorthand, e.g. `bg-(--bg-base)` and `text-(--text-muted)`, not hex values. An alternate dark palette sits commented out in `globals.css`.
+- Tailwind v4 is loaded through a Turbopack CSS loader rule in `next.config.ts`. There is no `tailwind.config` file. Tokens live in `app/globals.css`.
+- **Warm editorial palette.** Colors are CSS variables on `:root`: `--bg-base` (ivory), `--surface` (paper, for raised cards), `--card-*` fills, `--text-headline` / `--text-body` / `--text-muted`, `--border-color` (hairline), `--accent` (wine), plus status colors `--accent-love`, `--success`, `--error-*`. Use the variable shorthand (`bg-(--bg-base)`, `text-(--text-muted)`), not hex values. `--accent-blue` is a legacy name for the wine accent; prefer `--accent`. A warm dark palette sits commented out in `globals.css`.
+- **Type scale.** Use the `@theme` tokens instead of pixel sizes: `eyebrow` (utility: 11px uppercase label), `text-label` (12px; buttons, nav, meta), `text-copy-sm` / `text-copy` (14/15px body), `text-heading` / `text-title` / `text-display` (28/40/56px Playfair). Don't name new tokens `--text-body`/`--text-muted`/`--text-headline`; those are colors, and `@theme` tokens are emitted as CSS variables too. The only pixel sizes left are the 10px count badges in the Navbar.
+- Buttons don't inherit `text-transform` (Tailwind preflight), so put `uppercase` on the button itself.
+- **Shared UI:** `components/ui/Button.tsx` (`primary`, `secondary`, `inverse`, `inverse-outline`, `link`; renders a `Link` with `href`), `SectionHeading`, `Section`; `components/EditorialSplit.tsx` for image + copy sections.
+- **Motion:** `components/MotionProvider.tsx` sets `MotionConfig reducedMotion="user"`. Keep entrance animations; don't add `whileHover`/`whileTap` springs to buttons or icons (use CSS color/opacity transitions).
 - Fonts: Playfair Display (`font-serif`, aliased `font-primary`) and Inter (`font-sans`, aliased `font-secondary` / `font-body`), loaded with `next/font` in `layout.tsx`.
 - Use `next/image` (usually `fill` + `sizes` inside a `relative` parent). Allowed hosts are listed in `images.remotePatterns` in `next.config.ts`.
 

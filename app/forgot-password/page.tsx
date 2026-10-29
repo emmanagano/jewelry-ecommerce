@@ -12,7 +12,7 @@ export default function ForgotPasswordPage() {
 	return (
 		<AuthPanel eyebrow="Client Account" title="Forgot your password?">
 			<ForgotPasswordForm />
-			<p className="mt-8 pt-6 border-t border-(--border-color)/60 text-center font-secondary text-[10px] uppercase tracking-[0.2em] text-(--text-muted)">
+			<p className="mt-8 pt-6 border-t border-(--border-color)/60 text-center eyebrow text-(--text-muted)">
 				Remembered it?{" "}
 				<Link
 					href="/login"

@@ -37,7 +37,7 @@ export default function ResetPasswordForm() {
 				</AuthMessage>
 				<Link
 					href="/forgot-password"
-					className="font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold underline underline-offset-4 text-(--text-headline)"
+					className="text-label uppercase font-medium underline underline-offset-4 text-(--text-headline)"
 				>
 					Request a new link
 				</Link>
@@ -53,7 +53,7 @@ export default function ResetPasswordForm() {
 				</AuthMessage>
 				<Link
 					href="/account"
-					className="font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold underline underline-offset-4 text-(--text-headline)"
+					className="text-label uppercase font-medium underline underline-offset-4 text-(--text-headline)"
 				>
 					Back to your account
 				</Link>

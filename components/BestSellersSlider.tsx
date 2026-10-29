@@ -3,6 +3,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import ProductCard from "./ProductCard";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Button from "@/components/ui/Button";
 import type { ProductSummary } from "@/app/lib/products";
 
 // Horizontal slider; products are fetched on the server by BestSellers
@@ -38,38 +40,38 @@ export default function BestSellersSlider({
 	};
 
 	return (
-		<section className="w-full px-4 sm:px-8 py-20 max-w-screen-2xl mx-auto">
-			{/* Section Header */}
-			<div className="flex items-end justify-between mb-10 pb-5 border-b border-(--border-color)">
-				<div>
-					<span className="text-[10px] uppercase tracking-[0.28em] font-medium text-(--text-muted) block mb-2">
-						Curated Essentials
-					</span>
-					<h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl tracking-tight text-(--text-headline)">
-						Most Coveted Pieces
-					</h2>
-				</div>
-
-				{/* Minimal Editorial Arrow Controls */}
-				<div className="flex items-center space-x-2">
-					<button
-						onClick={() => scroll("left")}
-						disabled={!canScrollLeft}
-						aria-label="Previous pieces"
-						className="w-10 h-10 rounded-full border border-(--border-color) flex items-center justify-center text-(--text-headline) disabled:opacity-20 disabled:cursor-not-allowed hover:border-(--text-headline) transition-all duration-300 active:scale-95 cursor-pointer"
-					>
-						<ArrowLeft className="w-4 h-4 stroke-[1.5]" />
-					</button>
-					<button
-						onClick={() => scroll("right")}
-						disabled={!canScrollRight}
-						aria-label="Next pieces"
-						className="w-10 h-10 rounded-full border border-(--border-color) flex items-center justify-center text-(--text-headline) disabled:opacity-20 disabled:cursor-not-allowed hover:border-(--text-headline) transition-all duration-300 active:scale-95 cursor-pointer"
-					>
-						<ArrowRight className="w-4 h-4 stroke-[1.5]" />
-					</button>
-				</div>
-			</div>
+		<section className="w-full px-4 sm:px-8 pt-20 lg:pt-28 max-w-screen-2xl mx-auto">
+			<SectionHeading
+				eyebrow="Curated Essentials"
+				title="Most Coveted Pieces"
+				action={
+					<div className="flex items-center gap-6">
+						<Button href="/collections/best-sellers" variant="link">
+							View All
+						</Button>
+						<div className="hidden sm:flex items-center gap-2">
+							<button
+								type="button"
+								onClick={() => scroll("left")}
+								disabled={!canScrollLeft}
+								aria-label="Previous pieces"
+								className="w-11 h-11 rounded-full border border-(--border-color) flex items-center justify-center text-(--text-headline) disabled:opacity-30 disabled:cursor-not-allowed hover:border-(--text-headline) transition-colors cursor-pointer"
+							>
+								<ArrowLeft className="w-4 h-4 stroke-[1.5]" />
+							</button>
+							<button
+								type="button"
+								onClick={() => scroll("right")}
+								disabled={!canScrollRight}
+								aria-label="Next pieces"
+								className="w-11 h-11 rounded-full border border-(--border-color) flex items-center justify-center text-(--text-headline) disabled:opacity-30 disabled:cursor-not-allowed hover:border-(--text-headline) transition-colors cursor-pointer"
+							>
+								<ArrowRight className="w-4 h-4 stroke-[1.5]" />
+							</button>
+						</div>
+					</div>
+				}
+			/>
 
 			{/* Horizontal Scrolling Track */}
 			<div

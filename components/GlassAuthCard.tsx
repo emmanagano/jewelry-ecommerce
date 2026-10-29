@@ -3,7 +3,7 @@
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, Lock, Mail, Eye, EyeOff, User } from "lucide-react";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { AuthError } from "@supabase/supabase-js";
 import { createSupabaseBrowserClient } from "@/app/lib/supabase-browser";
 import { safeNextPath } from "@/app/lib/safe-redirect";
@@ -21,7 +21,7 @@ function LinkErrorNotice() {
 	const searchParams = useSearchParams();
 	if (searchParams.get("error") !== "link-invalid") return null;
 	return (
-		<div className="mb-5 p-3 rounded-xs text-xs font-body text-(--error-text) bg-(--error-bg) border border-(--error-border) text-center">
+		<div role="alert" className="mb-5 p-3 rounded-xs text-copy-sm text-(--error-text) bg-(--error-bg) border border-(--error-border)">
 			That link has expired or was already used. Sign in, or request a new
 			link.
 		</div>
@@ -119,64 +119,71 @@ export default function GlassAuthCard() {
 		}
 	};
 
+	const fieldClass =
+		"mt-2 w-full bg-(--surface) border border-(--border-color) rounded-xs px-4 py-3.5 text-copy-sm text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline) transition-colors";
+	const labelClass = "block text-label uppercase text-(--text-headline)";
+
+	const switchMode = () => {
+		setIsSignUp(!isSignUp);
+		setErrorMessage(null);
+		setSuccessMessage(null);
+		setNeedsConfirmation(false);
+	};
+
 	return (
-		<div className="w-full max-w-105 mx-auto relative group">
-			{/* Specular Ambient Glow Rings Behind Card */}
-			<div className="absolute -inset-2 bg-linear-to-tr from-rose-200/30 via-slate-200/40 to-transparent rounded-4xl blur-2xl opacity-60 pointer-events-none" />
+		<motion.div
+			initial={{ opacity: 0, y: 12 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ ...luxurySpring, duration: 1 }}
+			className="w-full max-w-sm mx-auto"
+		>
+			{/* Heading */}
+			<span className="eyebrow block mb-4 text-(--text-muted)">Client Account</span>
+			<h1 className="font-serif text-heading sm:text-title tracking-tight text-(--text-headline)">
+				{isSignUp ? "Create your account" : "Welcome back"}
+			</h1>
+			<p className="mt-3 text-copy text-(--text-body)">
+				{isSignUp
+					? "Save pieces, keep your sizes and see your orders in one place."
+					: "Sign in to see your saved pieces, sizes and orders."}
+			</p>
 
-			{/* Frosted Crystalline Glass Surface Card - Fades & slides in */}
-			<motion.div
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ ...luxurySpring, duration: 1.2 }}
-				className="relative rounded-2xl bg-white/85 backdrop-blur-2xl border border-(--border-color) shadow-[0_20px_50px_rgba(30,6,10,0.06),inset_0_1px_2px_rgba(255,255,255,0.9)] p-8 sm:p-10"
-			>
-				{/* Top Minimalist Seal */}
-				<motion.div
-					whileHover={{ scale: 1.05, rotate: 2 }}
-					transition={luxurySpring}
-					className="w-12 h-12 mx-auto mb-6 rounded-xl bg-(--card-sub) border border-(--border-color) shadow-xs flex items-center justify-center text-(--text-headline) cursor-default"
-				>
-					<Lock size={17} className="stroke-[1.5]" />
-				</motion.div>
-
-				{/* Title and Subtitle */}
-				<motion.div layout className="text-center mb-8">
-					<motion.h1
-						layout="position"
-						className="font-primary text-2xl sm:text-3xl tracking-tight text-(--text-headline) font-normal mb-2"
+			{/* Demo login for visitors exploring the site */}
+			{DEMO_ACCOUNT && (
+				<p className="mt-6 pt-6 border-t border-(--border-color) text-copy-sm text-(--text-muted)">
+					Just exploring?{" "}
+					<button
+						type="button"
+						onClick={fillDemoLogin}
+						className="text-(--text-headline) border-b border-current hover:text-(--accent) transition-colors cursor-pointer"
 					>
-						{isSignUp ? "Join the Maison" : "Sign in to Archive"}
-					</motion.h1>
-					<motion.p
-						layout="position"
-						className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-muted) font-medium"
-					>
-						{isSignUp
-							? "Create your client curation vault"
-							: "Access your bespoke collection"}
-					</motion.p>
-				</motion.div>
+						Use the demo account
+					</button>
+					{isSignUp ? " instead. No real email needed." : ". No real email needed."}
+				</p>
+			)}
 
-				{/* Alert Notices */}
+			{/* Notices */}
+			<div className="mt-6">
 				<Suspense fallback={null}>
 					<LinkErrorNotice />
 				</Suspense>
 				<AnimatePresence mode="popLayout">
 					{errorMessage && (
 						<motion.div
-							initial={{ opacity: 0, y: -10, scale: 0.95 }}
-							animate={{ opacity: 1, y: 0, scale: 1 }}
-							exit={{ opacity: 0, scale: 0.95 }}
-							transition={luxurySpring}
-							className="mb-5 p-3 rounded-xs text-xs font-body text-(--error-text) bg-(--error-bg) border border-(--error-border) text-center"
+							key="error"
+							role="alert"
+							initial={{ opacity: 0, y: -6 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0 }}
+							className="mb-5 p-3 rounded-xs text-copy-sm text-(--error-text) bg-(--error-bg) border border-(--error-border)"
 						>
 							{errorMessage}
 							{needsConfirmation && (
 								<button
 									type="button"
 									onClick={resendConfirmation}
-									className="block mx-auto mt-2 underline underline-offset-4 font-semibold cursor-pointer"
+									className="block mt-2 underline underline-offset-4 font-medium cursor-pointer"
 								>
 									Resend confirmation email
 								</button>
@@ -185,210 +192,113 @@ export default function GlassAuthCard() {
 					)}
 					{successMessage && (
 						<motion.div
-							initial={{ opacity: 0, y: -10, scale: 0.95 }}
-							animate={{ opacity: 1, y: 0, scale: 1 }}
-							exit={{ opacity: 0, scale: 0.95 }}
-							transition={luxurySpring}
-							className="mb-5 p-3 rounded-xs text-xs font-body text-(--text-headline) bg-(--card-main)/60 border border-(--border-color) text-center"
+							key="success"
+							role="status"
+							initial={{ opacity: 0, y: -6 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0 }}
+							className="mb-5 p-3 rounded-xs text-copy-sm text-(--text-headline) bg-(--card-main)/60 border border-(--border-color)"
 						>
 							{successMessage}
 						</motion.div>
 					)}
 				</AnimatePresence>
+			</div>
 
-				{/* Demo login for visitors exploring the site */}
-				{DEMO_ACCOUNT && (
-					<motion.div
-						layout
-						transition={luxurySpring}
-						className="mb-6 p-4 rounded-xs border border-(--border-color) bg-(--card-main)/40 text-center"
-					>
-						<p className="font-body text-[11px] leading-relaxed text-(--text-body) mb-3">
-							{isSignUp
-								? "Just exploring? Skip sign-up and use the shared demo account. No real email needed."
-								: "Just exploring? Use the shared demo account. No real email needed."}
-						</p>
-						<button
-							type="button"
-							onClick={fillDemoLogin}
-							className="py-2.5 px-5 rounded-xs border border-(--text-headline) font-secondary text-[9px] uppercase tracking-[0.2em] font-semibold text-(--text-headline) hover:bg-(--text-headline) hover:text-(--bg-base) transition-colors cursor-pointer"
-						>
-							Fill Demo Login
-						</button>
-					</motion.div>
+			{/* Form */}
+			<form onSubmit={handleSubmit} className="space-y-5">
+				{isSignUp && (
+					<label className={labelClass}>
+						Full Name
+						<input
+							type="text"
+							required
+							value={fullName}
+							onChange={(e) => setFullName(e.target.value)}
+							autoComplete="name"
+							className={fieldClass}
+						/>
+					</label>
 				)}
 
-				{/* Authentication Form - layout prop enables smooth shifting */}
-				<motion.form
-					layout
-					transition={luxurySpring}
-					onSubmit={handleSubmit}
-					className="space-y-4"
-				>
-					<AnimatePresence>
-						{isSignUp && (
-							<motion.div
-								initial={{
-									opacity: 0,
-									height: 0,
-									overflow: "hidden",
-								}}
-								animate={{
-									opacity: 1,
-									height: "auto",
-									overflow: "visible",
-								}}
-								exit={{
-									opacity: 0,
-									height: 0,
-									overflow: "hidden",
-								}}
-								transition={luxurySpring}
+				<label className={labelClass}>
+					Email
+					<input
+						type="email"
+						required
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						autoComplete="email"
+						className={fieldClass}
+					/>
+				</label>
+
+				<div>
+					<div className="flex items-baseline justify-between">
+						<label htmlFor="auth-password" className={labelClass}>
+							Password
+						</label>
+						{!isSignUp && (
+							<Link
+								href="/forgot-password"
+								className="text-copy-sm text-(--text-muted) hover:text-(--text-headline) transition-colors"
 							>
-								<div className="relative flex items-center pt-1">
-									<User
-										size={14}
-										className="absolute left-4 text-(--text-muted) stroke-[1.5]"
-									/>
-									<input
-										type="text"
-										required
-										value={fullName}
-										onChange={(e) =>
-											setFullName(e.target.value)
-										}
-										placeholder="Full Name"
-										className="w-full bg-(--card-sub)/50 border border-(--border-color) rounded-xs py-3.5 pl-11 pr-4 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 focus:bg-white transition-all"
-									/>
-								</div>
-							</motion.div>
+								Forgot password?
+							</Link>
 						)}
-					</AnimatePresence>
-
-					<motion.div
-						layout
-						transition={luxurySpring}
-						className="relative flex items-center"
-					>
-						<Mail
-							size={14}
-							className="absolute left-4 text-(--text-muted) stroke-[1.5]"
-						/>
+					</div>
+					<div className="relative">
 						<input
-							type="email"
-							required
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							placeholder="Client Email"
-							autoComplete="email"
-							className="w-full bg-(--card-sub)/50 border border-(--border-color) rounded-xs py-3.5 pl-11 pr-4 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 focus:bg-white transition-all"
-						/>
-					</motion.div>
-
-					<motion.div
-						layout
-						transition={luxurySpring}
-						className="relative flex items-center"
-					>
-						<Lock
-							size={14}
-							className="absolute left-4 text-(--text-muted) stroke-[1.5]"
-						/>
-						<input
+							id="auth-password"
 							type={showPassword ? "text" : "password"}
 							required
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
-							placeholder={isSignUp ? "Password (8+ characters)" : "Password"}
+							placeholder={isSignUp ? "At least 8 characters" : undefined}
 							minLength={isSignUp ? 8 : undefined}
 							autoComplete={isSignUp ? "new-password" : "current-password"}
-							className="w-full bg-(--card-sub)/50 border border-(--border-color) rounded-xs py-3.5 pl-11 pr-11 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 focus:bg-white transition-all tracking-wider"
+							className={`${fieldClass} pr-12`}
 						/>
 						<button
 							type="button"
 							onClick={() => setShowPassword(!showPassword)}
 							aria-label={showPassword ? "Hide password" : "Show password"}
-							className="absolute right-3.5 p-1 text-(--text-muted) hover:text-(--text-headline) transition-colors cursor-pointer"
+							className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 text-(--text-muted) hover:text-(--text-headline) transition-colors cursor-pointer"
 						>
-							{showPassword ? (
-								<EyeOff size={14} />
-							) : (
-								<Eye size={14} />
-							)}
+							{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
 						</button>
-					</motion.div>
+					</div>
+				</div>
 
-					{!isSignUp && (
-						<motion.div
-							layout
-							transition={luxurySpring}
-							className="flex justify-end pr-1 pt-0.5"
-						>
-							<Link
-								href="/forgot-password"
-								className="font-secondary text-[9px] uppercase tracking-[0.2em] text-(--text-muted) hover:text-(--text-headline) transition-colors font-medium"
-							>
-								Forgot password?
-							</Link>
-						</motion.div>
-					)}
-
-					{/* Framer Motion Action Button */}
-					<motion.button
-						layout
-						whileHover={{ scale: 1.01 }}
-						whileTap={{ scale: 0.98 }}
-						transition={luxurySpring}
-						type="submit"
-						disabled={loading}
-						className="w-full mt-3 py-4 px-6 rounded-xs bg-(--text-headline) text-(--bg-base) font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold shadow-xs hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
-					>
-						<span>
-							{loading
-								? "Authenticating..."
-								: isSignUp
-									? "Request Access"
-									: "Enter Salon"}
-						</span>
-						{!loading && (
-							<ArrowRight size={13} className="stroke-[1.5]" />
-						)}
-					</motion.button>
-				</motion.form>
-
-				{/* Toggle Switch */}
-				<motion.div
-					layout
-					transition={luxurySpring}
-					className="mt-8 pt-6 border-t border-(--border-color)/60 text-center"
+				<button
+					type="submit"
+					disabled={loading}
+					className="w-full mt-2 py-4 px-6 rounded-xs bg-(--text-headline) text-(--bg-base) text-label uppercase hover:bg-(--accent) transition-colors flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
 				>
-					<button
-						type="button"
-						onClick={() => {
-							setIsSignUp(!isSignUp);
-							setErrorMessage(null);
-							setSuccessMessage(null);
-						}}
-						className="font-secondary text-[10px] uppercase tracking-[0.2em] text-(--text-muted) hover:text-(--text-headline) transition-colors cursor-pointer"
-					>
-						{isSignUp ? (
-							<span>
-								Existing client?{" "}
-								<strong className="underline underline-offset-4 font-semibold text-(--text-headline)">
-									Sign In
-								</strong>
-							</span>
-						) : (
-							<span>
-								New to the Maison?{" "}
-								<strong className="underline underline-offset-4 font-semibold text-(--text-headline)">
-									Create Account
-								</strong>
-							</span>
-						)}
-					</button>
-				</motion.div>
-			</motion.div>
-		</div>
+					<span>
+						{loading
+							? isSignUp
+								? "Creating account..."
+								: "Signing in..."
+							: isSignUp
+								? "Create Account"
+								: "Sign In"}
+					</span>
+					{!loading && <ArrowRight size={14} className="stroke-[1.5]" />}
+				</button>
+			</form>
+
+			{/* Mode switch */}
+			<p className="mt-8 text-copy-sm text-(--text-muted)">
+				{isSignUp ? "Already have an account? " : "New here? "}
+				<button
+					type="button"
+					onClick={switchMode}
+					className="text-(--text-headline) border-b border-current hover:text-(--accent) transition-colors cursor-pointer"
+				>
+					{isSignUp ? "Sign in" : "Create an account"}
+				</button>
+			</p>
+		</motion.div>
 	);
 }

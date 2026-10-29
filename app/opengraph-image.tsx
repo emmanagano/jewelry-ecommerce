@@ -18,8 +18,8 @@ export default function OpengraphImage() {
 					flexDirection: "column",
 					alignItems: "center",
 					justifyContent: "center",
-					background: "#f4f6f8",
-					color: "#1e060a",
+					background: "#f7f3ee",
+					color: "#1f1a17",
 					fontFamily: "serif",
 				}}
 			>
@@ -37,7 +37,7 @@ export default function OpengraphImage() {
 						marginTop: 28,
 						width: 96,
 						height: 1,
-						background: "#1e060a",
+						background: "#5a1a24",
 						opacity: 0.4,
 					}}
 				/>
@@ -47,7 +47,7 @@ export default function OpengraphImage() {
 						fontSize: 28,
 						letterSpacing: "0.3em",
 						textTransform: "uppercase",
-						color: "#4a2027",
+						color: "#6e625a",
 					}}
 				>
 					{SITE_TAGLINE}

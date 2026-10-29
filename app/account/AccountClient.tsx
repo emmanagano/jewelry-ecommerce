@@ -23,11 +23,11 @@ import {
 import { AUTH_INPUT_CLASS, AuthMessage } from "@/components/AuthPanel";
 
 const LABEL_CLASS =
-	"block font-secondary text-[9px] uppercase tracking-[0.22em] font-medium text-(--text-muted)";
+	"block eyebrow text-(--text-muted)";
 const TEXT_LINK_CLASS =
-	"font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-muted) hover:text-(--text-headline) transition-colors cursor-pointer underline underline-offset-4 disabled:opacity-50";
+	"text-label uppercase font-medium text-(--text-muted) hover:text-(--text-headline) transition-colors cursor-pointer underline underline-offset-4 disabled:opacity-50";
 const PRIMARY_BUTTON_CLASS =
-	"py-3 px-6 rounded-xs bg-(--text-headline) text-(--bg-base) font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer";
+	"py-3 px-6 rounded-xs bg-(--text-headline) text-(--bg-base) text-label uppercase font-medium hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer";
 
 // ---------------------------------------------------------------------------
 // Shared pieces
@@ -45,9 +45,9 @@ export function AccountCard({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className={`${className} rounded-2xl bg-white/85 border border-(--border-color) shadow-[0_20px_50px_rgba(30,6,10,0.04)] p-6 sm:p-8`}>
+		<section className={`${className} rounded-2xl bg-(--surface) border border-(--border-color) shadow-[0_20px_50px_rgba(30,6,10,0.04)] p-6 sm:p-8`}>
 			<div className="flex items-center justify-between gap-4 mb-6">
-				<h2 className="font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold text-(--text-headline)">
+				<h2 className="text-label uppercase font-medium text-(--text-headline)">
 					{title}
 				</h2>
 				{action}
@@ -272,7 +272,7 @@ export function SizesCard({
 							/>
 						))}
 					</dl>
-					<p className="mt-6 font-body text-[11px] leading-relaxed text-(--text-muted)">
+					<p className="mt-6 text-copy-sm text-(--text-muted)">
 						Saved sizes are selected for you on product pages.
 					</p>
 				</>
@@ -289,7 +289,7 @@ function ViewAllLink({ href, label }: { href: string; label: string }) {
 	return (
 		<Link
 			href={href}
-			className="group inline-flex items-center gap-1.5 font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline) hover:opacity-70 transition-opacity"
+			className="group inline-flex items-center gap-1.5 text-label uppercase font-medium text-(--text-headline) hover:opacity-70 transition-opacity"
 		>
 			<span>{label}</span>
 			<ArrowRight
@@ -374,7 +374,7 @@ export function SavedPiecesPreview() {
 								<p className="mt-2 font-primary text-xs text-(--text-headline) truncate group-hover:opacity-70 transition-opacity">
 									{product.name}
 								</p>
-								<p className="font-secondary text-[10px] text-(--text-muted)">
+								<p className="font-secondary text-xs text-(--text-muted)">
 									{formatPrice(product.price)}
 								</p>
 							</Link>
@@ -433,7 +433,7 @@ export function BagPreview() {
 									<p className="font-primary text-sm text-(--text-headline) truncate">
 										{item.name}
 									</p>
-									<p className="font-secondary text-[10px] uppercase tracking-wider text-(--text-muted)">
+									<p className="font-secondary eyebrow text-(--text-muted)">
 										{item.size === ONE_SIZE ? "One Size" : `Size ${item.size}`} · Qty{" "}
 										{item.quantity}
 									</p>
@@ -445,7 +445,7 @@ export function BagPreview() {
 						))}
 					</ul>
 					{cart.length > preview.length && (
-						<p className="mt-2 font-body text-[11px] text-(--text-muted)">
+						<p className="mt-2 text-copy-sm text-(--text-muted)">
 							+ {cart.length - preview.length} more{" "}
 							{cart.length - preview.length === 1 ? "piece" : "pieces"}
 						</p>
@@ -494,7 +494,7 @@ export function NewsletterCard({ initial }: { initial: boolean }) {
 					<p className="font-body text-sm text-(--text-headline)">
 						The Atelier Letter
 					</p>
-					<p className="mt-1 font-body text-[11px] leading-relaxed text-(--text-muted)">
+					<p className="mt-1 text-copy-sm text-(--text-muted)">
 						New collections, private previews and care notes. No more
 						than twice a month.
 					</p>
@@ -533,7 +533,7 @@ export function SecurityCard() {
 	return (
 		<AccountCard title="Security" className="h-full">
 			{isDemo && (
-				<p className="mb-4 font-body text-[11px] leading-relaxed text-(--text-muted)">
+				<p className="mb-4 text-copy-sm text-(--text-muted)">
 					You&rsquo;re using the shared demo account, so the password
 					can&rsquo;t be changed. Everything else works as usual.
 				</p>
@@ -593,10 +593,10 @@ export function OrderHistoryCard({ orders }: { orders: OrderSummary[] }) {
 								className="group py-3.5 first:pt-0 flex items-center justify-between gap-4"
 							>
 								<div>
-									<p className="font-secondary text-[11px] uppercase tracking-[0.15em] font-semibold text-(--text-headline) group-hover:opacity-70 transition-opacity">
+									<p className="font-secondary text-label uppercase font-medium text-(--text-headline) group-hover:opacity-70 transition-opacity">
 										{order.orderNumber}
 									</p>
-									<p className="font-body text-[11px] text-(--text-muted)">
+									<p className="text-copy-sm text-(--text-muted)">
 										{new Date(order.createdAt).toLocaleDateString("en-US", {
 											month: "short",
 											day: "numeric",

@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductBySlug, getProductSlugs } from "@/app/lib/data/products";
 import ProductInteractive from "@/components/ProductInteractive";
+import ProductGallery from "@/components/ProductGallery";
 import { SITE_NAME, getSiteUrl } from "@/app/lib/site";
 
 interface PageProps {
@@ -107,54 +107,39 @@ async function ProductContent({ params }: PageProps) {
 			{/* Breadcrumbs */}
 			<nav
 				aria-label="Breadcrumb"
-				className="font-secondary text-[10px] uppercase tracking-[0.2em] font-medium flex items-center space-x-2 mb-8 text-(--text-muted)">
+				className="eyebrow flex items-center gap-2 mb-8 text-(--text-muted)"
+			>
 				<Link
 					href="/"
 					className="hover:text-(--text-headline) transition-colors"
 				>
 					Home
 				</Link>
-				<span className="opacity-50">/</span>
+				<span aria-hidden>/</span>
 				<Link
 					href={`/category/${category.slug}`}
 					className="hover:text-(--text-headline) transition-colors"
 				>
 					{category.name}
 				</Link>
-				<span className="opacity-50">/</span>
+				<span aria-hidden>/</span>
 				<span className="truncate max-w-xs text-(--text-headline)">
 					{product.name}
 				</span>
 			</nav>
 
 			{/* Main Two-Column Layout */}
-			<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-				{/* Left: 3-Image Editorial Stack */}
-				<div className="lg:col-span-7 flex flex-col gap-6 sm:gap-8">
-					{galleryImages.map(({ src, detail }, idx) => (
-						<div
-							key={`${src}-${idx}`}
-							className="relative w-full aspect-4/5 overflow-hidden bg-(--card-sub) border border-(--border-color) rounded-xs group"
-						>
-							<Image
-								src={src}
-								fill
-								sizes="(min-width: 1024px) 58vw, 100vw"
-								loading={idx === 0 ? "eager" : "lazy"}
-								fetchPriority={idx === 0 ? "high" : "auto"}
-								alt={
-									detail
-										? `${product.name} - Detail`
-										: `${product.name} - View ${idx + 1}`
-								}
-								className={`object-cover transition-transform duration-700 ease-out ${
-									detail
-										? "scale-125 hover:scale-150 origin-center"
-										: "hover:scale-105"
-								}`}
-							/>
-						</div>
-					))}
+			<div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+				<div className="lg:col-span-7">
+					<ProductGallery
+						images={galleryImages.map(({ src, detail }, idx) => ({
+							src,
+							detail,
+							alt: detail
+								? `${product.name}, detail`
+								: `${product.name}, view ${idx + 1}`,
+						}))}
+					/>
 				</div>
 
 				{/* Right: Sticky Details and Actions */}

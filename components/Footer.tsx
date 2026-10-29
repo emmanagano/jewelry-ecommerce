@@ -114,13 +114,11 @@ export default function Footer({ categories }: FooterProps) {
 								className="w-full bg-transparent border border-(--border-color) py-2.5 pl-4 pr-32 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 transition-colors rounded-xs"
 							/>
 							<motion.button
-								whileHover={{ scale: 1.02 }}
-								whileTap={{ scale: 0.96 }}
 								transition={luxurySpring}
 								type="submit"
 								disabled={isSubmitting}
 								aria-label="Join private client list"
-								className="absolute right-1 top-1 bottom-1 px-4 bg-(--bg-base) hover:bg-(--text-headline) hover:text-(--bg-base) text-(--text-headline) font-secondary text-[9px] uppercase tracking-[0.2em] font-medium transition-colors border border-(--border-color) cursor-pointer flex items-center gap-1.5 rounded-xs"
+								className="absolute right-1 top-1 bottom-1 px-4 bg-(--bg-base) hover:bg-(--text-headline) hover:text-(--bg-base) text-(--text-headline) eyebrow transition-colors border border-(--border-color) cursor-pointer flex items-center gap-1.5 rounded-xs"
 							>
 								<AnimatePresence mode="wait">
 									{subscribed ? (
@@ -159,7 +157,7 @@ export default function Footer({ categories }: FooterProps) {
 							<p
 								id="newsletter-message"
 								role={message.ok ? "status" : "alert"}
-								className={`-mt-3 font-body text-[11px] ${
+								className={`-mt-3 text-copy-sm ${
 									message.ok ? "text-(--text-muted)" : "text-(--error-text)"
 								}`}
 							>
@@ -176,10 +174,10 @@ export default function Footer({ categories }: FooterProps) {
 								variants={footerColumn}
 								className="flex flex-col space-y-5"
 							>
-								<span className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-headline) font-medium">
+								<span className="eyebrow text-(--text-headline) font-medium">
 									{column.title}
 								</span>
-								<ul className="flex flex-col space-y-3.5 font-secondary text-[11px] tracking-wide text-(--text-muted) font-light">
+								<ul className="flex flex-col space-y-3.5 text-copy-sm text-(--text-muted)">
 									{column.links.map((link) => (
 										<li key={link.href}>
 											<Link
@@ -199,7 +197,7 @@ export default function Footer({ categories }: FooterProps) {
 				{/* Bottom Bar: Copyright, Region */}
 				<motion.div
 					variants={footerColumn}
-					className="pt-8 flex flex-col md:flex-row items-center justify-between font-secondary text-[10px] uppercase tracking-widest text-(--text-muted) font-medium space-y-4 md:space-y-0"
+					className="pt-8 flex flex-col md:flex-row items-center justify-between eyebrow text-(--text-muted) space-y-4 md:space-y-0"
 				>
 					<span>© 2026 {SITE_NAME}. All rights reserved.</span>
 					<div className="flex items-center space-x-6 md:space-x-8">

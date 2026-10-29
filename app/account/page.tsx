@@ -107,13 +107,13 @@ async function AccountContent({ searchParams }: PageProps) {
 		<>
 			{/* Welcome header */}
 			<header className="mb-10 pb-6 border-b border-(--border-color)/60">
-				<span className="font-secondary text-[10px] uppercase tracking-[0.25em] font-medium text-(--text-muted) block mb-3">
+				<span className="eyebrow text-(--text-muted) block mb-3">
 					Client Account
 				</span>
 				<h1 className="font-primary text-3xl sm:text-4xl tracking-tight text-(--text-headline)">
 					{firstName ? `Welcome back, ${firstName}` : "Welcome back"}
 				</h1>
-				<p className="mt-2 font-secondary text-[10px] uppercase tracking-[0.2em] text-(--text-muted)">
+				<p className="mt-2 eyebrow text-(--text-muted)">
 					Client since {clientSince}
 				</p>
 			</header>

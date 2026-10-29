@@ -57,7 +57,7 @@ interface OrderDetail {
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const LABEL_CLASS =
-	"font-secondary text-[9px] uppercase tracking-[0.22em] font-medium text-(--text-muted)";
+	"eyebrow text-(--text-muted)";
 const SECTION_CLASS =
 	"border border-(--border-color) bg-(--card-sub)/20 p-6 sm:p-8 rounded-xs";
 
@@ -93,7 +93,7 @@ async function OrderContent({ params, searchParams }: PageProps) {
 				{placed === "1" && (
 					<div className="flex items-center gap-2 mb-4 text-(--success)">
 						<CheckCircle2 size={16} className="stroke-[1.5]" />
-						<span className="font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold">
+						<span className="text-label uppercase font-medium">
 							Order placed
 						</span>
 					</div>
@@ -108,7 +108,7 @@ async function OrderContent({ params, searchParams }: PageProps) {
 					· {placedOn} · Confirmation for {order.email}
 				</p>
 				{order.is_demo && (
-					<p className="mt-4 inline-block px-3 py-1.5 rounded-xs border border-(--border-color) bg-(--card-main)/40 font-body text-[11px] text-(--text-body)">
+					<p className="mt-4 inline-block px-3 py-1.5 rounded-xs border border-(--border-color) bg-(--card-main)/40 text-copy-sm text-(--text-body)">
 						This is a demo order. No payment was taken and nothing will ship.
 					</p>
 				)}
@@ -132,7 +132,7 @@ async function OrderContent({ params, searchParams }: PageProps) {
 									<p className="font-primary text-sm sm:text-base text-(--text-headline) truncate">
 										{item.product_name}
 									</p>
-									<p className="font-secondary text-[10px] uppercase tracking-wider text-(--text-muted)">
+									<p className="font-secondary eyebrow text-(--text-muted)">
 										{item.size === ONE_SIZE ? "One Size" : `Size ${item.size}`} · Qty {item.quantity} ·{" "}
 										{formatPrice(item.unit_price_cents)} each
 									</p>
@@ -148,7 +148,7 @@ async function OrderContent({ params, searchParams }: PageProps) {
 				<div className="lg:col-span-5 space-y-6">
 					<section className={SECTION_CLASS}>
 						<h2 className={`${LABEL_CLASS} mb-5`}>Summary</h2>
-						<dl className="space-y-3 font-secondary text-[11px] uppercase tracking-widest font-medium pb-5 border-b border-(--border-color)/60 text-(--text-muted)">
+						<dl className="space-y-3 text-label uppercase pb-5 border-b border-(--border-color)/60 text-(--text-muted)">
 							<Row label="Subtotal" value={formatPrice(order.subtotal_cents)} />
 							{order.gift_cents > 0 && <Row label="Gift Presentation" value={formatPrice(order.gift_cents)} />}
 							{order.discount_cents > 0 && (
@@ -161,7 +161,7 @@ async function OrderContent({ params, searchParams }: PageProps) {
 							<Row label="Taxes & Duties" value="Included" />
 						</dl>
 						<div className="flex justify-between items-baseline pt-5">
-							<span className="font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold text-(--text-headline)">
+							<span className="text-label uppercase font-medium text-(--text-headline)">
 								Total
 							</span>
 							<span className="font-primary text-2xl text-(--text-headline)">
@@ -201,13 +201,13 @@ async function OrderContent({ params, searchParams }: PageProps) {
 					<div className="flex flex-wrap items-center gap-6">
 						<Link
 							href="/"
-							className="py-3.5 px-8 font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs"
+							className="py-3.5 px-8 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs"
 						>
 							Continue Shopping
 						</Link>
 						<Link
 							href="/account"
-							className="font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-muted) hover:text-(--text-headline) underline underline-offset-4 transition-colors"
+							className="text-label uppercase font-medium text-(--text-muted) hover:text-(--text-headline) underline underline-offset-4 transition-colors"
 						>
 							Your Account
 						</Link>

@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { AuthProvider } from "../context/AuthContext";
 import { StoreProvider } from "../context/StoreContext";
+import MotionProvider from "../components/MotionProvider";
 import { getCategories } from "./lib/data/products";
 import {
 	SITE_DESCRIPTION,
@@ -59,13 +60,15 @@ export default async function RootLayout({
 			className={`${serifFont.variable} ${sansFont.variable} h-full antialiased`}
 		>
 			<body className="font-sans min-h-full flex flex-col bg-(--bg-base) text-(--text-headline)">
-				<AuthProvider>
-					<StoreProvider>
-						<Navbar categories={navCategories} />
-						<main className="grow">{children}</main>
-						<Footer categories={navCategories} />
-					</StoreProvider>
-				</AuthProvider>
+				<MotionProvider>
+					<AuthProvider>
+						<StoreProvider>
+							<Navbar categories={navCategories} />
+							<main className="grow">{children}</main>
+							<Footer categories={navCategories} />
+						</StoreProvider>
+					</AuthProvider>
+				</MotionProvider>
 			</body>
 		</html>
 	);

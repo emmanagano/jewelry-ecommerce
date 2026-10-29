@@ -23,7 +23,7 @@ async function ComingSoonContent({ searchParams }: ComingSoonProps) {
 	return (
 		<section className="max-w-4xl w-full mx-auto py-24 px-6 flex flex-col items-center text-center">
 			{/* Editorial Sub-tag */}
-			<span className="text-[11px] tracking-[0.35em] uppercase font-medium mb-6 text-(--text-muted)">
+			<span className="eyebrow font-medium mb-6 text-(--text-muted)">
 				In Development
 			</span>
 
@@ -57,7 +57,7 @@ async function ComingSoonContent({ searchParams }: ComingSoonProps) {
 			{/* Return home link */}
 			<Link
 				href="/"
-				className="text-[11px] tracking-[0.25em] uppercase transition-opacity duration-200 hover:opacity-70 text-(--accent-blue)"
+				className="eyebrow transition-opacity duration-200 hover:opacity-70 text-(--accent-blue)"
 			>
 				← Back to Storefront
 			</Link>

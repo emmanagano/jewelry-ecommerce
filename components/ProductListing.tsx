@@ -42,14 +42,14 @@ export default function ProductListing({
 
 				{/* Centered Typography */}
 				<div className="relative z-10 text-center text-white px-6 max-w-2xl flex flex-col items-center">
-					<span className="text-[10px] uppercase tracking-[0.3em] font-medium mb-4 text-white/80">
+					<span className="eyebrow mb-4 text-white/80">
 						{eyebrow}
 					</span>
 					<h1 className="font-serif text-4xl md:text-5xl lg:text-6xl tracking-wide mb-6 drop-shadow-sm">
 						{title}
 					</h1>
 					{description && (
-						<p className="text-xs sm:text-sm font-light leading-relaxed text-white/90 max-w-md">
+						<p className="text-copy text-white/90 max-w-md">
 							{description}
 						</p>
 					)}
@@ -61,7 +61,7 @@ export default function ProductListing({
 				{/* Breadcrumbs */}
 				<nav
 					aria-label="Breadcrumb"
-					className="text-[10px] uppercase tracking-[0.2em] font-medium flex items-center space-x-2 mb-10 text-(--text-muted)"
+					className="eyebrow flex items-center space-x-2 mb-10 text-(--text-muted)"
 				>
 					<Link
 						href="/"
@@ -80,7 +80,7 @@ export default function ProductListing({
 						<>
 							{/* Same footprint as the live ribbon, so nothing shifts */}
 							<div className="mb-8 border-b border-(--border-color)">
-								<div className="pb-4 flex items-center justify-between font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline)">
+								<div className="pb-4 flex items-center justify-between text-label uppercase font-medium text-(--text-headline)">
 									<span>Filter +</span>
 									<span>
 										{products.length}{" "}

@@ -14,19 +14,14 @@ export default async function ClientLoginPage() {
 		return null;
 	});
 	return (
-		<div className="w-full min-h-[calc(100vh-140px)] flex flex-col justify-center items-center py-10 px-4 sm:px-8 bg-(--bg-base)">
-			<div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 min-h-155 lg:h-[72vh] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(30,6,10,0.05)] border border-(--border-color)">
-				{/* LEFT: Restrained 6-column editorial column */}
-				<div className="hidden lg:block lg:col-span-6 h-full relative overflow-hidden">
-					<EditorialShowcase
-						products={featured?.products.slice(0, 6) ?? []}
-					/>
-				</div>
-
-				{/* RIGHT: Perfectly centered auth salon desk (6 cols) */}
-				<div className="col-span-1 lg:col-span-6 flex items-center justify-center p-8 sm:p-12 lg:p-14 bg-white/40 backdrop-blur-sm">
-					<GlassAuthCard />
-				</div>
+		// Full-bleed split: photo left (desktop only), form on the canvas right.
+		// No fixed height, so the form can never be clipped.
+		<div className="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-129px)] bg-(--bg-base)">
+			<div className="hidden lg:block relative min-h-160">
+				<EditorialShowcase products={featured?.products.slice(0, 6) ?? []} />
+			</div>
+			<div className="flex items-start lg:items-center justify-center px-4 sm:px-8 py-12 lg:py-20">
+				<GlassAuthCard />
 			</div>
 		</div>
 	);

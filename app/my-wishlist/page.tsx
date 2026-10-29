@@ -34,7 +34,7 @@ export default function WishlistPage() {
 			{/* Editorial Header */}
 			<div className="mb-12 pb-6 border-b border-(--border-color)/60 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
 				<div>
-					<span className="text-[10px] uppercase tracking-[0.25em] font-medium text-(--text-muted) block mb-3">
+					<span className="eyebrow text-(--text-muted) block mb-3">
 						Curated Pieces
 					</span>
 					<h1 className="font-serif text-3xl sm:text-4xl tracking-tight text-(--text-headline)">
@@ -45,7 +45,7 @@ export default function WishlistPage() {
 
 				<Link
 					href="/"
-					className="group flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline) hover:text-(--text-muted) transition-colors pb-1 border-b border-transparent hover:border-(--text-muted)"
+					className="group flex items-center gap-2 text-label uppercase font-medium text-(--text-headline) hover:text-(--text-muted) transition-colors pb-1 border-b border-transparent hover:border-(--text-muted)"
 				>
 					<ArrowLeft
 						size={12}
@@ -86,7 +86,7 @@ export default function WishlistPage() {
 					</p>
 					<Link
 						href="/"
-						className="py-3.5 px-10 text-[10px] uppercase tracking-[0.2em] font-semibold bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs shadow-xs"
+						className="py-3.5 px-10 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs shadow-xs"
 					>
 						Discover The Collection
 					</Link>

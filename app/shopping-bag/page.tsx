@@ -140,7 +140,7 @@ export default function BagPage() {
 				transition={luxurySpring}
 				className="mb-12 pb-6 border-b border-(--border-color)/60"
 			>
-				<span className="font-secondary text-[10px] uppercase tracking-[0.25em] font-medium text-(--text-muted) block mb-3">
+				<span className="eyebrow text-(--text-muted) block mb-3">
 					Selected Pieces
 				</span>
 				<div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
@@ -154,7 +154,7 @@ export default function BagPage() {
 					</h1>
 					<Link
 						href="/"
-						className="group flex items-center gap-2 font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline) hover:text-(--text-muted) transition-colors pb-1 border-b border-transparent hover:border-(--text-muted)"
+						className="group flex items-center gap-2 text-label uppercase font-medium text-(--text-headline) hover:text-(--text-muted) transition-colors pb-1 border-b border-transparent hover:border-(--text-muted)"
 					>
 						<ArrowLeft
 							size={12}
@@ -175,7 +175,7 @@ export default function BagPage() {
 							transition={luxurySpring}
 							className="mt-8 pt-5 border-t border-(--border-color)/60 overflow-hidden"
 						>
-							<div className="flex justify-between items-center font-secondary text-[10px] uppercase tracking-[0.2em] font-medium mb-3">
+							<div className="flex justify-between items-center eyebrow mb-3">
 								<span className="text-(--text-muted)">
 									{qualifiesForFreeCourier
 										? "Your order qualifies for complimentary insured courier delivery"
@@ -224,10 +224,8 @@ export default function BagPage() {
 					</p>
 					<Link href="/">
 						<motion.div
-							whileHover={{ scale: 1.02 }}
-							whileTap={{ scale: 0.98 }}
 							transition={luxurySpring}
-							className="py-3.5 px-10 font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs shadow-xs inline-block"
+							className="py-3.5 px-10 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs shadow-xs inline-block"
 						>
 							Discover The Collection
 						</motion.div>
@@ -280,7 +278,7 @@ export default function BagPage() {
 													className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
 												/>
 											) : (
-												<span className="font-secondary text-[9px] uppercase tracking-[0.25em] font-medium text-(--text-muted)">
+												<span className="eyebrow text-(--text-muted)">
 													Photo
 												</span>
 											)}
@@ -297,10 +295,10 @@ export default function BagPage() {
 													>
 														{item.name}
 													</Link>
-													<p className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-muted)">
+													<p className="eyebrow text-(--text-muted)">
 														{item.subtitle}
 													</p>
-													<p className="font-secondary text-[11px] tracking-widest text-(--text-muted) pt-1">
+													<p className="font-secondary text-copy-sm text-(--text-muted) pt-1">
 														Size:{" "}
 														<span className="font-medium text-(--text-headline)">
 															{item.size}
@@ -317,13 +315,6 @@ export default function BagPage() {
 														)}
 													</span>
 													<motion.button
-														whileHover={{
-															scale: 1.1,
-															rotate: 90,
-														}}
-														whileTap={{
-															scale: 0.9,
-														}}
 														transition={
 															luxurySpring
 														}
@@ -350,9 +341,6 @@ export default function BagPage() {
 												{/* Minimal Stepper */}
 												<div className="inline-flex items-center border border-(--border-color) rounded-xs bg-(--card-sub)/30">
 													<motion.button
-														whileTap={{
-															scale: 0.9,
-														}}
 														type="button"
 														onClick={() =>
 															updateQuantity(
@@ -374,9 +362,6 @@ export default function BagPage() {
 														{item.quantity}
 													</span>
 													<motion.button
-														whileTap={{
-															scale: 0.9,
-														}}
 														type="button"
 														onClick={() =>
 															updateQuantity(
@@ -402,15 +387,13 @@ export default function BagPage() {
 
 												{/* Quiet Move to Wishlist */}
 												<motion.button
-													whileHover={{ scale: 1.02 }}
-													whileTap={{ scale: 0.95 }}
 													type="button"
 													onClick={() =>
 														handleMoveToWishlist(
 															item,
 														)
 													}
-													className="font-secondary text-[9px] uppercase tracking-[0.2em] font-medium flex items-center gap-1.5 cursor-pointer text-(--text-muted) hover:text-(--accent-love) transition-colors"
+													className="eyebrow flex items-center gap-1.5 cursor-pointer text-(--text-muted) hover:text-(--accent-love) transition-colors"
 												>
 													<Heart
 														size={12}
@@ -437,10 +420,10 @@ export default function BagPage() {
 										className="stroke-[1.5] mt-0.5 text-(--text-muted)"
 									/>
 									<div className="space-y-1.5">
-										<h3 className="font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline)">
+										<h3 className="text-label uppercase font-medium text-(--text-headline)">
 											Bespoke Gift Presentation (+$5.00)
 										</h3>
-										<p className="font-body text-[11px] leading-relaxed text-(--text-muted) max-w-md font-light">
+										<p className="text-copy-sm text-(--text-muted) max-w-md font-light">
 											Individually housed in our signature
 											textured gift box, bound with raw
 											silk ribbon and accompanied by a
@@ -474,7 +457,7 @@ export default function BagPage() {
 										<div className="mt-5 pt-5 border-t border-(--border-color)/60">
 											<label
 												htmlFor="giftNote"
-												className="font-secondary text-[9px] uppercase tracking-[0.25em] block mb-2 font-medium text-(--text-headline)"
+												className="eyebrow block mb-2 font-medium text-(--text-headline)"
 											>
 												Personalized Inscription
 												(Complimentary)
@@ -506,7 +489,7 @@ export default function BagPage() {
 						className="lg:col-span-5 lg:sticky lg:top-32 space-y-6"
 					>
 						<div className="border border-(--border-color) bg-(--card-sub)/20 p-6 sm:p-8 rounded-xs">
-							<h2 className="font-secondary text-[10px] uppercase tracking-[0.3em] font-semibold pb-4 border-b border-(--border-color)/60 mb-6 text-(--text-headline)">
+							<h2 className="text-label uppercase font-medium pb-4 border-b border-(--border-color)/60 mb-6 text-(--text-headline)">
 								Order Summary
 							</h2>
 
@@ -528,11 +511,9 @@ export default function BagPage() {
 									className="flex-1 bg-transparent border border-(--border-color) px-3 py-2.5 font-secondary text-xs uppercase tracking-wider placeholder:normal-case focus:outline-none focus:border-(--text-headline)/40 rounded-xs text-(--text-headline) placeholder:text-(--text-muted)"
 								/>
 								<motion.button
-									whileHover={{ scale: 1.02 }}
-									whileTap={{ scale: 0.95 }}
 									type="submit"
 									disabled={isCheckingPromo || !promoCode.trim()}
-									className="px-5 border border-(--border-color) bg-(--card-sub) font-secondary text-[9px] uppercase tracking-[0.2em] font-semibold transition-colors hover:bg-(--text-headline) hover:text-(--bg-base) cursor-pointer rounded-xs text-(--text-headline) disabled:opacity-50 disabled:cursor-not-allowed"
+									className="px-5 border border-(--border-color) bg-(--card-sub) text-label uppercase font-medium transition-colors hover:bg-(--text-headline) hover:text-(--bg-base) cursor-pointer rounded-xs text-(--text-headline) disabled:opacity-50 disabled:cursor-not-allowed"
 								>
 									{isCheckingPromo ? "Checking" : "Apply"}
 								</motion.button>
@@ -541,7 +522,7 @@ export default function BagPage() {
 								<p
 									id="promo-message"
 									role="alert"
-									className="mb-8 font-body text-[11px] text-(--error-text)"
+									className="mb-8 text-copy-sm text-(--error-text)"
 								>
 									{promoError}
 								</p>
@@ -549,7 +530,7 @@ export default function BagPage() {
 							{appliedPromo && !promoError && (
 								<p
 									role="status"
-									className="mb-8 flex items-center justify-between font-secondary text-[10px] uppercase tracking-[0.2em] text-(--text-muted)"
+									className="mb-8 flex items-center justify-between eyebrow text-(--text-muted)"
 								>
 									<span>
 										Code{" "}
@@ -571,7 +552,7 @@ export default function BagPage() {
 							{/* Price Breakdown */}
 							<motion.div
 								layout
-								className="space-y-4 font-secondary text-[11px] uppercase tracking-widest pb-6 border-b border-(--border-color)/60 font-medium"
+								className="space-y-4 text-label uppercase pb-6 border-b border-(--border-color)/60 font-medium"
 							>
 								<div className="flex justify-between text-(--text-muted)">
 									<span>
@@ -650,7 +631,7 @@ export default function BagPage() {
 								layout
 								className="flex justify-between items-baseline pt-6 mb-8"
 							>
-								<span className="font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold text-(--text-headline)">
+								<span className="text-label uppercase font-medium text-(--text-headline)">
 									Total Investment
 								</span>
 								<motion.span
@@ -663,7 +644,7 @@ export default function BagPage() {
 
 							<Link
 								href="/checkout"
-								className="w-full py-4 font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold bg-(--text-headline) text-(--bg-base) hover:opacity-95 transition-opacity rounded-xs cursor-pointer flex items-center justify-center gap-2 shadow-xs"
+								className="w-full py-4 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-95 transition-opacity rounded-xs cursor-pointer flex items-center justify-center gap-2 shadow-xs"
 							>
 								<span>Proceed to Checkout</span>
 								<ArrowRight
@@ -674,7 +655,7 @@ export default function BagPage() {
 						</div>
 
 						{/* Editorial Guarantees */}
-						<div className="space-y-4 font-body text-[11px] tracking-wide text-(--text-muted) px-2 font-light">
+						<div className="space-y-4 text-copy-sm tracking-wide text-(--text-muted) px-2 font-light">
 							<div className="flex items-start gap-3.5">
 								<Truck
 									size={14}

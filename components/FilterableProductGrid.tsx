@@ -79,14 +79,14 @@ export default function FilterableProductGrid({
 		<>
 			{/* Utility Ribbon */}
 			<div className="mb-8 border-b border-(--border-color)">
-				<div className="pb-4 flex items-center justify-between gap-4 font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline)">
+				<div className="pb-4 flex items-center justify-between gap-4 text-label uppercase font-medium text-(--text-headline)">
 					<div className="flex items-center gap-4">
 						<button
 							type="button"
 							onClick={() => setPanelOpen((open) => !open)}
 							aria-expanded={panelOpen}
 							aria-controls="listing-filters"
-							className="hover:opacity-70 transition-opacity cursor-pointer"
+							className="uppercase hover:text-(--accent) transition-colors cursor-pointer"
 						>
 							Filter {activeCount > 0 && `(${activeCount})`}{" "}
 							{panelOpen ? "−" : "+"}
@@ -95,7 +95,7 @@ export default function FilterableProductGrid({
 							<button
 								type="button"
 								onClick={clearFilters}
-								className="text-(--text-muted) hover:text-(--text-headline) transition-colors cursor-pointer underline underline-offset-4"
+								className="uppercase text-(--text-muted) hover:text-(--text-headline) transition-colors cursor-pointer underline underline-offset-4"
 							>
 								Clear
 							</button>
@@ -119,7 +119,7 @@ export default function FilterableProductGrid({
 											: e.target.value,
 									)
 								}
-								className="bg-transparent font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline) cursor-pointer focus:outline-none"
+								className="bg-transparent text-label uppercase font-medium text-(--text-headline) cursor-pointer focus:outline-none"
 							>
 								{SORT_OPTIONS.map((option) => (
 									<option key={option.value} value={option.value}>
@@ -145,7 +145,7 @@ export default function FilterableProductGrid({
 							<div className="pb-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
 								{facets.map((facet) => (
 									<fieldset key={facet.key}>
-										<legend className="font-secondary text-[9px] uppercase tracking-[0.22em] font-medium text-(--text-muted) mb-3">
+										<legend className="eyebrow text-(--text-muted) mb-3">
 											{facet.label}
 										</legend>
 										<div className="flex flex-wrap gap-2">
@@ -165,7 +165,7 @@ export default function FilterableProductGrid({
 																	: option.value,
 															)
 														}
-														className={`px-3 py-1.5 font-secondary text-[10px] uppercase tracking-wider rounded-xs border transition-colors cursor-pointer ${
+														className={`px-3 py-1.5 font-secondary text-label rounded-xs border transition-colors cursor-pointer ${
 															selected
 																? "bg-(--text-headline) text-(--bg-base) border-(--text-headline)"
 																: "border-(--border-color) text-(--text-headline) hover:border-(--text-headline)"

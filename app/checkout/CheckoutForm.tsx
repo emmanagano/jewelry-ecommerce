@@ -42,11 +42,11 @@ const COUNTRIES = [
 ];
 
 const LABEL_CLASS =
-	"block font-secondary text-[9px] uppercase tracking-[0.22em] font-medium text-(--text-muted)";
+	"block eyebrow text-(--text-muted)";
 const SECTION_CLASS =
 	"border border-(--border-color) bg-(--card-sub)/20 p-6 sm:p-8 rounded-xs";
 const SECTION_TITLE_CLASS =
-	"font-secondary text-[10px] uppercase tracking-[0.3em] font-semibold pb-4 border-b border-(--border-color)/60 mb-6 text-(--text-headline)";
+	"text-label uppercase font-medium pb-4 border-b border-(--border-color)/60 mb-6 text-(--text-headline)";
 
 interface FormFields {
 	email: string;
@@ -236,7 +236,7 @@ export default function CheckoutForm() {
 	if (placedOrderNumber) {
 		return (
 			<div className="py-32 text-center">
-				<p className="font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold text-(--success) mb-3">
+				<p className="text-label uppercase font-medium text-(--success) mb-3">
 					Order placed
 				</p>
 				<p className="font-primary text-2xl text-(--text-headline)">
@@ -263,7 +263,7 @@ export default function CheckoutForm() {
 				</p>
 				<Link
 					href="/collections/best-sellers"
-					className="py-3.5 px-10 font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs"
+					className="py-3.5 px-10 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs"
 				>
 					Shop Best Sellers
 				</Link>
@@ -295,7 +295,7 @@ export default function CheckoutForm() {
 			{errors[name] && (
 				<span
 					id={`checkout-${name}-error`}
-					className="block mt-1.5 normal-case tracking-normal text-[11px] text-(--error-text)"
+					className="block mt-1.5 normal-case tracking-normal text-xs text-(--error-text)"
 				>
 					{errors[name]}
 				</span>
@@ -310,7 +310,7 @@ export default function CheckoutForm() {
 			{/* Header */}
 			<div className="mb-10 pb-6 border-b border-(--border-color)/60 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
 				<div>
-					<span className="font-secondary text-[10px] uppercase tracking-[0.25em] font-medium text-(--text-muted) block mb-3">
+					<span className="eyebrow text-(--text-muted) block mb-3">
 						Secure Checkout
 					</span>
 					<h1 className="font-primary text-3xl sm:text-4xl tracking-tight text-(--text-headline)">
@@ -319,7 +319,7 @@ export default function CheckoutForm() {
 				</div>
 				<Link
 					href="/shopping-bag"
-					className="group flex items-center gap-2 font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline) hover:text-(--text-muted) transition-colors"
+					className="group flex items-center gap-2 text-label uppercase font-medium text-(--text-headline) hover:text-(--text-muted) transition-colors"
 				>
 					<ArrowLeft
 						size={12}
@@ -344,7 +344,7 @@ export default function CheckoutForm() {
 				<button
 					type="button"
 					onClick={fillDemoDetails}
-					className="shrink-0 py-3 px-6 rounded-xs border border-(--text-headline) font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline) hover:bg-(--text-headline) hover:text-(--bg-base) transition-colors cursor-pointer"
+					className="shrink-0 py-3 px-6 rounded-xs border border-(--text-headline) text-label uppercase font-medium text-(--text-headline) hover:bg-(--text-headline) hover:text-(--bg-base) transition-colors cursor-pointer"
 				>
 					Fill Demo Details
 				</button>
@@ -365,7 +365,7 @@ export default function CheckoutForm() {
 							{input("phone", "Phone (optional)", { type: "tel", autoComplete: "tel" })}
 						</div>
 						{!user && (
-							<p className="mt-4 font-body text-[11px] text-(--text-muted)">
+							<p className="mt-4 text-copy-sm text-(--text-muted)">
 								Have an account?{" "}
 								<Link
 									href="/login?next=/checkout"
@@ -429,7 +429,7 @@ export default function CheckoutForm() {
 									{ inputMode: "numeric", autoComplete: "off", placeholder: "4242 4242 4242 4242" },
 									formatCardNumber,
 								)}
-								<span className="absolute right-4 top-9 flex items-center gap-1.5 font-secondary text-[9px] uppercase tracking-[0.15em] text-(--text-muted) pointer-events-none">
+								<span className="absolute right-4 top-9 flex items-center gap-1.5 eyebrow text-(--text-muted) pointer-events-none">
 									<CreditCard size={13} className="stroke-[1.5]" />
 									{fields.cardNumber ? brand : ""}
 								</span>
@@ -467,7 +467,7 @@ export default function CheckoutForm() {
 									</div>
 									<div className="flex-1 min-w-0">
 										<p className="font-primary text-sm text-(--text-headline) truncate">{item.name}</p>
-										<p className="font-secondary text-[10px] uppercase tracking-wider text-(--text-muted)">
+										<p className="font-secondary eyebrow text-(--text-muted)">
 											{item.size === ONE_SIZE ? "One Size" : `Size ${item.size}`} · Qty {item.quantity}
 										</p>
 									</div>
@@ -478,7 +478,7 @@ export default function CheckoutForm() {
 							))}
 						</ul>
 
-						<dl className="space-y-3 font-secondary text-[11px] uppercase tracking-widest font-medium pb-5 border-b border-(--border-color)/60">
+						<dl className="space-y-3 text-label uppercase pb-5 border-b border-(--border-color)/60">
 							<SummaryRow label="Subtotal" value={formatPrice(subtotalCents)} />
 							{options.giftPackaging && (
 								<SummaryRow label="Gift Presentation" value={formatPrice(totals.giftCents)} />
@@ -498,7 +498,7 @@ export default function CheckoutForm() {
 						</dl>
 
 						<div className="flex justify-between items-baseline pt-5 mb-6">
-							<span className="font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold text-(--text-headline)">
+							<span className="text-label uppercase font-medium text-(--text-headline)">
 								Total
 							</span>
 							<span className="font-primary text-3xl font-medium tracking-tight text-(--text-headline)">
@@ -507,7 +507,7 @@ export default function CheckoutForm() {
 						</div>
 
 						{options.giftPackaging && options.giftNote && (
-							<p className="mb-6 font-body text-[11px] italic text-(--text-muted)">
+							<p className="mb-6 text-copy-sm italic text-(--text-muted)">
 								Gift note: &ldquo;{options.giftNote}&rdquo;
 							</p>
 						)}
@@ -515,11 +515,11 @@ export default function CheckoutForm() {
 						<button
 							type="submit"
 							disabled={isPlacing}
-							className="w-full py-4 font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold bg-(--text-headline) text-(--bg-base) hover:opacity-95 transition-opacity rounded-xs cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+							className="w-full py-4 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-95 transition-opacity rounded-xs cursor-pointer disabled:opacity-60 disabled:cursor-wait"
 						>
 							{isPlacing ? "Placing Order..." : `Place Order · ${formatPrice(totals.totalCents)}`}
 						</button>
-						<p className="mt-3 text-center font-body text-[10px] text-(--text-muted)">
+						<p className="mt-3 text-center font-body text-xs text-(--text-muted)">
 							Demo order: no payment will be taken.
 						</p>
 					</section>

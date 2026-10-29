@@ -94,7 +94,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 			{/* Badge */}
 			<motion.div variants={staggerItem}>
 				{product.badge && (
-					<span className="font-secondary text-[10px] tracking-[0.25em] font-semibold uppercase mb-3 inline-block text-(--accent-blue)">
+					<span className="eyebrow mb-4 inline-block text-(--accent)">
 						{product.badge}
 					</span>
 				)}
@@ -103,7 +103,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 			{/* Title */}
 			<motion.h1
 				variants={staggerItem}
-				className="font-primary text-3xl sm:text-4xl tracking-tight leading-tight mb-2 text-(--text-headline)"
+				className="font-serif text-[2rem] sm:text-title tracking-tight mb-3 text-(--text-headline)"
 			>
 				{product.name}
 			</motion.h1>
@@ -111,7 +111,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 			{/* Subtitle / Material */}
 			<motion.p
 				variants={staggerItem}
-				className="font-secondary text-[10px] uppercase tracking-widest font-medium mb-4 text-(--text-muted)"
+				className="text-copy text-(--text-muted) mb-5"
 			>
 				{product.subtitle}
 			</motion.p>
@@ -119,7 +119,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 			{/* Main Display Price */}
 			<motion.div
 				variants={staggerItem}
-				className="font-serif text-2xl mb-8 pb-6 border-b border-(--border-color) text-(--text-headline)"
+				className="text-xl text-(--text-headline) mb-8 pb-8 border-b border-(--border-color)"
 			>
 				{formattedPrice}
 			</motion.div>
@@ -127,10 +127,10 @@ export default function ProductInteractive({ product }: { product: Product }) {
 			{/* Size Selector with Sliding Layout Indicator */}
 			{sizes.length > 1 && (
 				<motion.div variants={staggerItem} className="mb-8">
-					<div className="font-secondary text-[10px] tracking-[0.25em] uppercase mb-4 font-semibold text-(--text-headline)">
+					<div className="text-label uppercase mb-4 text-(--text-headline)">
 						Select {product.category.size_label ?? "Size"}
 						{savedSize && sizes.includes(savedSize) && (
-							<span className="ml-2 font-medium normal-case tracking-normal text-(--text-muted)">
+							<span className="ml-2 normal-case tracking-normal text-(--text-muted)">
 								· your saved size is {savedSize}
 							</span>
 						)}
@@ -142,7 +142,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 								type="button"
 								onClick={() => setSelectedSize(size)}
 								aria-pressed={selectedSize === size}
-								className="relative px-5 py-2.5 font-secondary text-[10px] uppercase tracking-wider rounded-xs border border-(--border-color) transition-colors cursor-pointer"
+								className="relative min-w-14 px-4 py-3 text-label rounded-xs border border-(--border-color) hover:border-(--text-headline) transition-colors cursor-pointer"
 								style={{
 									color:
 										selectedSize === size
@@ -172,16 +172,13 @@ export default function ProductInteractive({ product }: { product: Product }) {
 			{/* Button Actions: Split Add to Bag & Interactive Pink Wishlist */}
 			<motion.div
 				variants={staggerItem}
-				className="flex items-center gap-3 mb-10"
+				className="flex items-stretch gap-3 mb-6"
 			>
-				<motion.button
-					whileHover={{ scale: 1.01 }}
-					whileTap={{ scale: 0.98 }}
-					transition={luxurySpring}
+				<button
 					type="button"
 					onClick={handleAddToBag}
 					disabled={!selectedSize}
-					className="flex-1 py-4 px-6 flex items-center justify-between font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold text-white transition-opacity hover:opacity-95 rounded-xs cursor-pointer shadow-xs bg-(--text-headline) disabled:opacity-60 disabled:cursor-not-allowed"
+					className="flex-1 py-4 px-6 flex items-center justify-between text-label uppercase text-(--bg-base) bg-(--text-headline) hover:bg-(--accent) transition-colors rounded-xs cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-(--text-headline)"
 				>
 					<span>{formattedPrice}</span>
 					<AnimatePresence mode="wait">
@@ -206,65 +203,48 @@ export default function ProductInteractive({ product }: { product: Product }) {
 							</motion.span>
 						)}
 					</AnimatePresence>
-				</motion.button>
+				</button>
 
-				<motion.button
-					whileHover={{ scale: 1.05 }}
-					whileTap={{ scale: 0.95 }}
-					transition={luxurySpring}
+				<button
 					type="button"
 					onClick={() => toggleWishlist(product.id)}
-					aria-label="Save to Wishlist"
-					className="group p-4 rounded-xs border border-(--border-color) bg-(--card-sub)/50 transition-colors flex items-center justify-center cursor-pointer shadow-[inset_0_1px_2px_rgba(255,255,255,0.8)]"
+					aria-label={liked ? "Remove from wishlist" : "Save to wishlist"}
+					aria-pressed={liked}
+					className="group w-14 rounded-xs border border-(--border-color) hover:border-(--text-headline) transition-colors flex items-center justify-center cursor-pointer"
 				>
 					<Heart
-						className={`w-4 h-4 transition-colors duration-200 ${
+						className={`w-5 h-5 stroke-[1.25] transition-colors duration-200 ${
 							liked
 								? "fill-(--accent-love) text-(--accent-love)"
-								: "text-(--text-headline) stroke-[1.5] group-hover:text-(--accent-love) group-hover:fill-(--accent-love)/20"
+								: "text-(--text-headline) group-hover:text-(--accent-love)"
 						}`}
 					/>
-				</motion.button>
+				</button>
 			</motion.div>
 
-			{/* Horizontal 3-Column Value Guarantees */}
-			<motion.div
+			{/* Quiet promise line */}
+			<motion.ul
 				variants={staggerItem}
-				className="grid grid-cols-3 gap-2 py-6 mb-8 border-y border-(--border-color)/60 text-center"
+				className="flex flex-wrap gap-x-6 gap-y-2 mb-10 text-copy-sm text-(--text-muted)"
 			>
-				<div className="flex flex-col items-center justify-center gap-2">
-					<Truck
-						size={17}
-						className="text-(--accent-blue) stroke-[1.5]"
-					/>
-					<span className="font-secondary text-[9px] uppercase tracking-[0.2em] font-medium max-w-25 leading-tight text-(--text-muted)">
-						Complimentary Shipping
-					</span>
-				</div>
-				<div className="flex flex-col items-center justify-center gap-2">
-					<Gift
-						size={17}
-						className="text-(--accent-blue) stroke-[1.5]"
-					/>
-					<span className="font-secondary text-[9px] uppercase tracking-[0.2em] font-medium max-w-25 leading-tight text-(--text-muted)">
-						Signature Packaging
-					</span>
-				</div>
-				<div className="flex flex-col items-center justify-center gap-2">
-					<ShieldCheck
-						size={17}
-						className="text-(--accent-blue) stroke-[1.5]"
-					/>
-					<span className="font-secondary text-[9px] uppercase tracking-[0.2em] font-medium max-w-25 leading-tight text-(--text-muted)">
-						Lifetime Warranty
-					</span>
-				</div>
-			</motion.div>
+				<li className="flex items-center gap-2">
+					<Truck size={16} className="stroke-[1.25] text-(--accent)" />
+					Complimentary insured shipping
+				</li>
+				<li className="flex items-center gap-2">
+					<Gift size={16} className="stroke-[1.25] text-(--accent)" />
+					Signature packaging
+				</li>
+				<li className="flex items-center gap-2">
+					<ShieldCheck size={16} className="stroke-[1.25] text-(--accent)" />
+					Lifetime warranty
+				</li>
+			</motion.ul>
 
 			{/* Fluid Accordions */}
 			<motion.div
 				variants={staggerItem}
-				className="flex flex-col divide-y divide-(--border-color)/60 border-b border-(--border-color)/60"
+				className="flex flex-col divide-y divide-(--border-color) border-y border-(--border-color)"
 			>
 				{sections.map((section) => {
 					const isOpen = openSection === section.id;
@@ -275,14 +255,14 @@ export default function ProductInteractive({ product }: { product: Product }) {
 								onClick={() => toggleAccordion(section.id)}
 								aria-expanded={isOpen}
 								aria-controls={`section-${section.id}`}
-								className="w-full py-4 flex items-center justify-between font-secondary text-[10px] uppercase tracking-[0.25em] font-medium text-left text-(--text-headline) cursor-pointer hover:opacity-70 transition-opacity"
+								className="w-full py-5 flex items-center justify-between text-label uppercase text-left text-(--text-headline) cursor-pointer hover:text-(--accent) transition-colors"
 							>
 								<span>{section.title}</span>
 								<motion.div
 									animate={{ rotate: isOpen ? 180 : 0 }}
 									transition={{ duration: 0.3, ease: "easeInOut" }}
 								>
-									<ChevronDown size={14} className="stroke-[1.5]" />
+									<ChevronDown size={16} className="stroke-[1.25]" />
 								</motion.div>
 							</button>
 							<AnimatePresence>
@@ -295,7 +275,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 										transition={luxurySpring}
 										className="overflow-hidden"
 									>
-										<p className="pb-5 font-body text-[11px] leading-relaxed font-light text-(--text-muted) pr-6">
+										<p className="pb-6 text-copy text-(--text-body) pr-6">
 											{section.body}
 										</p>
 									</motion.div>

@@ -1,47 +1,51 @@
 @import "tailwindcss";
 
 :root {
-	/* LIGHT THEME */
-	--bg-base: #f4f6f8; /* Crisp clean editorial canvas */
-	--card-main: #dbe5ee; /* Soft French slate/powder blue */
-	--card-sub: #eef2f6; /* Light plaster tint */
-	--card-wide: #e3ebf2; /* Subtle neutral blue */
+	/* LIGHT THEME: warm editorial. Contrast (WCAG) on --bg-base:
+	   ink 15.6, body 9.1, muted 5.3, wine 11.8 */
+	--bg-base: #f7f3ee; /* Warm ivory canvas */
+	--surface: #fffdf9; /* Paper, for the few raised cards */
+	--card-main: #e9dfd3; /* Notice / badge fill */
+	--card-sub: #efe8df; /* Image placeholder, subtle fill */
+	--card-wide: #f1ebe3; /* Footer band */
 
-	--accent-blue: #360a11; /* Deep wine for contrast links */
-	--accent-light: #360a11; /* Deep wine button background */
+	--accent-blue: #5a1a24; /* Wine (historical name; prefer --accent) */
+	--accent-light: #5a1a24;
+	--accent: var(--accent-blue);
 
-	--text-headline: #1e060a; /* Deep wine near-black text */
-	--text-body: #4a2027; /* Muted wine body text */
-	--text-muted: rgba(74, 32, 39, 0.6);
+	--text-headline: #1f1a17; /* Ink */
+	--text-body: #4a403a; /* Body copy */
+	--text-muted: #6e625a; /* Taupe, for secondary text */
 
-	--border-color: rgba(125, 159, 195, 0.35); /* Subtle border lines */
+	--border-color: #e6ddd3; /* Hairlines */
 
 	/* Status colors */
-	--accent-love: #f43f5e; /* Wishlist hearts & discounts */
-	--success: #059669;
+	--accent-love: #c2364f; /* Wishlist hearts & discounts */
+	--success: #2f7a4f;
 	--error-text: #9f1239;
-	--error-bg: rgba(255, 241, 242, 0.9);
-	--error-border: #fecdd3;
+	--error-bg: #fbeeee;
+	--error-border: #efc9cc;
 }
 
 /*
-DARK THEME (To switch back to dark, just swap :root values with these):
+DARK THEME (warm dark; to try it, swap these into :root):
 :root {
-    --bg-base: #0e0c0d;
-    --card-main: #360a11;
-    --card-sub: #22080d;
-    --card-wide: #1a060a;
-    --accent-blue: #7d9fc3;
-    --accent-light: #d5e0eb;
-    --text-headline: #ffffff;
-    --text-body: #d5e0eb;
-    --text-muted: rgba(213, 224, 235, 0.5);
-    --border-color: rgba(125, 159, 195, 0.2);
-    --accent-love: #fb7185;
-    --success: #34d399;
-    --error-text: #fecdd3;
-    --error-bg: rgba(76, 5, 25, 0.6);
-    --error-border: rgba(251, 113, 133, 0.4);
+    --bg-base: #141110;
+    --surface: #1c1816;
+    --card-main: #2a2320;
+    --card-sub: #221d1a;
+    --card-wide: #191514;
+    --accent-blue: #d8b98a;
+    --accent-light: #d8b98a;
+    --text-headline: #f3ede6;
+    --text-body: #d6ccc2;
+    --text-muted: #a3968b;
+    --border-color: #352d29;
+    --accent-love: #f08a9c;
+    --success: #6fcf97;
+    --error-text: #f5c2c7;
+    --error-bg: #3a1d22;
+    --error-border: #6b2b35;
 }
 */
 
@@ -59,10 +63,45 @@ DARK THEME (To switch back to dark, just swap :root values with these):
 	--text-small: 0.875rem;
 	--text-base: 1rem;
 	--text-large: 2rem;
+
+	/* Type scale. Names avoid the color variables above (--text-body,
+	   --text-muted, --text-headline), since @theme tokens are also emitted
+	   as CSS variables. */
+	--text-eyebrow: 0.6875rem; /* 11px */
+	--text-eyebrow--line-height: 1.4;
+	--text-eyebrow--letter-spacing: 0.18em;
+	--text-label: 0.75rem; /* 12px */
+	--text-label--line-height: 1.4;
+	--text-label--letter-spacing: 0.12em;
+	--text-copy-sm: 0.875rem; /* 14px */
+	--text-copy-sm--line-height: 1.6;
+	--text-copy: 0.9375rem; /* 15px */
+	--text-copy--line-height: 1.7;
+	--text-heading: 1.75rem; /* 28px */
+	--text-heading--line-height: 1.15;
+	--text-title: 2.5rem; /* 40px */
+	--text-title--line-height: 1.1;
+	--text-display: 3.5rem; /* 56px */
+	--text-display--line-height: 1.05;
+}
+
+/* Small uppercase label used above headings and in meta rows */
+@utility eyebrow {
+	font-family: var(--font-sans);
+	font-size: var(--text-eyebrow);
+	line-height: var(--text-eyebrow--line-height);
+	letter-spacing: var(--text-eyebrow--letter-spacing);
+	text-transform: uppercase;
+	font-weight: 500;
 }
 
 body {
 	font-family: var(--font-sans);
 	background-color: var(--bg-base);
+	color: var(--text-headline);
+}
+
+::selection {
+	background-color: var(--card-main);
 	color: var(--text-headline);
 }

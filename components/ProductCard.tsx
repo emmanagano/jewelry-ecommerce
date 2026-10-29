@@ -96,33 +96,30 @@ export default function ProductCard({
 			className={`group flex flex-col relative ${className}`}
 		>
 			{/* Product Image Frame */}
-			<div className="w-full aspect-4/5 bg-(--card-sub) border border-(--border-color) relative overflow-hidden flex items-center justify-center transition-all duration-300 group-hover:border-(--text-headline)/40 rounded-xs">
-				{/* Clean Luxury Badge */}
+			<div className="w-full aspect-4/5 bg-(--card-sub) relative overflow-hidden flex items-center justify-center rounded-xs">
+				{/* Badge */}
 				{product.badge && (
 					<div className="absolute top-3 left-3 z-10 pointer-events-none">
-						<span className="bg-white/95 font-secondary text-(--text-headline) text-[9px] uppercase tracking-[0.22em] font-medium px-2.5 py-1 border border-black/5 shadow-xs">
+						<span className="eyebrow inline-block bg-(--bg-base)/95 text-(--text-headline) px-2.5 py-1 rounded-full border border-(--border-color)">
 							{product.badge}
 						</span>
 					</div>
 				)}
 
-				{/* Floating Wishlist Button */}
-				<motion.button
-					whileHover={{ scale: 1.1 }}
-					whileTap={{ scale: 0.9 }}
+				{/* Wishlist */}
+				<button
 					type="button"
 					onClick={handleWishlist}
-					aria-label={`Save ${product.name} to wishlist`}
-					className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-xs border border-black/5 flex items-center justify-center z-10 shadow-xs cursor-pointer"
+					aria-label={liked ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
+					aria-pressed={liked}
+					className="absolute top-3 right-3 w-9 h-9 rounded-full bg-(--bg-base)/90 flex items-center justify-center z-10 cursor-pointer text-(--text-body) hover:text-(--accent-love) transition-colors"
 				>
 					<Heart
-						className={`w-3.5 h-3.5 transition-colors duration-200 ${
-							liked
-								? "fill-(--accent-love) text-(--accent-love)"
-								: "text-(--text-body) stroke-[1.5] hover:text-(--accent-love)"
+						className={`w-4 h-4 stroke-[1.5] transition-colors duration-200 ${
+							liked ? "fill-(--accent-love) text-(--accent-love)" : ""
 						}`}
 					/>
-				</motion.button>
+				</button>
 
 				{/* Image Container with Dual-Angle Hover Reveal */}
 				<Link
@@ -159,9 +156,7 @@ export default function ProductCard({
 						</>
 					) : (
 						<div className="w-20 h-20 rounded-full border border-(--border-color) flex items-center justify-center opacity-30 group-hover:scale-110 transition-transform duration-500">
-							<span className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-muted)">
-								Atelier
-							</span>
+							<span className="eyebrow text-(--text-muted)">Atelier</span>
 						</div>
 					)}
 				</Link>
@@ -180,40 +175,36 @@ export default function ProductCard({
 							}}
 							role="group"
 							aria-label={`Choose a size for ${product.name}`}
-							className="absolute inset-x-0 bottom-0 bg-white/95 backdrop-blur-md border-t border-(--border-color) p-3 z-20 flex flex-col shadow-md"
+							className="absolute inset-x-0 bottom-0 bg-(--surface) border-t border-(--border-color) p-4 z-20 flex flex-col"
 						>
-							<div className="flex items-center justify-between mb-2">
-								<span className="font-secondary text-[9px] uppercase tracking-[0.22em] font-medium text-(--text-muted)">
-									Select Size
-								</span>
+							<div className="flex items-center justify-between mb-3">
+								<span className="eyebrow text-(--text-muted)">Select Size</span>
 								<button
 									type="button"
 									onClick={closeSizePicker}
 									aria-label="Close size picker"
 									className="text-(--text-muted) hover:text-(--text-headline) p-0.5 cursor-pointer"
 								>
-									<X size={12} />
+									<X size={14} />
 								</button>
 							</div>
 
-							<div className="flex flex-wrap gap-1.5 justify-center">
+							<div className="flex flex-wrap gap-2 justify-center">
 								{availableSizes.map((sz, idx) => (
-									<motion.button
-										whileHover={{ scale: 1.05 }}
-										whileTap={{ scale: 0.95 }}
+									<button
 										key={sz}
 										ref={idx === 0 ? firstSizeRef : undefined}
 										type="button"
 										onClick={() => triggerAddToCart(sz)}
 										aria-label={sz === savedSize ? `${sz} (your saved size)` : undefined}
-										className={`px-2.5 py-1 font-secondary text-[10px] tracking-wider uppercase border bg-(--card-sub) hover:bg-(--text-headline) hover:text-(--bg-base) transition-colors cursor-pointer rounded-xs ${
+										className={`min-w-10 px-3 py-1.5 text-label border hover:bg-(--text-headline) hover:text-(--bg-base) hover:border-(--text-headline) transition-colors cursor-pointer rounded-xs ${
 											sz === savedSize
 												? "border-(--text-headline) font-semibold"
 												: "border-(--border-color)"
 										}`}
 									>
 										{sz}
-									</motion.button>
+									</button>
 								))}
 							</div>
 						</motion.div>
@@ -221,37 +212,35 @@ export default function ProductCard({
 				</AnimatePresence>
 			</div>
 
-			{/* Product Typography & Pricing */}
-			<div className="mt-4 flex flex-col space-y-1.5">
-				{/* Category Tag */}
-				<span className="font-secondary text-[10px] uppercase tracking-[0.25em] text-(--text-muted) block">
+			{/* Name, category & price */}
+			<div className="mt-4 flex flex-col gap-1">
+				<span className="eyebrow text-(--text-muted)">
 					{product.category.name}
 				</span>
 
-				{/* Product Title (Full Width) */}
-				<Link
-					href={`/product/${product.slug}`}
-					className="group/link block"
-				>
-					<h3 className="font-primary text-sm sm:text-base text-(--text-headline) leading-snug group-hover/link:opacity-70 transition-opacity truncate">
+				<Link href={`/product/${product.slug}`} className="block">
+					<h3 className="font-serif text-base sm:text-[1.0625rem] leading-snug text-(--text-headline) hover:text-(--accent) transition-colors truncate">
 						{product.name}
 					</h3>
 				</Link>
 
-				{/* Dedicated Price & Action Row */}
-				<div className="flex items-center justify-between pt-1">
-					<span className="font-serif text-xs sm:text-sm font-medium text-(--text-headline) tracking-tight">
+				<div className="flex items-center justify-between gap-3 pt-0.5">
+					<span className="text-copy-sm text-(--text-body)">
 						{formatPrice(product.price)}
 					</span>
 
-					<motion.button
-						whileTap={{ scale: 0.95 }}
+					{/* Shown on hover/focus on pointer devices, always on touch */}
+					<button
 						ref={addButtonRef}
 						type="button"
 						onClick={handleAddClick}
 						disabled={justAdded}
 						aria-expanded={hasMultipleSizes ? showSizePicker : undefined}
-						className="font-secondary text-[10px] uppercase tracking-[0.2em] font-semibold text-(--text-headline) hover:opacity-60 transition-opacity cursor-pointer underline underline-offset-4 decoration-1 flex items-center gap-1 min-w-17.5 justify-end"
+						className={`text-label uppercase text-(--text-headline) hover:text-(--accent) border-b border-current pb-0.5 cursor-pointer flex items-center gap-1 transition-[opacity,color] duration-200 focus-visible:opacity-100 ${
+							justAdded || showSizePicker
+								? "opacity-100"
+								: "[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100"
+						}`}
 					>
 						<AnimatePresence mode="wait">
 							{justAdded ? (
@@ -263,7 +252,7 @@ export default function ProductCard({
 									className="flex items-center gap-1"
 								>
 									<Check
-										size={11}
+										size={12}
 										className="text-(--success)"
 									/>
 									<span>Added</span>
@@ -279,7 +268,7 @@ export default function ProductCard({
 								</motion.span>
 							)}
 						</AnimatePresence>
-					</motion.button>
+					</button>
 				</div>
 			</div>
 		</motion.div>
