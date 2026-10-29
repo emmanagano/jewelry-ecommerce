@@ -3,8 +3,8 @@ import EditorialSplit from "@/components/EditorialSplit";
 export default function BrandStory() {
 	return (
 		<EditorialSplit
-			image="https://images.unsplash.com/photo-1616837874254-8d5aaa63e273?q=80&w=1400&auto=format&fit=crop"
-			imageAlt="Jewelry being finished by hand in the atelier"
+			image="https://images.pexels.com/photos/5984625/pexels-photo-5984625.jpeg?auto=compress&cs=tinysrgb&w=1600"
+			imageAlt="A fine gold chain worn with an open white shirt"
 			caption="Behind the Atelier"
 			eyebrow="Modern Longevity"
 			title={

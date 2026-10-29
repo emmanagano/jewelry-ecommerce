@@ -5,8 +5,8 @@ export default function EngravingFeature() {
 	return (
 		<EditorialSplit
 			reverse
-			image="https://images.unsplash.com/photo-1779238226276-79d6cc60fdb1?q=80&w=1400&auto=format&fit=crop"
-			imageAlt="Hand-engraved gold pendant on textured paper"
+			image="https://images.pexels.com/photos/4938199/pexels-photo-4938199.jpeg?auto=compress&cs=tinysrgb&w=1600"
+			imageAlt="Engraved gold medallion pendant resting on an open book"
 			caption="Bespoke Hand-Inscribed"
 			eyebrow="Atelier Personalization"
 			title="Gifts to Engrave"
