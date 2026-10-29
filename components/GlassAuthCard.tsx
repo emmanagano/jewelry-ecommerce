@@ -1,19 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Lock, Mail, Eye, EyeOff, User } from "lucide-react";
-import { supabase } from "@/app/lib/supabase";
+import { AuthError } from "@supabase/supabase-js";
+import { createSupabaseBrowserClient } from "@/app/lib/supabase-browser";
+import { safeNextPath } from "@/app/lib/safe-redirect";
 import { motion, AnimatePresence } from "framer-motion";
+import { luxurySpring } from "@/app/lib/motion";
 
-// By adding `as const`, TypeScript knows this is strictly a "spring" type
-const luxurySpring = {
-	type: "spring" as const,
-	damping: 30,
-	stiffness: 100,
-	mass: 0.8,
-};
+// Where email links land; see app/auth/confirm/route.ts
+function confirmUrl(next: string) {
+	return `${window.location.origin}/auth/confirm?next=${encodeURIComponent(next)}`;
+}
+
+// Explains why the visitor was sent back here from an email link
+function LinkErrorNotice() {
+	const searchParams = useSearchParams();
+	if (searchParams.get("error") !== "link-invalid") return null;
+	return (
+		<div className="mb-5 p-3 rounded-xs text-xs font-body text-(--error-text) bg-(--error-bg) border border-(--error-border) text-center">
+			That link has expired or was already used. Sign in, or request a new
+			link.
+		</div>
+	);
+}
 
 export default function GlassAuthCard() {
 	const router = useRouter();
@@ -25,21 +37,44 @@ export default function GlassAuthCard() {
 	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [successMessage, setSuccessMessage] = useState<string | null>(null);
+	const [needsConfirmation, setNeedsConfirmation] = useState(false);
+
+	const resendConfirmation = async () => {
+		setErrorMessage(null);
+		const { error } = await createSupabaseBrowserClient().auth.resend({
+			type: "signup",
+			email,
+			options: { emailRedirectTo: confirmUrl("/account") },
+		});
+		if (error) {
+			setErrorMessage(error.message);
+		} else {
+			setNeedsConfirmation(false);
+			setSuccessMessage("A new confirmation email is on its way.");
+		}
+	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
 		setErrorMessage(null);
 		setSuccessMessage(null);
+		setNeedsConfirmation(false);
+		const supabase = createSupabaseBrowserClient();
 
 		try {
 			if (isSignUp) {
 				const { error } = await supabase.auth.signUp({
 					email,
 					password,
-					options: { data: { full_name: fullName } },
+					options: {
+						data: { full_name: fullName },
+						emailRedirectTo: confirmUrl("/account"),
+					},
 				});
 				if (error) throw error;
+				// Same message whether or not the email was already registered,
+				// so the form doesn't reveal who has an account
 				setSuccessMessage(
 					"An activation dispatch has been sent. Please confirm your email.",
 				);
@@ -49,12 +84,19 @@ export default function GlassAuthCard() {
 					password,
 				});
 				if (error) throw error;
-				router.push("/");
+				const next = new URLSearchParams(window.location.search).get(
+					"next",
+				);
+				router.push(safeNextPath(next, "/account"));
 				router.refresh();
 			}
 		} catch (err: unknown) {
-			// Replaced 'any' with 'unknown' for strict ESLint compliance
-			if (err instanceof Error) {
+			if (err instanceof AuthError && err.code === "email_not_confirmed") {
+				setNeedsConfirmation(true);
+				setErrorMessage(
+					"Please confirm your email before signing in. Check your inbox for the activation link.",
+				);
+			} else if (err instanceof Error) {
 				setErrorMessage(err.message);
 			} else {
 				setErrorMessage("An authentication error occurred.");
@@ -104,6 +146,9 @@ export default function GlassAuthCard() {
 				</motion.div>
 
 				{/* Alert Notices */}
+				<Suspense fallback={null}>
+					<LinkErrorNotice />
+				</Suspense>
 				<AnimatePresence mode="popLayout">
 					{errorMessage && (
 						<motion.div
@@ -111,9 +156,18 @@ export default function GlassAuthCard() {
 							animate={{ opacity: 1, y: 0, scale: 1 }}
 							exit={{ opacity: 0, scale: 0.95 }}
 							transition={luxurySpring}
-							className="mb-5 p-3 rounded-xs text-xs font-body text-rose-800 bg-rose-50/90 border border-rose-200 text-center"
+							className="mb-5 p-3 rounded-xs text-xs font-body text-(--error-text) bg-(--error-bg) border border-(--error-border) text-center"
 						>
 							{errorMessage}
+							{needsConfirmation && (
+								<button
+									type="button"
+									onClick={resendConfirmation}
+									className="block mx-auto mt-2 underline underline-offset-4 font-semibold cursor-pointer"
+								>
+									Resend confirmation email
+								</button>
+							)}
 						</motion.div>
 					)}
 					{successMessage && (
@@ -191,6 +245,7 @@ export default function GlassAuthCard() {
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							placeholder="Client Email"
+							autoComplete="email"
 							className="w-full bg-(--card-sub)/50 border border-(--border-color) rounded-xs py-3.5 pl-11 pr-4 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 focus:bg-white transition-all"
 						/>
 					</motion.div>
@@ -209,12 +264,15 @@ export default function GlassAuthCard() {
 							required
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
-							placeholder="Password"
+							placeholder={isSignUp ? "Password (8+ characters)" : "Password"}
+							minLength={isSignUp ? 8 : undefined}
+							autoComplete={isSignUp ? "new-password" : "current-password"}
 							className="w-full bg-(--card-sub)/50 border border-(--border-color) rounded-xs py-3.5 pl-11 pr-11 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 focus:bg-white transition-all tracking-wider"
 						/>
 						<button
 							type="button"
 							onClick={() => setShowPassword(!showPassword)}
+							aria-label={showPassword ? "Hide password" : "Show password"}
 							className="absolute right-3.5 p-1 text-(--text-muted) hover:text-(--text-headline) transition-colors cursor-pointer"
 						>
 							{showPassword ? (
@@ -232,7 +290,7 @@ export default function GlassAuthCard() {
 							className="flex justify-end pr-1 pt-0.5"
 						>
 							<Link
-								href="/coming-soon?feature=forgot-password"
+								href="/forgot-password"
 								className="font-secondary text-[9px] uppercase tracking-[0.2em] text-(--text-muted) hover:text-(--text-headline) transition-colors font-medium"
 							>
 								Forgot password?

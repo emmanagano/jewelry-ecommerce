@@ -1,67 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { Heart, ArrowLeft } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
-import { supabase } from "@/app/lib/supabase";
-import ProductCard, { Product } from "@/components/ProductCard";
+import ProductCard from "@/components/ProductCard";
+import { useWishlistProducts } from "@/app/lib/use-wishlist-products";
 
 export default function WishlistPage() {
-	const { wishlist, totalWishlistCount, isHydrated } = useStore();
-	const [products, setProducts] = useState<Product[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-
-	useEffect(() => {
-		let isMounted = true;
-
-		async function fetchWishlistItems() {
-			if (!isHydrated) return;
-
-			if (wishlist.length === 0) {
-				if (isMounted) {
-					setProducts([]);
-					setIsLoading(false);
-				}
-				return;
-			}
-
-			setIsLoading(true);
-			const { data, error } = await supabase
-				.from("products")
-				.select("*")
-				.in("id", wishlist);
-
-			if (!isMounted) return;
-
-			if (!error && data) {
-				// We pass the full `images` array here so the ProductCard's
-				// editorial hover reveal works perfectly in the wishlist too.
-				const formatted: Product[] = data.map((item) => ({
-					id: item.id,
-					name: item.name,
-					category: item.category,
-					price: item.price,
-					badge: item.badge,
-					slug: item.slug,
-					subtitle: item.subtitle,
-					images: item.images,
-				}));
-				setProducts(formatted);
-			}
-			setIsLoading(false);
-		}
-
-		fetchWishlistItems();
-
-		return () => {
-			isMounted = false;
-		};
-	}, [wishlist, isHydrated]);
+	const { totalWishlistCount, isHydrated } = useStore();
+	const { products, isLoading } = useWishlistProducts();
 
 	if (!isHydrated) {
 		return (
-			<main className="min-h-screen py-12 lg:py-16 px-4 sm:px-8 max-w-screen-2xl mx-auto animate-pulse">
+			<div className="min-h-screen py-12 lg:py-16 px-4 sm:px-8 max-w-screen-2xl mx-auto animate-pulse">
 				<div className="h-4 w-32 bg-(--card-sub) rounded-xs mb-4" />
 				<div className="h-8 w-64 bg-(--card-sub) rounded-xs mb-12" />
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-12">
@@ -73,12 +25,12 @@ export default function WishlistPage() {
 						</div>
 					))}
 				</div>
-			</main>
+			</div>
 		);
 	}
 
 	return (
-		<main className="min-h-screen py-12 lg:py-16 px-4 sm:px-8 max-w-screen-2xl mx-auto bg-(--bg-base)">
+		<div className="min-h-screen py-12 lg:py-16 px-4 sm:px-8 max-w-screen-2xl mx-auto bg-(--bg-base)">
 			{/* Editorial Header */}
 			<div className="mb-12 pb-6 border-b border-(--border-color)/60 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
 				<div>
@@ -149,6 +101,6 @@ export default function WishlistPage() {
 					))}
 				</div>
 			)}
-		</main>
+		</div>
 	);
 }

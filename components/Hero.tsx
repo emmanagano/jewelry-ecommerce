@@ -1,42 +1,22 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { luxurySpring, staggerContainer, fadeSlide } from "@/app/lib/motion";
 
-// Our standard "Quiet Luxury" physics
-const luxurySpring = {
-	type: "spring" as const,
-	damping: 30,
-	stiffness: 100,
-	mass: 0.8,
-};
-
-// Stagger sequence for the Bento grid tiles
-const staggerContainer = {
-	hidden: { opacity: 0 },
-	show: {
-		opacity: 1,
-		transition: {
-			staggerChildren: 0.15,
-			delayChildren: 0.1,
-		},
-	},
-};
-
-// Gentle fade-and-slide up for each individual block
-const blockEntrance = {
-	hidden: { opacity: 0, y: 30 },
-	show: { opacity: 1, y: 0, transition: { ...luxurySpring, duration: 1.2 } },
-};
+// Stagger sequence for the Bento grid tiles, with a gentle fade-and-slide up per block
+const heroContainer = staggerContainer(0.15, 0.1);
+const blockEntrance = fadeSlide(30, { duration: 1.2 });
 
 export default function Hero() {
 	return (
 		<section className="w-full px-4 sm:px-8 py-6 h-auto lg:h-[82vh] min-h-160 bg-(--bg-base)">
 			{/* Main Bento Grid */}
 			<motion.div
-				variants={staggerContainer}
+				variants={heroContainer}
 				initial="hidden"
 				animate="show"
 				className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full w-full max-w-screen-2xl mx-auto"
@@ -49,20 +29,28 @@ export default function Hero() {
 					className="lg:col-span-7 h-120 lg:h-full"
 				>
 					<Link
-						href="/coming-soon?feature=new-and-featured"
+						href="/collections/new-and-featured"
 						className="w-full h-full border border-(--border-color) relative overflow-hidden group block rounded-xs"
 					>
 						{/* Editorial Background Image */}
-						<motion.img
+						<motion.div
 							whileHover={{ scale: 1.05 }}
 							transition={{
 								duration: 1.5,
 								ease: [0.25, 0.46, 0.45, 0.94],
 							}}
-							src="https://images.unsplash.com/photo-1599458349289-18f0ee82e6ed?q=80&w=989&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
-							alt="Botanical Silver Heirlooms"
-							className="absolute inset-0 w-full h-full object-cover object-center"
-						/>
+							className="absolute inset-0"
+						>
+							<Image
+								src="https://images.unsplash.com/photo-1599458349289-18f0ee82e6ed?q=80&w=989&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+								alt="Botanical Silver Heirlooms"
+								fill
+								sizes="(min-width: 1024px) 58vw, 100vw"
+								loading="eager"
+								fetchPriority="high"
+								className="object-cover object-center"
+							/>
+						</motion.div>
 
 						{/* Luxury Vignette / Scrim Gradient */}
 						<div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/35 to-black/10 transition-opacity duration-700 group-hover:opacity-90" />
@@ -114,16 +102,22 @@ export default function Hero() {
 								href="/category/rings"
 								className="relative h-full border border-(--border-color) overflow-hidden group rounded-xs flex flex-col justify-between p-4"
 							>
-								<motion.img
+								<motion.div
 									whileHover={{ scale: 1.1 }}
 									transition={{
 										duration: 1.5,
 										ease: [0.25, 0.46, 0.45, 0.94],
 									}}
-									src="https://images.unsplash.com/photo-1773142073097-166a5a379cab?q=80&w=800&auto=format&fit=crop"
-									alt="Handcrafted Rings on Champagne Silk"
-									className="absolute inset-0 w-full h-full object-cover object-center"
-								/>
+									className="absolute inset-0"
+								>
+									<Image
+										src="https://images.unsplash.com/photo-1773142073097-166a5a379cab?q=80&w=800&auto=format&fit=crop"
+										alt="Handcrafted Rings on Champagne Silk"
+										fill
+										sizes="(min-width: 1024px) 25vw, 50vw"
+										className="object-cover object-center"
+									/>
+								</motion.div>
 								<div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/25 to-black/10 transition-opacity duration-500 group-hover:opacity-90" />
 
 								<div className="relative z-10 flex justify-end w-full">
@@ -150,16 +144,22 @@ export default function Hero() {
 								href="/category/necklaces"
 								className="relative h-full border border-(--border-color) overflow-hidden group rounded-xs flex flex-col justify-between p-4"
 							>
-								<motion.img
+								<motion.div
 									whileHover={{ scale: 1.1 }}
 									transition={{
 										duration: 1.5,
 										ease: [0.25, 0.46, 0.45, 0.94],
 									}}
-									src="https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=800&auto=format&fit=crop"
-									alt="Fine Necklaces"
-									className="absolute inset-0 w-full h-full object-cover object-center"
-								/>
+									className="absolute inset-0"
+								>
+									<Image
+										src="https://images.unsplash.com/photo-1599643477877-530eb83abc8e?q=80&w=800&auto=format&fit=crop"
+										alt="Fine Necklaces"
+										fill
+										sizes="(min-width: 1024px) 25vw, 50vw"
+										className="object-cover object-center"
+									/>
+								</motion.div>
 								<div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/25 to-black/10 transition-opacity duration-500 group-hover:opacity-90" />
 
 								<div className="relative z-10 flex justify-end w-full">
@@ -189,16 +189,22 @@ export default function Hero() {
 								href="/category/earrings"
 								className="relative h-full border border-(--border-color) overflow-hidden group rounded-xs flex flex-col justify-between p-4"
 							>
-								<motion.img
+								<motion.div
 									whileHover={{ scale: 1.1 }}
 									transition={{
 										duration: 1.5,
 										ease: [0.25, 0.46, 0.45, 0.94],
 									}}
-									src="https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=800&auto=format&fit=crop"
-									alt="Fine Earrings"
-									className="absolute inset-0 w-full h-full object-cover object-center"
-								/>
+									className="absolute inset-0"
+								>
+									<Image
+										src="https://images.unsplash.com/photo-1630019852942-f89202989a59?q=80&w=800&auto=format&fit=crop"
+										alt="Fine Earrings"
+										fill
+										sizes="(min-width: 1024px) 25vw, 50vw"
+										className="object-cover object-center"
+									/>
+								</motion.div>
 								<div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/25 to-black/10 transition-opacity duration-500 group-hover:opacity-90" />
 
 								<div className="relative z-10 flex justify-end w-full">
@@ -230,16 +236,22 @@ export default function Hero() {
 							className="relative w-full h-full border border-(--border-color) overflow-hidden group rounded-xs p-8 sm:p-10 flex flex-col justify-end"
 						>
 							{/* Studio Solitaire Photography */}
-							<motion.img
+							<motion.div
 								whileHover={{ scale: 1.05 }}
 								transition={{
 									duration: 1.5,
 									ease: [0.25, 0.46, 0.45, 0.94],
 								}}
-								src="https://images.unsplash.com/photo-1719924998065-0c60e329ef58?w=1200&auto=format&fit=crop&q=80"
-								alt="Lab-Grown Solitaire Diamonds"
-								className="absolute inset-0 w-full h-full object-cover object-center"
-							/>
+								className="absolute inset-0"
+							>
+								<Image
+									src="https://images.unsplash.com/photo-1719924998065-0c60e329ef58?w=1200&auto=format&fit=crop&q=80"
+									alt="Lab-Grown Solitaire Diamonds"
+									fill
+									sizes="(min-width: 1024px) 40vw, 100vw"
+									className="object-cover object-center"
+								/>
+							</motion.div>
 							{/* Gradient scrim */}
 							<div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/40 to-transparent transition-opacity duration-500" />
 

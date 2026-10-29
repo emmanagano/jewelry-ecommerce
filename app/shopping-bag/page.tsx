@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
 	X,
@@ -15,40 +16,18 @@ import {
 	Gift,
 	ArrowLeft,
 } from "lucide-react";
-import { useStore } from "@/context/StoreContext";
+import {
+	MAX_QUANTITY,
+	useStore,
+	type CartItem,
+} from "@/context/StoreContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { luxurySpring, staggerContainer, fadeSlide } from "@/app/lib/motion";
+import { formatPrice } from "@/app/lib/format";
+import { applyPromoCode } from "@/app/lib/store-actions";
 
-// Our standard "Quiet Luxury" physics
-const luxurySpring = {
-	type: "spring" as const,
-	damping: 30,
-	stiffness: 100,
-	mass: 0.8,
-};
-
-const staggerContainer = {
-	hidden: { opacity: 0 },
-	show: {
-		opacity: 1,
-		transition: { staggerChildren: 0.1 },
-	},
-};
-
-const staggerItem = {
-	hidden: { opacity: 0, y: 20 },
-	show: { opacity: 1, y: 0, transition: luxurySpring },
-};
-
-export interface CartItem {
-	id: string;
-	slug: string;
-	name: string;
-	subtitle?: string;
-	price: number;
-	size: string;
-	quantity: number;
-	image?: string;
-}
+const staggerContainerVariants = staggerContainer(0.1);
+const staggerItem = fadeSlide(20);
 
 export default function BagPage() {
 	const {
@@ -64,7 +43,13 @@ export default function BagPage() {
 	const [includeGiftPackaging, setIncludeGiftPackaging] = useState(false);
 	const [giftNote, setGiftNote] = useState("");
 	const [promoCode, setPromoCode] = useState("");
-	const [discountPercent, setDiscountPercent] = useState(0);
+	const [appliedPromo, setAppliedPromo] = useState<{
+		code: string;
+		percentOff: number;
+	} | null>(null);
+	const [promoError, setPromoError] = useState<string | null>(null);
+	const [isCheckingPromo, startPromoCheck] = useTransition();
+	const discountPercent = (appliedPromo?.percentOff ?? 0) / 100;
 
 	// Calculations (cents)
 	const GIFT_PACKAGING_FEE_CENTS = 500; // $5.00
@@ -87,20 +72,19 @@ export default function BagPage() {
 		subtotalCents - discountCents + packagingCents,
 	);
 
-	const formatPrice = (cents: number) => {
-		return (cents / 100).toLocaleString("en-US", {
-			style: "currency",
-			currency: "USD",
-		});
-	};
-
+	// Codes are checked on the server against the promo_codes table
 	const handleApplyPromo = (e: React.FormEvent) => {
 		e.preventDefault();
-		if (promoCode.trim().toUpperCase() === "ARCHIVE10") {
-			setDiscountPercent(0.1);
-		} else {
-			alert("Invalid promotion code. Try code: ARCHIVE10");
-		}
+		setPromoError(null);
+		startPromoCheck(async () => {
+			const result = await applyPromoCode(promoCode);
+			if (result.ok) {
+				setAppliedPromo({ code: result.code, percentOff: result.percentOff });
+				setPromoCode("");
+			} else {
+				setPromoError(result.message);
+			}
+		});
 	};
 
 	const handleMoveToWishlist = (item: CartItem) => {
@@ -112,7 +96,7 @@ export default function BagPage() {
 
 	if (!isHydrated) {
 		return (
-			<main className="min-h-screen py-16 px-4 sm:px-8 max-w-screen-2xl mx-auto animate-pulse">
+			<div className="min-h-screen py-16 px-4 sm:px-8 max-w-screen-2xl mx-auto animate-pulse">
 				<div className="h-4 w-32 bg-(--card-sub) rounded-xs mb-4" />
 				<div className="h-8 w-64 bg-(--card-sub) rounded-xs mb-12" />
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
@@ -122,12 +106,12 @@ export default function BagPage() {
 					</div>
 					<div className="lg:col-span-5 h-96 bg-(--card-sub) rounded-xs" />
 				</div>
-			</main>
+			</div>
 		);
 	}
 
 	return (
-		<main className="min-h-screen py-12 px-4 sm:px-8 max-w-screen-2xl mx-auto bg-(--bg-base)">
+		<div className="min-h-screen py-12 px-4 sm:px-8 max-w-screen-2xl mx-auto bg-(--bg-base)">
 			{/* Editorial Header */}
 			<motion.div
 				initial={{ opacity: 0, y: -10 }}
@@ -233,7 +217,7 @@ export default function BagPage() {
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 					{/* LEFT: Item Rows (Spans 7 columns) */}
 					<motion.div
-						variants={staggerContainer}
+						variants={staggerContainerVariants}
 						initial="hidden"
 						animate="show"
 						className="lg:col-span-7 flex flex-col space-y-8"
@@ -267,10 +251,12 @@ export default function BagPage() {
 											className="w-24 sm:w-32 aspect-4/5 bg-(--card-sub) border border-(--border-color) shrink-0 flex flex-col items-center justify-center relative overflow-hidden transition-opacity hover:opacity-85 rounded-xs"
 										>
 											{item.image ? (
-												<img
+												<Image
 													src={item.image}
 													alt={item.name}
-													className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+													fill
+													sizes="128px"
+													className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
 												/>
 											) : (
 												<span className="font-secondary text-[9px] uppercase tracking-[0.25em] font-medium text-(--text-muted)">
@@ -379,7 +365,11 @@ export default function BagPage() {
 																	1,
 															)
 														}
-														className="p-2.5 text-(--text-muted) hover:text-(--text-headline) cursor-pointer"
+														disabled={
+															item.quantity >=
+															MAX_QUANTITY
+														}
+														className="p-2.5 text-(--text-muted) hover:text-(--text-headline) cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
 														aria-label="Increase quantity"
 													>
 														<Plus
@@ -399,7 +389,7 @@ export default function BagPage() {
 															item,
 														)
 													}
-													className="font-secondary text-[9px] uppercase tracking-[0.2em] font-medium flex items-center gap-1.5 cursor-pointer text-(--text-muted) hover:text-[#f43f5e] transition-colors"
+													className="font-secondary text-[9px] uppercase tracking-[0.2em] font-medium flex items-center gap-1.5 cursor-pointer text-(--text-muted) hover:text-(--accent-love) transition-colors"
 												>
 													<Heart
 														size={12}
@@ -502,11 +492,14 @@ export default function BagPage() {
 							{/* Discreet Privilege / Archive Inscription */}
 							<form
 								onSubmit={handleApplyPromo}
-								className="flex gap-2 mb-8"
+								className={`flex gap-2 ${promoError || appliedPromo ? "mb-3" : "mb-8"}`}
 							>
 								<input
 									type="text"
-									placeholder="Code (e.g. ARCHIVE10)"
+									placeholder="Promo code"
+									aria-label="Promo code"
+									aria-invalid={promoError ? true : undefined}
+									aria-describedby={promoError ? "promo-message" : undefined}
 									value={promoCode}
 									onChange={(e) =>
 										setPromoCode(e.target.value)
@@ -517,11 +510,42 @@ export default function BagPage() {
 									whileHover={{ scale: 1.02 }}
 									whileTap={{ scale: 0.95 }}
 									type="submit"
-									className="px-5 border border-(--border-color) bg-(--card-sub) font-secondary text-[9px] uppercase tracking-[0.2em] font-semibold transition-colors hover:bg-(--text-headline) hover:text-(--bg-base) cursor-pointer rounded-xs text-(--text-headline)"
+									disabled={isCheckingPromo || !promoCode.trim()}
+									className="px-5 border border-(--border-color) bg-(--card-sub) font-secondary text-[9px] uppercase tracking-[0.2em] font-semibold transition-colors hover:bg-(--text-headline) hover:text-(--bg-base) cursor-pointer rounded-xs text-(--text-headline) disabled:opacity-50 disabled:cursor-not-allowed"
 								>
-									Apply
+									{isCheckingPromo ? "Checking" : "Apply"}
 								</motion.button>
 							</form>
+							{promoError && (
+								<p
+									id="promo-message"
+									role="alert"
+									className="mb-8 font-body text-[11px] text-(--error-text)"
+								>
+									{promoError}
+								</p>
+							)}
+							{appliedPromo && !promoError && (
+								<p
+									role="status"
+									className="mb-8 flex items-center justify-between font-secondary text-[10px] uppercase tracking-[0.2em] text-(--text-muted)"
+								>
+									<span>
+										Code{" "}
+										<span className="font-semibold text-(--text-headline)">
+											{appliedPromo.code}
+										</span>{" "}
+										applied
+									</span>
+									<button
+										type="button"
+										onClick={() => setAppliedPromo(null)}
+										className="underline underline-offset-4 hover:text-(--text-headline) cursor-pointer"
+									>
+										Remove
+									</button>
+								</p>
+							)}
 
 							{/* Price Breakdown */}
 							<motion.div
@@ -570,11 +594,11 @@ export default function BagPage() {
 												height: "auto",
 											}}
 											exit={{ opacity: 0, height: 0 }}
-											className="flex justify-between text-[#f43f5e] overflow-hidden"
+											className="flex justify-between text-(--accent-love) overflow-hidden"
 										>
 											<span>
 												Privilege Courtesy (-
-												{discountPercent * 100}%)
+												{appliedPromo?.percentOff}%)
 											</span>
 											<span>
 												-{formatPrice(discountCents)}
@@ -621,25 +645,17 @@ export default function BagPage() {
 								</motion.span>
 							</motion.div>
 
-							{/* High-Finish Acquisition CTA */}
-							<motion.button
-								whileHover={{ scale: 1.01 }}
-								whileTap={{ scale: 0.98 }}
-								transition={luxurySpring}
-								type="button"
-								onClick={() =>
-									alert(
-										"Proceeding to secure acquisition gateway...",
-									)
-								}
-								className="w-full py-4 font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold bg-(--text-headline) text-(--bg-base) hover:opacity-95 rounded-xs cursor-pointer flex items-center justify-center gap-2 shadow-xs"
+							{/* Checkout isn't built yet (no payments); the bag is the end of the flow */}
+							<Link
+								href="/coming-soon?feature=checkout"
+								className="w-full py-4 font-secondary text-[10px] uppercase tracking-[0.25em] font-semibold bg-(--text-headline) text-(--bg-base) hover:opacity-95 transition-opacity rounded-xs cursor-pointer flex items-center justify-center gap-2 shadow-xs"
 							>
 								<span>Proceed to Checkout</span>
 								<ArrowRight
 									size={14}
 									className="stroke-[1.5]"
 								/>
-							</motion.button>
+							</Link>
 						</div>
 
 						{/* Editorial Guarantees */}
@@ -678,6 +694,6 @@ export default function BagPage() {
 					</motion.div>
 				</div>
 			)}
-		</main>
+		</div>
 	);
 }

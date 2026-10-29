@@ -1,48 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Sparkles } from "lucide-react";
-import { supabase } from "@/app/lib/supabase";
+import type { ProductSummary } from "@/app/lib/products";
 
-export interface FeaturedProduct {
-	id: string;
-	name: string;
-	slug: string;
-	subtitle: string;
-	badge: string | null;
-	category: string;
-	price: number;
-	images?: string[];
-	imageUrl?: string;
-}
-
-export default function EditorialShowcase() {
-	const [products, setProducts] = useState<FeaturedProduct[]>([]);
+// Products are fetched on the server by the login page
+export default function EditorialShowcase({
+	products,
+}: {
+	products: ProductSummary[];
+}) {
 	const [currentIndex, setCurrentIndex] = useState(0);
-	const [loading, setLoading] = useState(true);
-
-	useEffect(() => {
-		async function fetchFeatured() {
-			const { data, error } = await supabase
-				.from("products")
-				.select("*")
-				.ilike("badge", "%BEST SELLER%")
-				.limit(6);
-
-			if (error || !data || data.length === 0) {
-				const { data: fallbackData } = await supabase
-					.from("products")
-					.select("*")
-					.limit(6);
-				if (fallbackData) setProducts(fallbackData);
-			} else {
-				setProducts(data);
-			}
-			setLoading(false);
-		}
-		fetchFeatured();
-	}, []);
 
 	const currentItem = products[currentIndex];
 
@@ -56,7 +26,7 @@ export default function EditorialShowcase() {
 		);
 	};
 
-	if (loading || !currentItem) {
+	if (!currentItem) {
 		return (
 			<div className="w-full h-full bg-(--card-sub) animate-pulse flex flex-col justify-between p-10">
 				<div className="h-4 w-28 bg-white/20 rounded-xs" />
@@ -70,17 +40,18 @@ export default function EditorialShowcase() {
 
 	const displayImg =
 		currentItem.images?.[0] ||
-		currentItem.imageUrl ||
 		"https://images.unsplash.com/photo-1599458349289-18f0ee82e6ed?q=80&w=1200&auto=format&fit=crop";
 
 	return (
 		<div className="relative w-full h-full flex flex-col justify-between p-8 sm:p-10 text-white group overflow-hidden select-none">
 			{/* High-res background image */}
-			<img
+			<Image
 				key={displayImg}
 				src={displayImg}
 				alt={currentItem.name}
-				className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105"
+				fill
+				sizes="(min-width: 1024px) 50vw, 0px"
+				className="object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105"
 			/>
 
 			{/* Soft subtle vignette scrim (lighter so photography breathes) */}
@@ -136,7 +107,7 @@ export default function EditorialShowcase() {
 					<Sparkles size={10} className="text-amber-200/80" />
 					<span>
 						{currentItem.badge || "Permanent Archive"} •{" "}
-						{currentItem.category}
+						{currentItem.category.name}
 					</span>
 				</div>
 

@@ -1,48 +1,24 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 
-// Our standard Quiet Luxury physics
-const luxurySpring = {
-	type: "spring" as const,
-	damping: 30,
-	stiffness: 100,
-	mass: 0.8,
-};
-
-// We separate the actual animated content into its own component
-// so we can safely wrap it in <Suspense> (a Next.js requirement when using useSearchParams)
-function AnimatedTemplate({ children }: { children: React.ReactNode }) {
+// A light fade-and-rise on each route change. Keyed on the pathname only, so
+// changing filters or sort (search params) doesn't replay the transition or
+// remount the page. Opacity/transform only — animating blur is costly.
+export default function Template({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
-	const searchParams = useSearchParams();
-
-	// Combine the path and the query string to create a 100% unique key
-	const urlKey = `${pathname}?${searchParams.toString()}`;
 
 	return (
 		<motion.div
-			key={urlKey}
-			initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
-			animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-			transition={{
-				...luxurySpring,
-				duration: 1.2,
-				delay: 0.1,
-			}}
+			key={pathname}
+			initial={{ opacity: 0, y: 8 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
 			className="w-full h-full"
 		>
 			{children}
 		</motion.div>
-	);
-}
-
-export default function Template({ children }: { children: React.ReactNode }) {
-	return (
-		// Suspense is required by Next.js when reading URL parameters globally
-		<Suspense fallback={<div>{children}</div>}>
-			<AnimatedTemplate>{children}</AnimatedTemplate>
-		</Suspense>
 	);
 }

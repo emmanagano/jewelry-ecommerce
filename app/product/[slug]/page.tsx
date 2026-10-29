@@ -1,7 +1,9 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { supabase } from "@/app/lib/supabase";
+import { getProductBySlug, getProductSlugs } from "@/app/lib/data/products";
 import ProductInteractive from "@/components/ProductInteractive";
 
 interface PageProps {
@@ -9,24 +11,28 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-	const { data: products } = await supabase.from("products").select("slug");
-	return (products ?? []).map((p) => ({
-		slug: p.slug,
-	}));
+	const slugs = await getProductSlugs();
+	return slugs.map((slug) => ({ slug }));
 }
 
-async function getProductBySlug(slug: string) {
-	"use cache";
-	const { data, error } = await supabase
-		.from("products")
-		.select("*")
-		.eq("slug", slug)
-		.single();
+export async function generateMetadata({
+	params,
+}: PageProps): Promise<Metadata> {
+	const { slug } = await params;
+	const product = await getProductBySlug(slug);
+	if (!product) return {};
 
-	if (error || !data) {
-		return null;
-	}
-	return data;
+	const description =
+		product.description ?? product.subtitle ?? product.category.name;
+	return {
+		title: product.name,
+		description,
+		openGraph: {
+			title: product.name,
+			description,
+			images: product.images?.slice(0, 1),
+		},
+	};
 }
 
 function ProductSkeleton() {
@@ -57,20 +63,46 @@ async function ProductContent({ params }: PageProps) {
 		notFound();
 	}
 
-	const category = product?.category || "Jewelry";
-	const categorySlug = category.toLowerCase();
+	const { category } = product;
 
-	const rawImages: string[] = product.images ?? [];
-	const galleryImages = [
-		rawImages[0] ?? product.imageUrl ?? "",
-		rawImages[1] ?? rawImages[0] ?? product.imageUrl ?? "",
-		rawImages[0] ?? product.imageUrl ?? "",
-	].filter(Boolean);
+	// Structured data so search engines can show price and availability
+	const jsonLd = {
+		"@context": "https://schema.org",
+		"@type": "Product",
+		name: product.name,
+		description: product.description ?? product.subtitle ?? undefined,
+		image: product.images ?? [],
+		category: category.name,
+		material: product.metal ?? undefined,
+		offers: {
+			"@type": "Offer",
+			price: (product.price / 100).toFixed(2),
+			priceCurrency: "USD",
+			availability: "https://schema.org/InStock",
+		},
+	};
+
+	// Show every real photo. Products with fewer than three photos get a
+	// zoomed "detail" crop of the first one as a final panel.
+	const images = product.images ?? [];
+	const galleryImages = images.map((src) => ({ src, detail: false }));
+	if (images.length > 0 && images.length < 3) {
+		galleryImages.push({ src: images[0], detail: true });
+	}
 
 	return (
 		<div className="max-w-screen-2xl mx-auto px-4 sm:px-8 py-8 lg:py-12">
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{
+					__html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+				}}
+			/>
+
 			{/* Breadcrumbs */}
-			<nav className="font-secondary text-[10px] uppercase tracking-[0.2em] font-medium flex items-center space-x-2 mb-8 text-(--text-muted)">
+			<nav
+				aria-label="Breadcrumb"
+				className="font-secondary text-[10px] uppercase tracking-[0.2em] font-medium flex items-center space-x-2 mb-8 text-(--text-muted)">
 				<Link
 					href="/"
 					className="hover:text-(--text-headline) transition-colors"
@@ -79,10 +111,10 @@ async function ProductContent({ params }: PageProps) {
 				</Link>
 				<span className="opacity-50">/</span>
 				<Link
-					href={`/category/${categorySlug}`}
+					href={`/category/${category.slug}`}
 					className="hover:text-(--text-headline) transition-colors"
 				>
-					{category}
+					{category.name}
 				</Link>
 				<span className="opacity-50">/</span>
 				<span className="truncate max-w-xs text-(--text-headline)">
@@ -94,18 +126,26 @@ async function ProductContent({ params }: PageProps) {
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 				{/* Left: 3-Image Editorial Stack */}
 				<div className="lg:col-span-7 flex flex-col gap-6 sm:gap-8">
-					{galleryImages.map((imgSrc, idx) => (
+					{galleryImages.map(({ src, detail }, idx) => (
 						<div
-							key={`${imgSrc}-${idx}`}
+							key={`${src}-${idx}`}
 							className="relative w-full aspect-4/5 overflow-hidden bg-(--card-sub) border border-(--border-color) rounded-xs group"
 						>
-							<img
-								src={imgSrc}
-								alt={`${product.name} - View 0${idx + 1}`}
-								className={`w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-105 ${
-									idx === 2
+							<Image
+								src={src}
+								fill
+								sizes="(min-width: 1024px) 58vw, 100vw"
+								loading={idx === 0 ? "eager" : "lazy"}
+								fetchPriority={idx === 0 ? "high" : "auto"}
+								alt={
+									detail
+										? `${product.name} - Detail`
+										: `${product.name} - View ${idx + 1}`
+								}
+								className={`object-cover transition-transform duration-700 ease-out ${
+									detail
 										? "scale-125 hover:scale-150 origin-center"
-										: ""
+										: "hover:scale-105"
 								}`}
 							/>
 						</div>
@@ -123,10 +163,10 @@ async function ProductContent({ params }: PageProps) {
 
 export default function ProductPage({ params }: PageProps) {
 	return (
-		<main className="min-h-screen bg-(--bg-base)">
+		<div className="min-h-screen bg-(--bg-base)">
 			<Suspense fallback={<ProductSkeleton />}>
 				<ProductContent params={params} />
 			</Suspense>
-		</main>
+		</div>
 	);
 }

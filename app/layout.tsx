@@ -1,48 +1,56 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Roboto } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { AuthProvider } from "../context/AuthContext";
 import { StoreProvider } from "../context/StoreContext";
+import { getCategories } from "./lib/data/products";
 
-// 1. Configure your three fonts
-const fontPrimary = Playfair_Display({
-	variable: "--font-primary",
+const serifFont = Playfair_Display({
+	variable: "--font-serif",
 	subsets: ["latin"],
 });
 
-const fontSecondary = Inter({
-	variable: "--font-secondary",
-	subsets: ["latin"],
-});
-
-const fontBody = Roboto({
-	variable: "--font-body",
-	weight: ["400", "700"],
+const sansFont = Inter({
+	variable: "--font-sans",
 	subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-	title: "BrandLogo | Fine Jewelry & Heirlooms",
+	title: {
+		default: "BrandLogo | Fine Jewelry & Heirlooms",
+		template: "%s | BrandLogo",
+	},
 	description: "Handcrafted fine jewelry designed for modern longevity.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	// The nav degrades to its fixed links rather than taking the site down
+	const categories = await getCategories().catch((error) => {
+		console.error(error);
+		return [];
+	});
+
 	return (
 		<html
 			lang="en"
-			className={`${fontPrimary.variable} ${fontSecondary.variable} ${fontBody.variable} h-full antialiased`}
+			className={`${serifFont.variable} ${sansFont.variable} h-full antialiased`}
 		>
-			<body className="min-h-full flex flex-col bg-(--bg-base) text-(--text-headline)">
-				<StoreProvider>
-					<Navbar />
-					<main className="grow">{children}</main>
-					<Footer />
-				</StoreProvider>
+			<body className="font-sans min-h-full flex flex-col bg-(--bg-base) text-(--text-headline)">
+				<AuthProvider>
+					<StoreProvider>
+						<Navbar
+							categories={categories.map(({ slug, name }) => ({ slug, name }))}
+						/>
+						<main className="grow">{children}</main>
+						<Footer />
+					</StoreProvider>
+				</AuthProvider>
 			</body>
 		</html>
 	);

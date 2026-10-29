@@ -1,39 +1,67 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Search, Heart, ShoppingBag, Menu, X, User } from "lucide-react";
 import Link from "next/link";
+import Form from "next/form";
+import type { Category } from "@/app/lib/products";
 import { useStore } from "@/context/StoreContext";
+import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-
-// Our standard "Quiet Luxury" physics
-const luxurySpring = {
-	type: "spring" as const,
-	damping: 30,
-	stiffness: 100,
-	mass: 0.8,
-};
+import { luxurySpring, staggerContainer, fadeSlide } from "@/app/lib/motion";
 
 // Variants for staggering children (desktop links & mobile links)
-const staggerContainer = {
-	hidden: { opacity: 0 },
-	show: {
-		opacity: 1,
-		transition: {
-			staggerChildren: 0.05,
-			delayChildren: 0.1,
-		},
-	},
-};
+const navContainer = staggerContainer(0.05, 0.1);
+const staggerItem = fadeSlide(-5);
 
-const staggerItem = {
-	hidden: { opacity: 0, y: -5 },
-	show: { opacity: 1, y: 0, transition: luxurySpring },
-};
+interface NavbarProps {
+	categories: Pick<Category, "slug" | "name">[];
+}
 
-export default function Navbar() {
+export default function Navbar({ categories }: NavbarProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const { totalCartCount, totalWishlistCount } = useStore();
+	const { user } = useAuth();
+	const accountHref = user ? "/account" : "/login";
+	const menuButtonRef = useRef<HTMLButtonElement>(null);
+	const panelRef = useRef<HTMLDivElement>(null);
+
+	// While the mobile menu is open: focus it, keep Tab inside it, close on
+	// Escape, and return focus to the hamburger button afterwards
+	useEffect(() => {
+		if (!isOpen) return;
+		const panel = panelRef.current;
+		const menuButton = menuButtonRef.current;
+		const focusables = () =>
+			Array.from(
+				panel?.querySelectorAll<HTMLElement>("a[href], button, input") ??
+					[],
+			);
+		focusables()[0]?.focus();
+
+		const onKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				setIsOpen(false);
+				return;
+			}
+			if (e.key !== "Tab") return;
+			const items = focusables();
+			const first = items[0];
+			const last = items[items.length - 1];
+			if (e.shiftKey && document.activeElement === first) {
+				e.preventDefault();
+				last?.focus();
+			} else if (!e.shiftKey && document.activeElement === last) {
+				e.preventDefault();
+				first?.focus();
+			}
+		};
+		document.addEventListener("keydown", onKeyDown);
+		return () => {
+			document.removeEventListener("keydown", onKeyDown);
+			menuButton?.focus();
+		};
+	}, [isOpen]);
 
 	// Prevent scrolling when mobile menu is open
 	useEffect(() => {
@@ -48,16 +76,13 @@ export default function Navbar() {
 	}, [isOpen]);
 
 	const navItems = [
-		{
-			name: "New & Featured",
-			href: "/coming-soon?feature=new-and-featured",
-		},
-		{ name: "Bracelets", href: "/category/bracelets" },
-		{ name: "Rings", href: "/category/rings" },
-		{ name: "Necklaces", href: "/category/necklaces" },
-		{ name: "Earrings", href: "/category/earrings" },
+		{ name: "New & Featured", href: "/collections/new-and-featured" },
+		...categories.map((c) => ({
+			name: c.name,
+			href: `/category/${c.slug}`,
+		})),
 		{ name: "Engraving", href: "/coming-soon?feature=engraving" },
-		{ name: "Gifts", href: "/coming-soon?feature=gifts" },
+		{ name: "Gifts", href: "/collections/gifts" },
 		{ name: "Blog", href: "/coming-soon?feature=blog" },
 	];
 
@@ -73,11 +98,14 @@ export default function Navbar() {
 				{/* Mobile: Hamburger Button */}
 				<div className="flex items-center md:hidden">
 					<motion.button
+						ref={menuButtonRef}
 						whileHover={{ scale: 1.1 }}
 						whileTap={{ scale: 0.9 }}
 						transition={luxurySpring}
 						onClick={() => setIsOpen(true)}
 						aria-label="Open navigation menu"
+						aria-expanded={isOpen}
+						aria-controls="mobile-menu"
 						className="p-1 -ml-1 text-(--text-headline) hover:opacity-60 transition-opacity cursor-pointer"
 					>
 						<Menu className="w-5 h-5 stroke-[1.5]" />
@@ -93,8 +121,24 @@ export default function Navbar() {
 					</Link>
 				</div>
 
-				{/* Right Actions: Wishlist & Bag */}
+				{/* Right Actions: Search, Wishlist & Bag */}
 				<div className="flex items-center space-x-5 sm:space-x-6 shrink-0">
+					{/* Desktop Search (mobile search lives in the drawer) */}
+					<Form
+						action="/search"
+						role="search"
+						className="hidden md:flex relative items-center"
+					>
+						<Search className="absolute left-3 w-3.5 h-3.5 text-(--text-muted) pointer-events-none" />
+						<input
+							type="search"
+							name="q"
+							placeholder="Search pieces..."
+							aria-label="Search pieces"
+							className="w-44 lg:w-56 bg-(--card-sub)/70 border border-(--border-color) rounded-full py-1.5 pl-8 pr-3 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 focus:bg-white"
+						/>
+					</Form>
+
 					{/* Wishlist Link */}
 					<Link href="/my-wishlist" aria-label="Wishlist">
 						<motion.div
@@ -111,7 +155,7 @@ export default function Navbar() {
 										animate={{ scale: 1, opacity: 1 }}
 										exit={{ scale: 0, opacity: 0 }}
 										transition={luxurySpring}
-										className="absolute 0 right-0 translate-x-1/3 -translate-y-1/3 min-w-4 h-4 px-1 font-secondary text-[8px] font-semibold rounded-full flex items-center justify-center bg-stone-900 text-white shadow-xs"
+										className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 min-w-4 h-4 px-1 font-secondary text-[8px] font-semibold rounded-full flex items-center justify-center bg-(--text-headline) text-(--bg-base) shadow-xs"
 									>
 										{totalWishlistCount}
 									</motion.span>
@@ -136,7 +180,7 @@ export default function Navbar() {
 										animate={{ scale: 1, opacity: 1 }}
 										exit={{ scale: 0, opacity: 0 }}
 										transition={luxurySpring}
-										className="absolute 0 right-0 translate-x-1/3 -translate-y-1/3 min-w-4 h-4 px-1 font-secondary text-[8px] font-semibold rounded-full flex items-center justify-center bg-(--text-headline) text-(--bg-base) shadow-xs"
+										className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/3 min-w-4 h-4 px-1 font-secondary text-[8px] font-semibold rounded-full flex items-center justify-center bg-(--text-headline) text-(--bg-base) shadow-xs"
 									>
 										{totalCartCount}
 									</motion.span>
@@ -145,8 +189,11 @@ export default function Navbar() {
 						</motion.div>
 					</Link>
 
-					{/* Login Link */}
-					<Link href="/login" aria-label="User">
+					{/* Account Link (dot = signed in) */}
+					<Link
+						href={accountHref}
+						aria-label={user ? "Your account" : "Sign in"}
+					>
 						<motion.div
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
@@ -154,6 +201,9 @@ export default function Navbar() {
 							className="text-(--text-headline) hover:opacity-60 transition-opacity relative p-1 cursor-pointer"
 						>
 							<User className="w-4.5 h-4.5 stroke-[1.5]" />
+							{user && (
+								<span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-(--success)" />
+							)}
 						</motion.div>
 					</Link>
 				</div>
@@ -163,7 +213,7 @@ export default function Navbar() {
 			<nav className="hidden md:block w-full border-t border-(--border-color)/60 py-2.5">
 				<div className="max-w-screen-2xl mx-auto px-8">
 					<motion.ul
-						variants={staggerContainer}
+						variants={navContainer}
 						initial="hidden"
 						animate="show"
 						className="flex items-center justify-center space-x-9 overflow-x-auto whitespace-nowrap font-secondary text-[10px] uppercase tracking-[0.22em] font-medium text-(--text-muted) hide-scrollbar"
@@ -206,10 +256,15 @@ export default function Navbar() {
 							animate={{ x: 0 }}
 							exit={{ x: "-100%" }}
 							transition={luxurySpring}
+							ref={panelRef}
+							id="mobile-menu"
+							role="dialog"
+							aria-modal="true"
+							aria-label="Navigation"
 							className="fixed top-0 left-0 bottom-0 z-50 w-[84vw] max-w-xs bg-(--bg-base) border-r border-(--border-color) p-6 flex flex-col justify-between md:hidden shadow-2xl"
 						>
 							<motion.div
-								variants={staggerContainer}
+								variants={navContainer}
 								initial="hidden"
 								animate="show"
 							>
@@ -235,14 +290,21 @@ export default function Navbar() {
 									variants={staggerItem}
 									className="mt-5 mb-6"
 								>
-									<div className="relative flex items-center">
-										<Search className="absolute left-3.5 w-3.5 h-3.5 text-(--text-muted)" />
+									<Form
+										action="/search"
+										role="search"
+										onSubmit={() => setIsOpen(false)}
+										className="relative flex items-center"
+									>
+										<Search className="absolute left-3.5 w-3.5 h-3.5 text-(--text-muted) pointer-events-none" />
 										<input
-											type="text"
+											type="search"
+											name="q"
 											placeholder="Search pieces..."
+											aria-label="Search pieces"
 											className="w-full bg-(--card-sub)/70 border border-(--border-color) rounded-full py-2 pl-9 pr-3 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 focus:bg-white"
 										/>
-									</div>
+									</Form>
 								</motion.div>
 
 								{/* Category Links */}
@@ -290,17 +352,17 @@ export default function Navbar() {
 								>
 									<span>Saved Pieces</span>
 									{totalWishlistCount > 0 && (
-										<span className="text-[9px] px-2 py-0.5 rounded-full bg-stone-900 text-white font-semibold">
+										<span className="text-[9px] px-2 py-0.5 rounded-full bg-(--text-headline) text-(--bg-base) font-semibold">
 											{totalWishlistCount}
 										</span>
 									)}
 								</Link>
 								<Link
-									href="/login"
+									href={accountHref}
 									onClick={() => setIsOpen(false)}
 									className="hover:text-(--text-headline) transition-colors"
 								>
-									Client Account
+									{user ? "Client Account" : "Sign In"}
 								</Link>
 								<Link
 									href="/coming-soon?feature=concierge"

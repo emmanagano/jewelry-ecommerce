@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
 	ArrowRight,
@@ -10,13 +11,7 @@ import {
 	RotateCcw,
 } from "lucide-react";
 import { motion } from "framer-motion";
-
-const luxurySpring = {
-	type: "spring" as const,
-	damping: 30,
-	stiffness: 100,
-	mass: 0.8,
-};
+import { luxurySpring } from "@/app/lib/motion";
 
 export default function BrandStory() {
 	return (
@@ -81,16 +76,22 @@ export default function BrandStory() {
 						transition={luxurySpring}
 						className="lg:col-span-5 relative aspect-4/3 sm:aspect-16/10 lg:aspect-4/3 max-h-110 overflow-hidden border border-(--border-color) rounded-xs group"
 					>
-						<motion.img
+						<motion.div
 							whileHover={{ scale: 1.05 }}
 							transition={{
 								duration: 1.5,
 								ease: [0.25, 0.46, 0.45, 0.94],
 							}}
-							src="https://images.unsplash.com/photo-1616837874254-8d5aaa63e273?q=80&w=1200&auto=format&fit=crop"
-							alt="The Atelier Craftsmanship"
-							className="w-full h-full object-cover object-center"
-						/>
+							className="absolute inset-0"
+						>
+							<Image
+								src="https://images.unsplash.com/photo-1616837874254-8d5aaa63e273?q=80&w=1200&auto=format&fit=crop"
+								alt="The Atelier Craftsmanship"
+								fill
+								sizes="(min-width: 1024px) 40vw, 100vw"
+								className="object-cover object-center"
+							/>
+						</motion.div>
 						<div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
 						<span className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-xs font-secondary text-[9px] uppercase tracking-[0.25em] text-(--text-headline) font-medium px-2.5 py-1 border border-black/5 shadow-xs">
 							Behind the Atelier

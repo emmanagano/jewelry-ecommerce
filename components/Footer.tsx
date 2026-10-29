@@ -1,48 +1,38 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { luxurySpring, staggerContainer, fadeSlide } from "@/app/lib/motion";
+import { subscribeToNewsletter } from "@/app/lib/store-actions";
 
-// Bespoke "Quiet Luxury" physics
-const luxurySpring = {
-	type: "spring" as const,
-	damping: 30,
-	stiffness: 100,
-	mass: 0.8,
-};
-
-const footerContainer = {
-	hidden: { opacity: 0 },
-	show: {
-		opacity: 1,
-		transition: {
-			staggerChildren: 0.12,
-			delayChildren: 0.1,
-		},
-	},
-};
-
-const footerColumn = {
-	hidden: { opacity: 0, y: 24 },
-	show: {
-		opacity: 1,
-		y: 0,
-		transition: { ...luxurySpring, duration: 1.1 },
-	},
-};
+const footerContainer = staggerContainer(0.12, 0.1);
+const footerColumn = fadeSlide(24, { duration: 1.1 });
 
 export default function Footer() {
 	const [email, setEmail] = useState("");
 	const [subscribed, setSubscribed] = useState(false);
+	const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(
+		null,
+	);
+	const [isSubmitting, startSubmit] = useTransition();
 
+	// Saves to newsletter_subscribers, the same subscription the account
+	// page's Email Preferences switch controls
 	const handleSubscribe = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!email.trim()) return;
-		setSubscribed(true);
-		setEmail("");
-		setTimeout(() => setSubscribed(false), 3000);
+		setMessage(null);
+		startSubmit(async () => {
+			const result = await subscribeToNewsletter(email);
+			setMessage({ ok: result.ok, text: result.message });
+			if (result.ok) {
+				setSubscribed(true);
+				setEmail("");
+				setTimeout(() => setSubscribed(false), 3000);
+			}
+		});
 	};
 
 	return (
@@ -81,6 +71,8 @@ export default function Footer() {
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 								placeholder="Enter your email address"
+								aria-label="Email address"
+								aria-describedby={message ? "newsletter-message" : undefined}
 								className="w-full bg-transparent border border-(--border-color) py-2.5 pl-4 pr-32 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 transition-colors rounded-xs"
 							/>
 							<motion.button
@@ -88,6 +80,7 @@ export default function Footer() {
 								whileTap={{ scale: 0.96 }}
 								transition={luxurySpring}
 								type="submit"
+								disabled={isSubmitting}
 								aria-label="Join private client list"
 								className="absolute right-1 top-1 bottom-1 px-4 bg-(--bg-base) hover:bg-(--text-headline) hover:text-(--bg-base) text-(--text-headline) font-secondary text-[9px] uppercase tracking-[0.2em] font-medium transition-colors border border-(--border-color) cursor-pointer flex items-center gap-1.5 rounded-xs"
 							>
@@ -98,11 +91,11 @@ export default function Footer() {
 											initial={{ opacity: 0, y: 3 }}
 											animate={{ opacity: 1, y: 0 }}
 											exit={{ opacity: 0, y: -3 }}
-											className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold"
+											className="flex items-center gap-1 text-(--success) font-semibold"
 										>
 											<Check
 												size={10}
-												className="stroke-[2]"
+												className="stroke-2"
 											/>
 											<span>Joined</span>
 										</motion.span>
@@ -124,6 +117,17 @@ export default function Footer() {
 								</AnimatePresence>
 							</motion.button>
 						</form>
+						{message && (
+							<p
+								id="newsletter-message"
+								role={message.ok ? "status" : "alert"}
+								className={`-mt-3 font-body text-[11px] ${
+									message.ok ? "text-(--text-muted)" : "text-(--error-text)"
+								}`}
+							>
+								{message.text}
+							</p>
+						)}
 					</motion.div>
 
 					{/* Navigation Links Container (Spans 7 columns) */}

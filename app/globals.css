@@ -15,6 +15,13 @@
 	--text-muted: rgba(74, 32, 39, 0.6);
 
 	--border-color: rgba(125, 159, 195, 0.35); /* Subtle border lines */
+
+	/* Status colors */
+	--accent-love: #f43f5e; /* Wishlist hearts & discounts */
+	--success: #059669;
+	--error-text: #9f1239;
+	--error-bg: rgba(255, 241, 242, 0.9);
+	--error-border: #fecdd3;
 }
 
 /*
@@ -30,14 +37,23 @@ DARK THEME (To switch back to dark, just swap :root values with these):
     --text-body: #d5e0eb;
     --text-muted: rgba(213, 224, 235, 0.5);
     --border-color: rgba(125, 159, 195, 0.2);
+    --accent-love: #fb7185;
+    --success: #34d399;
+    --error-text: #fecdd3;
+    --error-bg: rgba(76, 5, 25, 0.6);
+    --error-border: rgba(251, 113, 133, 0.4);
 }
 */
 
 @theme {
-	/* Custom Fonts */
-	--font-primary: var(--font-primary);
-	--font-secondary: var(--font-secondary);
-	--font-body: var(--font-body);
+	/* Standardized 2-Font System */
+	--font-serif: var(--font-serif), Georgia, serif;
+	--font-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
+
+	/* Aliases so existing component classes automatically inherit the right font */
+	--font-primary: var(--font-serif);
+	--font-secondary: var(--font-sans);
+	--font-body: var(--font-sans);
 
 	/* Custom Sizes */
 	--text-small: 0.875rem;
@@ -46,7 +62,7 @@ DARK THEME (To switch back to dark, just swap :root values with these):
 }
 
 body {
+	font-family: var(--font-sans);
 	background-color: var(--bg-base);
 	color: var(--text-headline);
 }
-
