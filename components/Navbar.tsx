@@ -33,7 +33,6 @@ const staggerItem = {
 
 export default function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
-	const [searchQuery, setSearchQuery] = useState("");
 	const { totalCartCount, totalWishlistCount } = useStore();
 
 	// Prevent scrolling when mobile menu is open
@@ -92,20 +91,6 @@ export default function Navbar() {
 							BrandLogo
 						</span>
 					</Link>
-				</div>
-
-				{/* Desktop: Enclosed Search Pill */}
-				<div className="hidden md:flex flex-1 justify-center px-8">
-					<div className="relative w-full max-w-sm flex items-center group">
-						<Search className="absolute left-3.5 w-3.5 h-3.5 text-(--text-muted) group-focus-within:text-(--text-headline) transition-colors pointer-events-none" />
-						<input
-							type="text"
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value)}
-							placeholder="Search by collection or stone..."
-							className="w-full bg-(--card-sub)/70 border border-(--border-color) rounded-full py-1.5 pl-9 pr-4 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) tracking-wide transition-all duration-300 focus:outline-none focus:bg-white focus:border-(--text-headline)/40 focus:ring-1 focus:ring-(--text-headline)/20"
-						/>
-					</div>
 				</div>
 
 				{/* Right Actions: Wishlist & Bag */}

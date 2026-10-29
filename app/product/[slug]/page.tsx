@@ -8,7 +8,6 @@ interface PageProps {
 	params: Promise<{ slug: string }>;
 }
 
-// 1. Build-time static generation for all products in DB
 export async function generateStaticParams() {
 	const { data: products } = await supabase.from("products").select("slug");
 	return (products ?? []).map((p) => ({
@@ -16,7 +15,6 @@ export async function generateStaticParams() {
 	}));
 }
 
-// 2. Cached product query
 async function getProductBySlug(slug: string) {
 	"use cache";
 	const { data, error } = await supabase
@@ -31,7 +29,6 @@ async function getProductBySlug(slug: string) {
 	return data;
 }
 
-// 3. Loading skeleton
 function ProductSkeleton() {
 	return (
 		<div className="max-w-screen-2xl mx-auto px-4 sm:px-8 py-8 lg:py-10 animate-pulse">
@@ -52,7 +49,6 @@ function ProductSkeleton() {
 	);
 }
 
-// 4. Product content
 async function ProductContent({ params }: PageProps) {
 	const { slug } = await params;
 	const product = await getProductBySlug(slug);
@@ -61,19 +57,20 @@ async function ProductContent({ params }: PageProps) {
 		notFound();
 	}
 
-	// Guarantee 3 images in the stack
-	// Uses images[0] (Front View), images[1] (Scale & Wear), and a zoomed images[0] for the Detail Angle
+	const category = product?.category || "Jewelry";
+	const categorySlug = category.toLowerCase();
+
 	const rawImages: string[] = product.images ?? [];
 	const galleryImages = [
-		rawImages[0] ?? "",
-		rawImages[1] ?? rawImages[0] ?? "",
-		rawImages[0] ?? "", // 3rd stack angle (macro detail)
-	].filter(Boolean); // Remove empty strings if images are missing
+		rawImages[0] ?? product.imageUrl ?? "",
+		rawImages[1] ?? rawImages[0] ?? product.imageUrl ?? "",
+		rawImages[0] ?? product.imageUrl ?? "",
+	].filter(Boolean);
 
 	return (
 		<div className="max-w-screen-2xl mx-auto px-4 sm:px-8 py-8 lg:py-12">
 			{/* Breadcrumbs */}
-			<nav className="text-[10px] uppercase tracking-[0.2em] font-medium flex items-center space-x-2 mb-8 text-(--text-muted)">
+			<nav className="font-secondary text-[10px] uppercase tracking-[0.2em] font-medium flex items-center space-x-2 mb-8 text-(--text-muted)">
 				<Link
 					href="/"
 					className="hover:text-(--text-headline) transition-colors"
@@ -82,10 +79,10 @@ async function ProductContent({ params }: PageProps) {
 				</Link>
 				<span className="opacity-50">/</span>
 				<Link
-					href={`/category/${product.category.toLowerCase()}`}
+					href={`/category/${categorySlug}`}
 					className="hover:text-(--text-headline) transition-colors"
 				>
-					{product.category}
+					{category}
 				</Link>
 				<span className="opacity-50">/</span>
 				<span className="truncate max-w-xs text-(--text-headline)">
@@ -96,16 +93,15 @@ async function ProductContent({ params }: PageProps) {
 			{/* Main Two-Column Layout */}
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 				{/* Left: 3-Image Editorial Stack */}
-				<div className="lg:col-span-7 flex flex-col gap-4">
+				<div className="lg:col-span-7 flex flex-col gap-6 sm:gap-8">
 					{galleryImages.map((imgSrc, idx) => (
 						<div
 							key={`${imgSrc}-${idx}`}
-							className="relative w-full aspect-4/5 overflow-hidden bg-(--card-sub) border border-(--border-color) rounded-xs"
+							className="relative w-full aspect-4/5 overflow-hidden bg-(--card-sub) border border-(--border-color) rounded-xs group"
 						>
 							<img
 								src={imgSrc}
 								alt={`${product.name} - View 0${idx + 1}`}
-								// The 3rd image (idx 2) is zoomed in by default to act as a detail/macro shot
 								className={`w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-105 ${
 									idx === 2
 										? "scale-125 hover:scale-150 origin-center"
@@ -117,7 +113,7 @@ async function ProductContent({ params }: PageProps) {
 				</div>
 
 				{/* Right: Sticky Details and Actions */}
-				<div className="lg:col-span-5 top-32">
+				<div className="lg:col-span-5 lg:sticky lg:top-32">
 					<ProductInteractive product={product} />
 				</div>
 			</div>

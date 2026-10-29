@@ -112,7 +112,7 @@ export default function Hero() {
 						<motion.div variants={blockEntrance} className="h-full">
 							<Link
 								href="/category/rings"
-								className="relative h-full border border-(--border-color) overflow-hidden group rounded-xs block flex flex-col justify-between p-4"
+								className="relative h-full border border-(--border-color) overflow-hidden group rounded-xs flex flex-col justify-between p-4"
 							>
 								<motion.img
 									whileHover={{ scale: 1.1 }}
@@ -148,7 +148,7 @@ export default function Hero() {
 						<motion.div variants={blockEntrance} className="h-full">
 							<Link
 								href="/category/necklaces"
-								className="relative h-full border border-(--border-color) overflow-hidden group rounded-xs block flex flex-col justify-between p-4"
+								className="relative h-full border border-(--border-color) overflow-hidden group rounded-xs flex flex-col justify-between p-4"
 							>
 								<motion.img
 									whileHover={{ scale: 1.1 }}
@@ -223,7 +223,7 @@ export default function Hero() {
 					{/* Bottom Row: Wide Rectangle (Lab-Grown Solitaires) */}
 					<motion.div
 						variants={blockEntrance}
-						className="grow h-full min-h-[240px]"
+						className="grow h-full min-h-60"
 					>
 						<Link
 							href="/category/rings"
