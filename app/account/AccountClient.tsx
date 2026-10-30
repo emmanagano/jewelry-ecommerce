@@ -3,12 +3,12 @@
 import React, { useActionState, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ArrowRight, Heart, ShoppingBag } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useStore } from "@/context/StoreContext";
 import { useWishlistProducts } from "@/app/lib/use-wishlist-products";
 import { isDemoAccount } from "@/app/lib/demo-account";
+import { useAccountTab } from "./AccountTabs";
 import { formatPrice } from "@/app/lib/format";
 import type { SizeOption } from "@/app/lib/data/products";
 import { ONE_SIZE } from "@/app/lib/products";
@@ -37,15 +37,20 @@ export function AccountCard({
 	title,
 	action,
 	className = "",
+	flush = false,
 	children,
 }: {
 	title: string;
 	action?: React.ReactNode;
 	className?: string;
+	// The first card on a panel sits under the page rule, so it drops its own
+	flush?: boolean;
 	children: React.ReactNode;
 }) {
 	return (
-		<section className={`${className} border-t border-(--border-color) pt-8`}>
+		<section
+			className={`${className} ${flush ? "" : "border-t border-(--border-color) pt-8"}`}
+		>
 			<div className="flex items-center justify-between gap-4 mb-6">
 				<h2 className="text-label uppercase font-medium text-(--text-headline)">
 					{title}
@@ -161,6 +166,7 @@ export function ProfileCard({
 
 	return (
 		<AccountCard
+			flush
 			title="Profile"
 			action={!editing && <EditButton onClick={() => setEditing(true)} />}
 		>
@@ -228,6 +234,7 @@ export function SizesCard({
 
 	return (
 		<AccountCard
+			flush
 			title="My Sizes"
 			action={!editing && <EditButton onClick={() => setEditing(true)} />}
 		>
@@ -332,13 +339,20 @@ function PreviewSkeleton() {
 	);
 }
 
-export function SavedPiecesPreview() {
+export function SavedPiecesPreview({
+	limit = 4,
+	flush = false,
+}: {
+	limit?: number;
+	flush?: boolean;
+}) {
 	const { totalWishlistCount } = useStore();
 	const { products, isLoading } = useWishlistProducts();
-	const preview = products.slice(0, 4);
+	const preview = products.slice(0, limit);
 
 	return (
 		<AccountCard
+			flush={flush}
 			title={`Saved Pieces${totalWishlistCount ? ` (${totalWishlistCount})` : ""}`}
 			action={
 				totalWishlistCount > 0 && (
@@ -483,11 +497,9 @@ export function NewsletterCard({ initial }: { initial: boolean }) {
 	);
 
 	return (
-		<AccountCard title="Email Preferences" className="h-full">
-			{result && (
-				<AuthMessage tone={result.ok ? "success" : "error"}>
-					{result.message}
-				</AuthMessage>
+		<AccountCard flush title="Email Preferences" className="h-full">
+			{result && !result.ok && (
+				<AuthMessage tone="error">{result.message}</AuthMessage>
 			)}
 			<form action={formAction} className="flex items-start justify-between gap-6">
 				<div>
@@ -519,14 +531,17 @@ export function NewsletterCard({ initial }: { initial: boolean }) {
 					/>
 				</button>
 			</form>
+			{result?.ok && (
+				<p role="status" className="mt-4 text-copy-sm text-(--text-muted)">
+					{result.message}
+				</p>
+			)}
 		</AccountCard>
 	);
 }
 
 export function SecurityCard() {
-	const router = useRouter();
-	const { user, signOut } = useAuth();
-	const [signingOut, setSigningOut] = useState(false);
+	const { user } = useAuth();
 	// The demo login is shared, so its password stays fixed
 	const isDemo = isDemoAccount(user?.email);
 
@@ -538,26 +553,11 @@ export function SecurityCard() {
 					can&rsquo;t be changed. Everything else works as usual.
 				</p>
 			)}
-			<div className="flex flex-wrap items-center justify-between gap-4">
-				{!isDemo && (
-					<Link href="/reset-password" className={TEXT_LINK_CLASS}>
-						Change Password
-					</Link>
-				)}
-				<button
-					type="button"
-					disabled={signingOut}
-					onClick={async () => {
-						setSigningOut(true);
-						await signOut();
-						router.push("/");
-						router.refresh();
-					}}
-					className={TEXT_LINK_CLASS}
-				>
-					{signingOut ? "Signing out..." : "Sign Out"}
-				</button>
-			</div>
+			{!isDemo && (
+				<Link href="/reset-password" className={TEXT_LINK_CLASS}>
+					Change Password
+				</Link>
+			)}
 		</AccountCard>
 	);
 }
@@ -574,9 +574,63 @@ export interface OrderSummary {
 	itemCount: number;
 }
 
+function formatOrderDate(createdAt: string) {
+	return new Date(createdAt).toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		year: "numeric",
+	});
+}
+
+// The most recent order, front and centre on the overview
+export function LatestOrderCard({ order }: { order: OrderSummary | undefined }) {
+	const setTab = useAccountTab();
+
+	return (
+		<AccountCard
+			flush
+			title="Latest Order"
+			action={
+				order && (
+					<button type="button" onClick={() => setTab("orders")} className={TEXT_LINK_CLASS}>
+						All Orders
+					</button>
+				)
+			}
+		>
+			{order ? (
+				<div className="flex flex-wrap items-end justify-between gap-6">
+					<div>
+						<p className="font-secondary text-label uppercase font-medium text-(--text-headline)">
+							{order.orderNumber}
+						</p>
+						<p className="mt-1 text-copy-sm text-(--text-muted)">
+							{formatOrderDate(order.createdAt)} · {order.itemCount}{" "}
+							{order.itemCount === 1 ? "piece" : "pieces"}
+						</p>
+						<p className="mt-4 font-serif text-heading text-(--text-headline)">
+							{formatPrice(order.totalCents)}
+						</p>
+					</div>
+					<Link href={`/orders/${order.id}`} className={PRIMARY_BUTTON_CLASS}>
+						View Order
+					</Link>
+				</div>
+			) : (
+				<EmptyPreview
+					icon={<ShoppingBag size={16} className="stroke-[1.5]" />}
+					text="Your orders will appear here."
+					href="/collections/new-and-featured"
+					cta="Discover New Pieces"
+				/>
+			)}
+		</AccountCard>
+	);
+}
+
 export function OrderHistoryCard({ orders }: { orders: OrderSummary[] }) {
 	return (
-		<AccountCard title="Order History">
+		<AccountCard flush title="Order History">
 			{orders.length === 0 ? (
 				<EmptyPreview
 					icon={<ShoppingBag size={16} className="stroke-[1.5]" />}
@@ -597,12 +651,7 @@ export function OrderHistoryCard({ orders }: { orders: OrderSummary[] }) {
 										{order.orderNumber}
 									</p>
 									<p className="text-copy-sm text-(--text-muted)">
-										{new Date(order.createdAt).toLocaleDateString("en-US", {
-											month: "short",
-											day: "numeric",
-											year: "numeric",
-										})}{" "}
-										· {order.itemCount} {order.itemCount === 1 ? "piece" : "pieces"}
+										{formatOrderDate(order.createdAt)} · {order.itemCount} {order.itemCount === 1 ? "piece" : "pieces"}
 									</p>
 								</div>
 								<span className="flex items-center gap-3 font-serif text-copy-sm text-(--text-headline)">

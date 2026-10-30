@@ -7,6 +7,7 @@ import { createSupabaseServerClient } from "@/app/lib/supabase-server";
 import { getSizeOptions } from "@/app/lib/data/products";
 import {
 	BagPreview,
+	LatestOrderCard,
 	NewsletterCard,
 	OrderHistoryCard,
 	ProfileCard,
@@ -14,6 +15,8 @@ import {
 	SecurityCard,
 	SizesCard,
 } from "./AccountClient";
+import AccountTabs from "./AccountTabs";
+import { parseAccountTab } from "./tabs";
 
 export const metadata: Metadata = {
 	title: "Your Account",
@@ -21,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-	searchParams: Promise<{ password?: string }>;
+	searchParams: Promise<{ password?: string; tab?: string }>;
 }
 
 // Reads the session, so it streams in behind Suspense
@@ -44,7 +47,7 @@ async function AccountContent({ searchParams }: PageProps) {
 		newsletterResult,
 		sizeOptions,
 		ordersResult,
-		{ password },
+		{ password, tab },
 	] = await Promise.all([
 			supabase
 				.from("profiles")
@@ -61,7 +64,7 @@ async function AccountContent({ searchParams }: PageProps) {
 				.from("orders")
 				.select("id, order_number, created_at, total_cents, order_items(quantity)")
 				.order("created_at", { ascending: false })
-				.limit(5)
+				.limit(20)
 				.overrideTypes<
 					{
 						id: string;
@@ -106,7 +109,7 @@ async function AccountContent({ searchParams }: PageProps) {
 	return (
 		<>
 			{/* Welcome header */}
-			<header className="mb-10 pb-6 border-b border-(--border-color)/60">
+			<header className="mb-10 pb-8 border-b border-(--border-color)">
 				<span className="eyebrow text-(--text-muted) block mb-3">
 					Your Account
 				</span>
@@ -122,34 +125,41 @@ async function AccountContent({ searchParams }: PageProps) {
 				<AuthMessage tone="success">Your password has been updated.</AuthMessage>
 			)}
 
-			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-				<div className="lg:col-span-5 space-y-6">
-					<ProfileCard
-						email={user.email ?? ""}
-						initial={{ fullName, birthday: profile?.birthday ?? "" }}
-					/>
-					{sizeOptions.length > 0 && (
-						<SizesCard
-							initial={(profile?.preferred_sizes as Record<string, string>) ?? {}}
-							options={sizeOptions}
-						/>
-					)}
-				</div>
-
-				<div className="lg:col-span-7 space-y-6">
-					<SavedPiecesPreview />
-					<BagPreview />
-					<OrderHistoryCard orders={orders} />
-				</div>
-
-				{/* Same 5/7 split as the cards above, so the columns line up */}
-				<div className="lg:col-span-5">
-					<SecurityCard />
-				</div>
-				<div className="lg:col-span-7">
-					<NewsletterCard initial={newsletterResult.data === true} />
-				</div>
-			</div>
+			<AccountTabs
+				initialTab={parseAccountTab(tab)}
+				orderCount={orders.length}
+				panels={{
+					overview: (
+						<div className="space-y-12">
+							<LatestOrderCard order={orders[0]} />
+							<SavedPiecesPreview />
+							<BagPreview />
+						</div>
+					),
+					orders: <OrderHistoryCard orders={orders} />,
+					saved: <SavedPiecesPreview flush limit={12} />,
+					details: (
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+							<ProfileCard
+								email={user.email ?? ""}
+								initial={{ fullName, birthday: profile?.birthday ?? "" }}
+							/>
+							{sizeOptions.length > 0 && (
+								<SizesCard
+									initial={(profile?.preferred_sizes as Record<string, string>) ?? {}}
+									options={sizeOptions}
+								/>
+							)}
+						</div>
+					),
+					preferences: (
+						<div className="space-y-12">
+							<NewsletterCard initial={newsletterResult.data === true} />
+							<SecurityCard />
+						</div>
+					),
+				}}
+			/>
 		</>
 	);
 }
@@ -157,18 +167,19 @@ async function AccountContent({ searchParams }: PageProps) {
 function AccountSkeleton() {
 	return (
 		<div className="animate-pulse">
-			<div className="mb-10 pb-6 border-b border-(--border-color)/60">
+			<div className="mb-10 pb-8 border-b border-(--border-color)">
 				<div className="h-3 w-28 bg-(--card-sub) rounded-xs mb-4" />
 				<div className="h-9 w-72 bg-(--card-sub) rounded-xs" />
 			</div>
-			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-				<div className="lg:col-span-5 space-y-6">
-					<div className="h-64 bg-(--card-sub) rounded-2xl" />
-					<div className="h-56 bg-(--card-sub) rounded-2xl" />
+			<div className="grid grid-cols-1 lg:grid-cols-[13rem_1fr] gap-x-16 gap-y-8">
+				<div className="space-y-3">
+					{[1, 2, 3, 4, 5].map((n) => (
+						<div key={n} className="h-5 w-32 bg-(--card-sub) rounded-xs" />
+					))}
 				</div>
-				<div className="lg:col-span-7 space-y-6">
-					<div className="h-64 bg-(--card-sub) rounded-2xl" />
-					<div className="h-56 bg-(--card-sub) rounded-2xl" />
+				<div className="space-y-8">
+					<div className="h-28 bg-(--card-sub) rounded-xs" />
+					<div className="h-56 bg-(--card-sub) rounded-xs" />
 				</div>
 			</div>
 		</div>

@@ -138,6 +138,7 @@ Decisions: portfolio site, so no real payment provider; guests and signed-in use
 
 - [x] `supabase/migrations/20261030000007_catalog_photography.sql`: Pexels photography for all products and category banners, copy rewritten to match, 7 new products (5 under $200)
 - [x] Vaelore rebrand: logos in Navbar/Footer, Pearl White / Abyss Ink / deep-gold tokens, hero copy, `supabase/migrations/20261030000008_vaelore_catalog.sql` (15 pieces in Lumière, Tide, Heirloom; `PRIVATE5` replaces `ARCHIVE10`); `20261030000009_vaelore_shipping.sql` (courier $75, free from $5,000, gift wrap complimentary; mirrored in `app/lib/pricing.ts`)
+- [x] Account page revamp: tabbed dashboard (Overview, Orders, Saved Pieces, Details & Sizes, Preferences) with the latest order first
 - [x] Polish pass: 404 page, page titles, README, OG logo, skip link + focus ring, type tokens, hairline layout on bag/checkout/orders/account/password pages, template leftovers removed; `20261030000011_collection_banner.sql`
 - [x] Brand copy pass: TrustBar, footer, nav, bag, checkout, account, auth, errors in Vaelore voice; new `/the-house` page; `20261030000010_vaelore_copy.sql`
 - [x] Editorial images swapped; `images.pexels.com` allowed in `next.config.ts`
