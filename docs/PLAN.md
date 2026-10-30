@@ -120,8 +120,37 @@ Decisions: portfolio site, so no real payment provider; guests and signed-in use
 - [x] Account Order History card (last 5)
 - [x] Shared pricing helper `app/lib/pricing.ts`; bag gift/promo choices carried to checkout via sessionStorage
 
+## Demo account, navigation cleanup (done 2026-10-30)
+
+- [x] Shared demo login (`NEXT_PUBLIC_DEMO_EMAIL` / `_PASSWORD`), password changes blocked for it in the UI
+- [x] Footer, Navbar and homepage links point only to real pages; categories come from the database
+- [x] Deleted the unlinked `/coming-soon` page
+
+## Redesign: warm editorial (done 2026-10-30)
+
+- [x] Warm palette + type scale tokens, `MotionProvider` (reduced motion), shared UI (`Button`, `SectionHeading`, `Section`, `EditorialSplit`)
+- [x] Navbar, product card, homepage (single hero, trust bar, category tiles, best sellers, editorial splits), product page (`ProductGallery`)
+- [x] Type-size sweep across all pages; sign-in page rebuilt as an open split layout (fixed clipping bug)
+- [ ] Round 2: bag, checkout, account, order confirmation, forgot/reset password in the open style
+- [ ] Load Playfair Display into the generated social image
+
+## Photography and catalog (done 2026-10-30)
+
+- [x] `supabase/migrations/20261030000007_catalog_photography.sql`: Pexels photography for all products and category banners, copy rewritten to match, 7 new products (5 under $200)
+- [x] Vaelore rebrand: logos in Navbar/Footer, Pearl White / Abyss Ink / deep-gold tokens, hero copy, `supabase/migrations/20261030000008_vaelore_catalog.sql` (15 pieces in Lumière, Tide, Heirloom; `PRIVATE5` replaces `ARCHIVE10`); `20261030000009_vaelore_shipping.sql` (courier $75, free from $5,000, gift wrap complimentary; mirrored in `app/lib/pricing.ts`)
+- [x] Polish pass: 404 page, page titles, README, OG logo, skip link + focus ring, type tokens, hairline layout on bag/checkout/orders/account/password pages, template leftovers removed; `20261030000011_collection_banner.sql`
+- [x] Brand copy pass: TrustBar, footer, nav, bag, checkout, account, auth, errors in Vaelore voice; new `/the-house` page; `20261030000010_vaelore_copy.sql`
+- [x] Editorial images swapped; `images.pexels.com` allowed in `next.config.ts`
+
+## Next
+
+- [ ] Deploy (see `docs/DEPLOY.md`), set Vercel env vars incl. demo login, run webhook template
+- [ ] Recruiter-facing README (live link, demo login, screenshots, key technical decisions, Pexels credit)
+- [ ] Playwright e2e tests + saved DB security test script + GitHub Actions CI
+- [ ] Choose the real brand name (`app/lib/site.ts`)
+
 ## Open questions
 
 - Run migrations via Supabase dashboard SQL editor, or install the Supabase CLI?
 - Checkout: save pending orders, or stop at the bag?
-- Real brand name to replace "BrandLogo"?
+- ~~Real brand name to replace "BrandLogo"?~~ Maison Vaelore (logos in `public/logo/`)

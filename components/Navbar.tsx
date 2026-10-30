@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, Heart, ShoppingBag, Menu, X, User } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import Form from "next/form";
 import type { Category } from "@/app/lib/products";
 import { SITE_NAME } from "@/app/lib/site";
@@ -83,6 +84,7 @@ export default function Navbar({ categories }: NavbarProps) {
 			href: `/category/${c.slug}`,
 		})),
 		{ name: "Gifts", href: "/collections/gifts" },
+		{ name: "The House", href: "/the-house" },
 	];
 
 	return (
@@ -121,17 +123,23 @@ export default function Navbar({ categories }: NavbarProps) {
 				</div>
 
 				{/* Center: wordmark */}
-				<Link href="/" className="justify-self-center">
-					<span className="font-serif text-xl sm:text-2xl lg:text-[1.75rem] tracking-[0.22em] uppercase text-(--text-headline)">
-						{SITE_NAME}
-					</span>
+				<Link href="/" className="justify-self-center" aria-label={SITE_NAME}>
+					<Image
+						src="/logo/vaelore-logo-horizontal-ink.svg"
+						alt={SITE_NAME}
+						width={936}
+						height={214}
+						unoptimized
+						priority
+						className="h-8 sm:h-9 lg:h-10 w-auto"
+					/>
 				</Link>
 
 				{/* Right: wishlist, bag, account */}
 				<div className="flex items-center justify-end gap-4 sm:gap-6">
 					<Link
 						href="/my-wishlist"
-						aria-label={`Wishlist${totalWishlistCount ? `, ${totalWishlistCount} saved` : ""}`}
+						aria-label={`Saved pieces${totalWishlistCount ? `, ${totalWishlistCount} saved` : ""}`}
 						className="relative p-1 text-(--text-headline) hover:text-(--accent) transition-colors"
 					>
 						<Heart className="w-5 h-5 stroke-[1.25]" />
@@ -144,7 +152,7 @@ export default function Navbar({ categories }: NavbarProps) {
 
 					<Link
 						href="/shopping-bag"
-						aria-label={`Shopping bag${totalCartCount ? `, ${totalCartCount} items` : ""}`}
+						aria-label={`Your bag${totalCartCount ? `, ${totalCartCount} items` : ""}`}
 						className="relative p-1 text-(--text-headline) hover:text-(--accent) transition-colors"
 					>
 						<ShoppingBag className="w-5 h-5 stroke-[1.25]" />
@@ -170,7 +178,7 @@ export default function Navbar({ categories }: NavbarProps) {
 			</div>
 
 			{/* --- DESKTOP CATEGORY NAVIGATION STRIP --- */}
-			<nav aria-label="Shop" className="hidden md:block w-full border-t border-(--border-color) py-3">
+			<nav aria-label="Main" className="hidden md:block w-full border-t border-(--border-color) py-3">
 				<div className="max-w-screen-2xl mx-auto px-8">
 					<motion.ul
 						variants={navContainer}
@@ -230,9 +238,14 @@ export default function Navbar({ categories }: NavbarProps) {
 							>
 								{/* Drawer Header */}
 								<div className="flex items-center justify-between pb-5 border-b border-(--border-color)">
-									<span className="font-serif text-lg tracking-[0.2em] uppercase text-(--text-headline)">
-										{SITE_NAME}
-									</span>
+									<Image
+										src="/logo/vaelore-logo-horizontal-ink.svg"
+										alt={SITE_NAME}
+										width={936}
+										height={214}
+										unoptimized
+										className="h-8 w-auto"
+									/>
 									<button
 										type="button"
 										onClick={() => setIsOpen(false)}
@@ -296,7 +309,7 @@ export default function Navbar({ categories }: NavbarProps) {
 									onClick={() => setIsOpen(false)}
 									className="flex items-center justify-between text-(--text-headline)"
 								>
-									<span>Shopping Bag</span>
+									<span>Your Bag</span>
 									{totalCartCount > 0 && (
 										<span className="text-[10px] leading-none px-2 py-1 rounded-full bg-(--text-headline) text-(--bg-base) font-medium normal-case tracking-normal">
 											{totalCartCount}

@@ -20,7 +20,7 @@ async function SearchResults({ searchParams }: PageProps) {
 
 	if (!query) {
 		return (
-			<p className="py-24 text-center text-xs tracking-widest uppercase text-(--text-muted)">
+			<p className="py-24 text-center text-label tracking-widest uppercase text-(--text-muted)">
 				Search by piece, metal or stone.
 			</p>
 		);
@@ -36,7 +36,7 @@ async function SearchResults({ searchParams }: PageProps) {
 			</p>
 			<ProductGrid
 				products={products}
-				emptyMessage="No pieces match your search."
+				emptyMessage="No piece matches your search."
 			/>
 		</>
 	);
@@ -59,7 +59,7 @@ function SearchForm({ defaultValue = "" }: { defaultValue?: string }) {
 				defaultValue={defaultValue}
 				placeholder="Search pieces..."
 				aria-label="Search pieces"
-				className="w-full bg-(--card-sub)/70 border border-(--border-color) rounded-full py-3 pl-11 pr-4 font-body text-sm text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 focus:bg-white"
+				className="w-full bg-(--card-sub)/70 border border-(--border-color) rounded-full py-3 pl-11 pr-4 font-body text-copy-sm text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 focus:bg-white"
 			/>
 		</Form>
 	);
@@ -69,9 +69,9 @@ export default function SearchPage({ searchParams }: PageProps) {
 	return (
 		<div className="min-h-screen max-w-screen-2xl mx-auto px-4 sm:px-8 py-12 lg:py-16 bg-(--bg-base)">
 			<span className="eyebrow text-(--text-muted) block mb-3">
-				The Archive
+				The Collections
 			</span>
-			<h1 className="font-primary text-3xl sm:text-4xl tracking-tight text-(--text-headline) mb-8">
+			<h1 className="font-primary text-heading sm:text-title tracking-tight text-(--text-headline) mb-8">
 				Search
 			</h1>
 

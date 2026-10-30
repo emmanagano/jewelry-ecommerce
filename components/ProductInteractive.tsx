@@ -14,10 +14,10 @@ const staggerContainerVariants = staggerContainer(0.1);
 const staggerItem = fadeSlide(15);
 
 const DEFAULT_SHIPPING_COPY =
-	"Orders are packaged by hand and dispatched via insured courier in 1–2 business days. We gladly offer complimentary 30-day returns and exchanges on unworn pieces.";
+	"Every piece is packed by hand and sent insured, signature required, within two business days. Unworn, non-engraved pieces may be returned or exchanged within 30 days.";
 
 function defaultCareCopy(material: string | null) {
-	return `Hand-finished in ${material ?? "precious metals"}. Each piece is crafted using recycled precious metals and certified conflict-free stones. Store in the provided anti-tarnish pouch away from water and direct cosmetic application.`;
+	return `Hand-finished in ${material ?? "precious metals"}, with pearls and diamonds of documented origin. Wipe with the soft cloth after wearing and keep the piece in its pouch, away from perfume and water. Bring it to us for complimentary cleaning, for life.`;
 }
 
 export default function ProductInteractive({ product }: { product: Product }) {
@@ -199,7 +199,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 								animate={{ opacity: 1 }}
 								exit={{ opacity: 0 }}
 							>
-								{selectedSize ? "Add to Bag" : "Select a Size"}
+								{selectedSize ? "Acquire" : "Select a Size"}
 							</motion.span>
 						)}
 					</AnimatePresence>
@@ -208,7 +208,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 				<button
 					type="button"
 					onClick={() => toggleWishlist(product.id)}
-					aria-label={liked ? "Remove from wishlist" : "Save to wishlist"}
+					aria-label={liked ? "Remove from saved pieces" : "Save this piece"}
 					aria-pressed={liked}
 					className="group w-14 rounded-xs border border-(--border-color) hover:border-(--text-headline) transition-colors flex items-center justify-center cursor-pointer"
 				>

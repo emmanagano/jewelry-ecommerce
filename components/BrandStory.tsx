@@ -3,26 +3,25 @@ import EditorialSplit from "@/components/EditorialSplit";
 export default function BrandStory() {
 	return (
 		<EditorialSplit
-			image="https://images.pexels.com/photos/5984625/pexels-photo-5984625.jpeg?auto=compress&cs=tinysrgb&w=1600"
-			imageAlt="A fine gold chain worn with an open white shirt"
-			caption="Behind the Atelier"
-			eyebrow="Modern Longevity"
+			image="https://images.pexels.com/photos/10457796/pexels-photo-10457796.jpeg?auto=compress&cs=tinysrgb&w=1600"
+			imageAlt="Gold earrings and a fine chain on cream fur in soft light"
+			caption="The Golden Pearl"
+			eyebrow="Four years in the making"
 			title={
 				<>
-					Pieces sculpted for daily wear,{" "}
-					<span className="italic">cherished for generations.</span>
+					Grown for four years,{" "}
+					<span className="italic">chosen in a moment.</span>
 				</>
 			}
 		>
 			<p>
-				We reject seasonal disposability. Every silhouette begins in our
-				sketch atelier, balancing architectural weight, ergonomic comfort
-				and light refraction before casting.
+				A pearl grows slowly, in warm water, tended by hand. We make
+				fewer pieces, finish each one by hand, and sign it with the
+				artisan&rsquo;s mark.
 			</p>
 			<p>
-				By pairing recycled solid gold with precision lab-grown
-				solitaires, we create heirloom-grade pieces with complete
-				traceability from stone to setting.
+				Recycled 18k gold, traceable diamonds and pearls with a
+				documented origin: every piece is made to be passed down.
 			</p>
 		</EditorialSplit>
 	);

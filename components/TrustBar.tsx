@@ -1,16 +1,16 @@
-import { RotateCcw, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import { RotateCcw, ScrollText, ShieldCheck, Sparkles } from "lucide-react";
 
 const PROMISES = [
-	{ icon: Sparkles, title: "Recycled Solid Gold", text: "Certified 14k and 18k, never plated." },
-	{ icon: ShieldCheck, title: "Conflict-Free Stones", text: "Lab-grown diamonds and natural pearls." },
-	{ icon: Truck, title: "Insured Delivery", text: "Complimentary on fine jewelry." },
-	{ icon: RotateCcw, title: "Lifetime Care", text: "Resizing, inspection and polishing." },
+	{ icon: Sparkles, title: "Recycled 18k Gold", text: "Never plated. Finished by hand." },
+	{ icon: ShieldCheck, title: "Traceable Stones", text: "Natural diamonds and pearls with a documented origin." },
+	{ icon: ScrollText, title: "Certificate of Provenance", text: "Every piece is numbered and named." },
+	{ icon: RotateCcw, title: "Lifetime Care", text: "Complimentary cleaning and polishing." },
 ];
 
 // Slim strip of brand promises under the hero
 export default function TrustBar() {
 	return (
-		<section aria-label="Our promises" className="border-b border-(--border-color)">
+		<section aria-label="The Vaelore promise" className="border-b border-(--border-color)">
 			<ul className="max-w-screen-2xl mx-auto px-4 sm:px-8 py-8 grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
 				{PROMISES.map(({ icon: Icon, title, text }) => (
 					<li key={title} className="flex items-start gap-3">

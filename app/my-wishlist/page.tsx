@@ -35,9 +35,9 @@ export default function WishlistPage() {
 			<div className="mb-12 pb-6 border-b border-(--border-color)/60 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
 				<div>
 					<span className="eyebrow text-(--text-muted) block mb-3">
-						Curated Pieces
+						Your Selection
 					</span>
-					<h1 className="font-serif text-3xl sm:text-4xl tracking-tight text-(--text-headline)">
+					<h1 className="font-serif text-heading sm:text-title tracking-tight text-(--text-headline)">
 						Saved Pieces{" "}
 						{totalWishlistCount > 0 && `(${totalWishlistCount})`}
 					</h1>
@@ -51,7 +51,7 @@ export default function WishlistPage() {
 						size={12}
 						className="stroke-[1.5] transition-transform group-hover:-translate-x-1"
 					/>
-					<span>Continue Exploring</span>
+					<span>Continue Discovering</span>
 				</Link>
 			</div>
 
@@ -77,18 +77,18 @@ export default function WishlistPage() {
 							className="stroke-[1.5] text-(--text-muted)"
 						/>
 					</div>
-					<h2 className="font-serif text-2xl tracking-tight mb-3 text-(--text-headline)">
-						Your Wishlist is Empty
+					<h2 className="font-serif text-heading tracking-tight mb-3 text-(--text-headline)">
+						No saved pieces yet
 					</h2>
-					<p className="text-xs uppercase tracking-widest max-w-md mb-10 leading-relaxed text-(--text-muted) font-light">
-						Select the heart icon on any piece across our collection
-						to save your personal curation for later acquisition.
+					<p className="text-label uppercase tracking-widest max-w-md mb-10 leading-relaxed text-(--text-muted) font-light">
+						Select the heart on any piece to keep it here until you are
+						ready.
 					</p>
 					<Link
 						href="/"
 						className="py-3.5 px-10 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs shadow-xs"
 					>
-						Discover The Collection
+						Discover the Collections
 					</Link>
 				</div>
 			)}

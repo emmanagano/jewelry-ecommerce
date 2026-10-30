@@ -10,7 +10,7 @@ export type PromoResult =
 // so the list of codes is never exposed)
 export async function applyPromoCode(rawCode: string): Promise<PromoResult> {
 	const code = rawCode.trim().slice(0, 32);
-	if (!code) return { ok: false, message: "Enter a promo code." };
+	if (!code) return { ok: false, message: "Enter your advisor code." };
 
 	const supabase = await createSupabaseServerClient();
 	const { data, error } = await supabase.rpc("validate_promo_code", {

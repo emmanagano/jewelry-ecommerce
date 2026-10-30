@@ -18,12 +18,12 @@ export default function AuthPanel({
 }) {
 	return (
 		<div className="w-full min-h-[calc(100vh-140px)] flex items-center justify-center py-16 px-4 sm:px-8 bg-(--bg-base)">
-			<div className="w-full max-w-md rounded-2xl bg-(--surface) border border-(--border-color) shadow-[0_20px_50px_rgba(30,6,10,0.06)] p-8 sm:p-10">
+			<div className="w-full max-w-md border-t border-(--border-color) pt-10">
 				<div className="text-center mb-8">
 					<span className="eyebrow text-(--text-muted) font-medium block mb-3">
 						{eyebrow}
 					</span>
-					<h1 className="font-primary text-2xl sm:text-3xl tracking-tight text-(--text-headline)">
+					<h1 className="font-primary text-heading tracking-tight text-(--text-headline)">
 						{title}
 					</h1>
 				</div>
@@ -43,7 +43,7 @@ export function AuthMessage({
 	return (
 		<div
 			role={tone === "error" ? "alert" : "status"}
-			className={`mb-5 p-3 rounded-xs text-xs font-body text-center border ${
+			className={`mb-5 p-3 rounded-xs text-label font-body text-center border ${
 				tone === "error"
 					? "text-(--error-text) bg-(--error-bg) border-(--error-border)"
 					: "text-(--text-headline) bg-(--card-main)/60 border-(--border-color)"

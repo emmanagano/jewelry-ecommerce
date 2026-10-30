@@ -51,7 +51,7 @@ export default function GlassAuthCard() {
 			setErrorMessage(error.message);
 		} else {
 			setNeedsConfirmation(false);
-			setSuccessMessage("A new confirmation email is on its way.");
+			setSuccessMessage("A new confirmation link is on its way.");
 		}
 	};
 
@@ -89,7 +89,7 @@ export default function GlassAuthCard() {
 				// Same message whether or not the email was already registered,
 				// so the form doesn't reveal who has an account
 				setSuccessMessage(
-					"An activation dispatch has been sent. Please confirm your email.",
+					"We have sent a confirmation link to your email. Please open it to continue.",
 				);
 			} else {
 				const { error } = await supabase.auth.signInWithPassword({
@@ -107,12 +107,12 @@ export default function GlassAuthCard() {
 			if (err instanceof AuthError && err.code === "email_not_confirmed") {
 				setNeedsConfirmation(true);
 				setErrorMessage(
-					"Please confirm your email before signing in. Check your inbox for the activation link.",
+					"Please confirm your email before signing in. The link is waiting in your inbox.",
 				);
 			} else if (err instanceof Error) {
 				setErrorMessage(err.message);
 			} else {
-				setErrorMessage("An authentication error occurred.");
+				setErrorMessage("We could not sign you in. Please try again.");
 			}
 		} finally {
 			setLoading(false);

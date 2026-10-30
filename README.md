@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Maison Vaelore
 
-## Getting Started
+A portfolio storefront for a fictional high-jewelry house, built to be browsed and tested. Checkout is a demo (no real payments, nothing ships), and there's a shared demo login on the sign-in page.
 
-First, run the development server:
+**Stack:** Next.js 16 (App Router, `cacheComponents`), React 19, TypeScript, Tailwind CSS v4, Framer Motion, Supabase (Postgres, Auth, RLS).
+
+## What to try
+
+- Browse the Lumière, Tide and Heirloom collections; filter and sort by metal, stone and price.
+- Save pieces and fill a bag as a guest, then sign in with "Use the demo account": the guest bag merges into the account.
+- Check out with "Fill Demo Details", then open the order confirmation.
+
+## Engineering notes
+
+- **Server-side pricing.** The browser sends product ids, sizes and quantities, never prices. `place_order` (a Postgres function) prices the order from the catalog, re-validates the promo code and stores a snapshot. Rules are mirrored in `app/lib/pricing.ts`.
+- **Row Level Security.** The catalog is public read-only; carts, wishlists and profiles are owner-only; orders, promo codes and newsletter data are reachable only through functions.
+- **Cached catalog.** Reads go through tagged `"use cache"` fetchers (`app/lib/data/products.ts`) that Supabase webhooks revalidate through `/api/revalidate`.
+- **Cart that follows the user.** `context/StoreContext.tsx` has one API for guest (localStorage) and signed-in (Supabase) carts, with optimistic writes and a merge on sign-in.
+- **Card numbers never leave the browser.** The demo card form is Luhn-checked; only brand and last 4 are sent.
+
+## Run it locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local   # add your Supabase URL, anon key and a REVALIDATE_SECRET
+npm install
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Apply the SQL files in `supabase/migrations/` in order in the Supabase SQL Editor. Checks: `npm run build`, `npm run lint`, `npx tsc --noEmit`. Deployment, auth emails and webhooks are covered in [`docs/DEPLOY.md`](docs/DEPLOY.md); the brand book is in `docs/`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Notes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Product photography is from [Pexels](https://www.pexels.com/license/). Maison Vaelore is a fictional brand and the pieces are not for sale.

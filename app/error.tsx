@@ -20,10 +20,10 @@ export default function Error({
 			<span className="eyebrow font-medium mb-6 text-(--text-muted)">
 				A Brief Pause
 			</span>
-			<h1 className="font-serif text-3xl sm:text-4xl tracking-tight leading-tight mb-5 text-balance text-(--text-headline)">
+			<h1 className="font-serif text-heading sm:text-title tracking-tight leading-tight mb-5 text-balance text-(--text-headline)">
 				This page couldn&rsquo;t be loaded.
 			</h1>
-			<p className="text-sm leading-relaxed mb-10 font-light text-(--text-body)">
+			<p className="text-copy-sm leading-relaxed mb-10 font-light text-(--text-body)">
 				Please try again in a moment.
 			</p>
 			<div className="flex items-center gap-8 eyebrow">
@@ -38,7 +38,7 @@ export default function Error({
 					href="/"
 					className="text-(--accent-blue) hover:opacity-70 transition-opacity"
 				>
-					Back to Storefront
+					Return Home
 				</Link>
 			</div>
 		</section>

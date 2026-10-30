@@ -1,9 +1,9 @@
 // Site-wide identity. Change the brand here and it updates the page titles,
 // Navbar, Footer, social preview image and structured data.
-export const SITE_NAME = "BrandLogo";
-export const SITE_TAGLINE = "Fine Jewelry & Heirlooms";
+export const SITE_NAME = "Maison Vaelore";
+export const SITE_TAGLINE = "Light, kept.";
 export const SITE_DESCRIPTION =
-	"Handcrafted fine jewelry designed for modern longevity.";
+	"Modern heirlooms from rare golden South Sea pearls, recycled 18k gold and traceable diamonds. Each piece is made by hand and meant to be passed down.";
 
 // The public origin, used for absolute URLs (sitemap, robots, social
 // previews). Set NEXT_PUBLIC_SITE_URL in production; on Vercel the

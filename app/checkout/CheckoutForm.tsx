@@ -44,7 +44,7 @@ const COUNTRIES = [
 const LABEL_CLASS =
 	"block eyebrow text-(--text-muted)";
 const SECTION_CLASS =
-	"border border-(--border-color) bg-(--card-sub)/20 p-6 sm:p-8 rounded-xs";
+	"border-t border-(--border-color) pt-8";
 const SECTION_TITLE_CLASS =
 	"text-label uppercase font-medium pb-4 border-b border-(--border-color)/60 mb-6 text-(--text-headline)";
 
@@ -239,10 +239,10 @@ export default function CheckoutForm() {
 				<p className="text-label uppercase font-medium text-(--success) mb-3">
 					Order placed
 				</p>
-				<p className="font-primary text-2xl text-(--text-headline)">
+				<p className="font-primary text-heading text-(--text-headline)">
 					{placedOrderNumber}
 				</p>
-				<p className="mt-3 font-body text-xs text-(--text-muted)">
+				<p className="mt-3 font-body text-copy-sm text-(--text-muted)">
 					Taking you to your confirmation…
 				</p>
 			</div>
@@ -255,17 +255,17 @@ export default function CheckoutForm() {
 				<div className="w-16 h-16 rounded-full border border-(--border-color) bg-(--card-sub)/50 flex items-center justify-center mb-6">
 					<ShoppingBag size={20} className="stroke-[1.5] text-(--text-muted)" />
 				</div>
-				<h1 className="font-primary text-2xl tracking-tight mb-3 text-(--text-headline)">
+				<h1 className="font-primary text-heading tracking-tight mb-3 text-(--text-headline)">
 					Your bag is empty
 				</h1>
-				<p className="font-body text-xs text-(--text-muted) mb-10">
-					Add a piece to your bag to check out.
+				<p className="font-body text-copy-sm text-(--text-muted) mb-10">
+					Choose a piece to begin.
 				</p>
 				<Link
 					href="/collections/best-sellers"
 					className="py-3.5 px-10 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs"
 				>
-					Shop Best Sellers
+					Discover Best Sellers
 				</Link>
 			</div>
 		);
@@ -295,7 +295,7 @@ export default function CheckoutForm() {
 			{errors[name] && (
 				<span
 					id={`checkout-${name}-error`}
-					className="block mt-1.5 normal-case tracking-normal text-xs text-(--error-text)"
+					className="block mt-1.5 normal-case tracking-normal text-copy-sm text-(--error-text)"
 				>
 					{errors[name]}
 				</span>
@@ -311,9 +311,9 @@ export default function CheckoutForm() {
 			<div className="mb-10 pb-6 border-b border-(--border-color)/60 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
 				<div>
 					<span className="eyebrow text-(--text-muted) block mb-3">
-						Secure Checkout
+						Almost yours
 					</span>
-					<h1 className="font-primary text-3xl sm:text-4xl tracking-tight text-(--text-headline)">
+					<h1 className="font-primary text-heading sm:text-title tracking-tight text-(--text-headline)">
 						Checkout
 					</h1>
 				</div>
@@ -333,7 +333,7 @@ export default function CheckoutForm() {
 			<div className="mb-8 p-5 rounded-xs border border-(--border-color) bg-(--card-main)/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 				<div className="flex items-start gap-3">
 					<Sparkles size={16} className="stroke-[1.5] mt-0.5 text-(--text-headline) shrink-0" />
-					<p className="font-body text-xs leading-relaxed text-(--text-body)">
+					<p className="font-body text-copy-sm leading-relaxed text-(--text-body)">
 						<span className="font-semibold text-(--text-headline)">
 							Demo checkout.
 						</span>{" "}
@@ -466,12 +466,12 @@ export default function CheckoutForm() {
 										)}
 									</div>
 									<div className="flex-1 min-w-0">
-										<p className="font-primary text-sm text-(--text-headline) truncate">{item.name}</p>
+										<p className="font-primary text-copy-sm text-(--text-headline) truncate">{item.name}</p>
 										<p className="font-secondary eyebrow text-(--text-muted)">
 											{item.size === ONE_SIZE ? "One Size" : `Size ${item.size}`} · Qty {item.quantity}
 										</p>
 									</div>
-									<span className="font-serif text-sm text-(--text-headline)">
+									<span className="font-serif text-copy-sm text-(--text-headline)">
 										{formatPrice(item.price * item.quantity)}
 									</span>
 								</li>
@@ -481,7 +481,7 @@ export default function CheckoutForm() {
 						<dl className="space-y-3 text-label uppercase pb-5 border-b border-(--border-color)/60">
 							<SummaryRow label="Subtotal" value={formatPrice(subtotalCents)} />
 							{options.giftPackaging && (
-								<SummaryRow label="Gift Presentation" value={formatPrice(totals.giftCents)} />
+								<SummaryRow label="Gift Presentation" value={totals.giftCents === 0 ? "Complimentary" : formatPrice(totals.giftCents)} />
 							)}
 							{totals.discountCents > 0 && (
 								<SummaryRow
@@ -501,7 +501,7 @@ export default function CheckoutForm() {
 							<span className="text-label uppercase font-medium text-(--text-headline)">
 								Total
 							</span>
-							<span className="font-primary text-3xl font-medium tracking-tight text-(--text-headline)">
+							<span className="font-primary text-heading font-medium tracking-tight text-(--text-headline)">
 								{formatPrice(totals.totalCents)}
 							</span>
 						</div>
@@ -519,7 +519,7 @@ export default function CheckoutForm() {
 						>
 							{isPlacing ? "Placing Order..." : `Place Order · ${formatPrice(totals.totalCents)}`}
 						</button>
-						<p className="mt-3 text-center font-body text-xs text-(--text-muted)">
+						<p className="mt-3 text-center font-body text-copy-sm text-(--text-muted)">
 							Demo order: no payment will be taken.
 						</p>
 					</section>
@@ -539,7 +539,7 @@ function SummaryRow({
 	accent?: boolean;
 }) {
 	return (
-		<div className={`flex justify-between ${accent ? "text-(--accent-love)" : "text-(--text-muted)"}`}>
+		<div className={`flex justify-between ${accent ? "text-(--text-body)" : "text-(--text-muted)"}`}>
 			<dt>{label}</dt>
 			<dd className={accent ? "" : "text-(--text-headline)"}>{value}</dd>
 		</div>

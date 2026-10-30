@@ -110,7 +110,7 @@ export default function ProductCard({
 				<button
 					type="button"
 					onClick={handleWishlist}
-					aria-label={liked ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
+					aria-label={liked ? `Remove ${product.name} from saved pieces` : `Save ${product.name}`}
 					aria-pressed={liked}
 					className="absolute top-3 right-3 w-9 h-9 rounded-full bg-(--bg-base)/90 flex items-center justify-center z-10 cursor-pointer text-(--text-body) hover:text-(--accent-love) transition-colors"
 				>
@@ -219,7 +219,7 @@ export default function ProductCard({
 				</span>
 
 				<Link href={`/product/${product.slug}`} className="block">
-					<h3 className="font-serif text-base sm:text-[1.0625rem] leading-snug text-(--text-headline) hover:text-(--accent) transition-colors truncate">
+					<h3 className="font-serif text-copy sm:text-[1.0625rem] leading-snug text-(--text-headline) hover:text-(--accent) transition-colors truncate">
 						{product.name}
 					</h3>
 				</Link>

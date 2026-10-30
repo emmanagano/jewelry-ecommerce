@@ -7,19 +7,19 @@ export default function EngravingFeature() {
 			reverse
 			image="https://images.pexels.com/photos/4938199/pexels-photo-4938199.jpeg?auto=compress&cs=tinysrgb&w=1600"
 			imageAlt="Engraved gold medallion pendant resting on an open book"
-			caption="Bespoke Hand-Inscribed"
-			eyebrow="Atelier Personalization"
-			title="Gifts to Engrave"
+			caption="Hand-inscribed"
+			eyebrow="Complimentary engraving"
+			title="Chosen once. Treasured for generations."
 			action={
 				<Button href="/collections/gifts" variant="link">
-					Shop Gifts
+					Discover Gifts
 				</Button>
 			}
 		>
 			<p>
-				Inscribe initials, coordinates or meaningful milestones onto
-				solid 14k gold pendants and signets. Every stroke is hand-carved
-				to turn fine jewelry into an enduring heirloom.
+				Inscribe initials, a date or a few words onto 18k gold pendants and
+				bands, complimentary with every piece. Each stroke is made by hand
+				to turn a gift into an heirloom.
 			</p>
 		</EditorialSplit>
 	);

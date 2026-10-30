@@ -20,7 +20,6 @@ export default function robots(): MetadataRoute.Robots {
 				"/orders/",
 				"/my-wishlist",
 				"/search",
-				"/coming-soon",
 			],
 		},
 		sitemap: `${getSiteUrl()}/sitemap.xml`,

@@ -59,7 +59,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const LABEL_CLASS =
 	"eyebrow text-(--text-muted)";
 const SECTION_CLASS =
-	"border border-(--border-color) bg-(--card-sub)/20 p-6 sm:p-8 rounded-xs";
+	"border-t border-(--border-color) pt-8";
 
 // Visible to the order's owner, or to anyone with the confirmation link's
 // token (guest orders); see get_order() in the orders migration
@@ -98,12 +98,17 @@ async function OrderContent({ params, searchParams }: PageProps) {
 						</span>
 					</div>
 				)}
-				<h1 className="font-primary text-3xl sm:text-4xl tracking-tight text-(--text-headline)">
+				<h1 className="font-primary text-heading sm:text-title tracking-tight text-(--text-headline)">
 					{placed === "1"
 						? `Thank you, ${order.full_name.split(" ")[0]}`
 						: `Order ${order.order_number}`}
 				</h1>
-				<p className="mt-3 font-body text-sm text-(--text-body)">
+				{placed === "1" && (
+					<p className="mt-3 font-body text-copy-sm text-(--text-body)">
+						Sofia, your client advisor, will write to confirm your order.
+					</p>
+				)}
+				<p className="mt-3 font-body text-copy-sm text-(--text-body)">
 					Order <span className="font-medium text-(--text-headline)">{order.order_number}</span>{" "}
 					· {placedOn} · Confirmation for {order.email}
 				</p>
@@ -129,7 +134,7 @@ async function OrderContent({ params, searchParams }: PageProps) {
 									)}
 								</Link>
 								<div className="flex-1 min-w-0">
-									<p className="font-primary text-sm sm:text-base text-(--text-headline) truncate">
+									<p className="font-primary text-copy-sm sm:text-copy text-(--text-headline) truncate">
 										{item.product_name}
 									</p>
 									<p className="font-secondary eyebrow text-(--text-muted)">
@@ -137,7 +142,7 @@ async function OrderContent({ params, searchParams }: PageProps) {
 										{formatPrice(item.unit_price_cents)} each
 									</p>
 								</div>
-								<span className="font-serif text-sm text-(--text-headline)">
+								<span className="font-serif text-copy-sm text-(--text-headline)">
 									{formatPrice(item.unit_price_cents * item.quantity)}
 								</span>
 							</li>
@@ -164,13 +169,13 @@ async function OrderContent({ params, searchParams }: PageProps) {
 							<span className="text-label uppercase font-medium text-(--text-headline)">
 								Total
 							</span>
-							<span className="font-primary text-2xl text-(--text-headline)">
+							<span className="font-primary text-heading text-(--text-headline)">
 								{formatPrice(order.total_cents)}
 							</span>
 						</div>
 					</section>
 
-					<section className={`${SECTION_CLASS} grid grid-cols-1 sm:grid-cols-2 gap-6 font-body text-xs leading-relaxed text-(--text-body)`}>
+					<section className={`${SECTION_CLASS} grid grid-cols-1 sm:grid-cols-2 gap-6 font-body text-copy-sm leading-relaxed text-(--text-body)`}>
 						<div>
 							<h2 className={`${LABEL_CLASS} mb-2`}>Shipping To</h2>
 							<p className="text-(--text-headline)">{order.full_name}</p>
@@ -203,7 +208,7 @@ async function OrderContent({ params, searchParams }: PageProps) {
 							href="/"
 							className="py-3.5 px-8 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs"
 						>
-							Continue Shopping
+							Continue Discovering
 						</Link>
 						<Link
 							href="/account"

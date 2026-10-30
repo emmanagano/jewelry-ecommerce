@@ -4,6 +4,7 @@ import CategoryTiles from "@/components/CategoryTiles";
 import BestSellers from "@/components/BestSellers";
 import BrandStory from "@/components/BrandStory";
 import EngravingFeature from "@/components/EngravingFeature";
+import HeirloomPromise from "@/components/HeirloomPromise";
 
 export default function Home() {
 	return (
@@ -14,6 +15,7 @@ export default function Home() {
 			<BestSellers />
 			<BrandStory />
 			<EngravingFeature />
+			<HeirloomPromise />
 		</div>
 	);
 }

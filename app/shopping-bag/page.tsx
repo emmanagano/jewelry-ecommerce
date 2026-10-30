@@ -28,7 +28,6 @@ import { applyPromoCode } from "@/app/lib/store-actions";
 import {
 	COURIER_CENTS,
 	FREE_COURIER_THRESHOLD_CENTS,
-	GIFT_PACKAGING_CENTS,
 	computeTotals,
 } from "@/app/lib/pricing";
 import {
@@ -141,11 +140,11 @@ export default function BagPage() {
 				className="mb-12 pb-6 border-b border-(--border-color)/60"
 			>
 				<span className="eyebrow text-(--text-muted) block mb-3">
-					Selected Pieces
+					Your Selection
 				</span>
 				<div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-					<h1 className="font-primary text-3xl sm:text-4xl tracking-tight text-(--text-headline)">
-						Shopping Bag{" "}
+					<h1 className="font-primary text-heading sm:text-title tracking-tight text-(--text-headline)">
+						Your Bag{" "}
 						{totalCartCount > 0 && (
 							<span className="text-(--text-muted) font-light">
 								({totalCartCount})
@@ -215,19 +214,18 @@ export default function BagPage() {
 							className="stroke-[1.5] text-(--text-muted)"
 						/>
 					</div>
-					<h2 className="font-primary text-2xl tracking-tight mb-3 text-(--text-headline)">
-						Your Shopping Bag is Empty
+					<h2 className="font-primary text-heading tracking-tight mb-3 text-(--text-headline)">
+						Your bag is empty
 					</h2>
-					<p className="font-body text-xs uppercase tracking-widest max-w-md mb-10 leading-relaxed text-(--text-muted) font-light">
-						Explore our curated collections to select timeless
-						handcrafted jewelry for your personal archive.
+					<p className="font-body text-label uppercase tracking-widest max-w-md mb-10 leading-relaxed text-(--text-muted) font-light">
+						Discover the collections when you are ready.
 					</p>
 					<Link href="/">
 						<motion.div
 							transition={luxurySpring}
 							className="py-3.5 px-10 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-90 transition-opacity rounded-xs shadow-xs inline-block"
 						>
-							Discover The Collection
+							Discover the Collections
 						</motion.div>
 					</Link>
 				</motion.div>
@@ -291,7 +289,7 @@ export default function BagPage() {
 												<div className="flex flex-col space-y-1.5 pr-4">
 													<Link
 														href={`/product/${item.slug}`}
-														className="font-primary text-base sm:text-lg tracking-tight text-(--text-headline) hover:opacity-70 transition-opacity leading-snug"
+														className="font-primary text-copy sm:text-lg tracking-tight text-(--text-headline) hover:opacity-70 transition-opacity leading-snug"
 													>
 														{item.name}
 													</Link>
@@ -308,7 +306,7 @@ export default function BagPage() {
 
 												{/* Price & Remove Action */}
 												<div className="flex items-start gap-3 sm:gap-4 shrink-0">
-													<span className="font-serif font-medium text-sm text-(--text-headline) whitespace-nowrap mt-1">
+													<span className="font-serif font-medium text-copy-sm text-(--text-headline) whitespace-nowrap mt-1">
 														{formatPrice(
 															item.price *
 																item.quantity,
@@ -358,7 +356,7 @@ export default function BagPage() {
 															className="stroke-[1.5]"
 														/>
 													</motion.button>
-													<span className="px-3 font-body text-xs font-medium text-(--text-headline)">
+													<span className="px-3 font-body text-copy-sm font-medium text-(--text-headline)">
 														{item.quantity}
 													</span>
 													<motion.button
@@ -411,7 +409,7 @@ export default function BagPage() {
 						{/* Bespoke Presentation Option */}
 						<motion.div
 							variants={staggerItem}
-							className="p-6 sm:p-8 border border-(--border-color) bg-(--card-sub)/40 rounded-xs transition-colors"
+							className="pt-8 border-t border-(--border-color) transition-colors"
 						>
 							<div className="flex items-start justify-between">
 								<div className="flex items-start gap-4">
@@ -421,13 +419,12 @@ export default function BagPage() {
 									/>
 									<div className="space-y-1.5">
 										<h3 className="text-label uppercase font-medium text-(--text-headline)">
-											Bespoke Gift Presentation (+$5.00)
+											Bespoke Gift Presentation (Complimentary)
 										</h3>
 										<p className="text-copy-sm text-(--text-muted) max-w-md font-light">
-											Individually housed in our signature
-											textured gift box, bound with raw
-											silk ribbon and accompanied by a
-											wax-sealed envelope.
+											Presented in the signature box, tied by
+											hand with ribbon and closed with a
+											wax seal.
 										</p>
 									</div>
 								</div>
@@ -459,7 +456,7 @@ export default function BagPage() {
 												htmlFor="giftNote"
 												className="eyebrow block mb-2 font-medium text-(--text-headline)"
 											>
-												Personalized Inscription
+												Personal Inscription
 												(Complimentary)
 											</label>
 											<textarea
@@ -470,8 +467,8 @@ export default function BagPage() {
 												onChange={(e) =>
 													setGiftNote(e.target.value)
 												}
-												placeholder="Write your note to be handwritten by our studio..."
-												className="w-full font-body text-xs p-3 bg-white/50 dark:bg-black/20 border border-(--border-color) rounded-xs focus:outline-none focus:border-(--text-headline)/50 text-(--text-headline) placeholder:text-(--text-muted)"
+												placeholder="A few words, handwritten by our studio"
+												className="w-full font-body text-copy-sm p-3 bg-white/50 border border-(--border-color) rounded-xs focus:outline-none focus:border-(--text-headline)/50 text-(--text-headline) placeholder:text-(--text-muted)"
 											/>
 										</div>
 									</motion.div>
@@ -488,7 +485,7 @@ export default function BagPage() {
 						transition={{ ...luxurySpring, delay: 0.2 }}
 						className="lg:col-span-5 lg:sticky lg:top-32 space-y-6"
 					>
-						<div className="border border-(--border-color) bg-(--card-sub)/20 p-6 sm:p-8 rounded-xs">
+						<div className="border-t border-(--border-color) pt-8">
 							<h2 className="text-label uppercase font-medium pb-4 border-b border-(--border-color)/60 mb-6 text-(--text-headline)">
 								Order Summary
 							</h2>
@@ -500,15 +497,15 @@ export default function BagPage() {
 							>
 								<input
 									type="text"
-									placeholder="Promo code"
-									aria-label="Promo code"
+									placeholder="Advisor code"
+									aria-label="Advisor code"
 									aria-invalid={promoError ? true : undefined}
 									aria-describedby={promoError ? "promo-message" : undefined}
 									value={promoCode}
 									onChange={(e) =>
 										setPromoCode(e.target.value)
 									}
-									className="flex-1 bg-transparent border border-(--border-color) px-3 py-2.5 font-secondary text-xs uppercase tracking-wider placeholder:normal-case focus:outline-none focus:border-(--text-headline)/40 rounded-xs text-(--text-headline) placeholder:text-(--text-muted)"
+									className="flex-1 bg-transparent border border-(--border-color) px-3 py-2.5 font-secondary text-label uppercase tracking-wider placeholder:normal-case focus:outline-none focus:border-(--text-headline)/40 rounded-xs text-(--text-headline) placeholder:text-(--text-muted)"
 								/>
 								<motion.button
 									type="submit"
@@ -581,9 +578,7 @@ export default function BagPage() {
 										>
 											<span>Gift Presentation</span>
 											<span className="text-(--text-headline)">
-												{formatPrice(
-													GIFT_PACKAGING_CENTS,
-												)}
+												Complimentary
 											</span>
 										</motion.div>
 									)}
@@ -596,7 +591,7 @@ export default function BagPage() {
 												height: "auto",
 											}}
 											exit={{ opacity: 0, height: 0 }}
-											className="flex justify-between text-(--accent-love) overflow-hidden"
+											className="flex justify-between text-(--text-body) overflow-hidden"
 										>
 											<span>
 												Privilege Courtesy (-
@@ -626,7 +621,7 @@ export default function BagPage() {
 								</div>
 							</motion.div>
 
-							{/* Final Total Investment */}
+							{/* Final Total */}
 							<motion.div
 								layout
 								className="flex justify-between items-baseline pt-6 mb-8"
@@ -636,7 +631,7 @@ export default function BagPage() {
 								</span>
 								<motion.span
 									layout="position"
-									className="font-primary text-3xl font-medium tracking-tight text-(--text-headline)"
+									className="font-primary text-heading font-medium tracking-tight text-(--text-headline)"
 								>
 									{formatPrice(totals.totalCents)}
 								</motion.span>
@@ -662,8 +657,8 @@ export default function BagPage() {
 									className="stroke-[1.5] mt-0.5 text-(--text-headline)"
 								/>
 								<span>
-									Insured direct courier dispatch with
-									tamper-evident seal.
+									Insured, signature-required delivery,
+									hand-packed.
 								</span>
 							</div>
 							<div className="flex items-start gap-3.5">
@@ -672,8 +667,8 @@ export default function BagPage() {
 									className="stroke-[1.5] mt-0.5 text-(--text-headline)"
 								/>
 								<span>
-									30-day complimentary return or exchange
-									privilege.
+									30 days to return or exchange unworn,
+									non-engraved pieces.
 								</span>
 							</div>
 							<div className="flex items-start gap-3.5">
@@ -682,8 +677,8 @@ export default function BagPage() {
 									className="stroke-[1.5] mt-0.5 text-(--text-headline)"
 								/>
 								<span>
-									Certificate of authenticity & lifetime
-									atelier guarantee.
+									Certificate of Provenance and lifetime
+									care.
 								</span>
 							</div>
 						</div>

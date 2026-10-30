@@ -50,7 +50,7 @@ export default function ForgotPasswordForm() {
 	return (
 		<form onSubmit={handleSubmit} className="space-y-4">
 			{errorMessage && <AuthMessage tone="error">{errorMessage}</AuthMessage>}
-			<p className="font-body text-xs leading-relaxed text-(--text-body) text-center mb-2">
+			<p className="font-body text-copy-sm leading-relaxed text-(--text-body) text-center mb-2">
 				Enter your email and we&rsquo;ll send you a link to choose a new
 				password.
 			</p>

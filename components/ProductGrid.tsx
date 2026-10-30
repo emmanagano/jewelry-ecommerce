@@ -10,7 +10,7 @@ export default function ProductGrid({
 }) {
 	if (products.length === 0) {
 		return (
-			<div className="py-24 text-center text-xs tracking-widest uppercase text-(--text-muted)">
+			<div className="py-24 text-center text-label tracking-widest uppercase text-(--text-muted)">
 				{emptyMessage}
 			</div>
 		);

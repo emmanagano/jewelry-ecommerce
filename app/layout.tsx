@@ -63,8 +63,11 @@ export default async function RootLayout({
 				<MotionProvider>
 					<AuthProvider>
 						<StoreProvider>
+							<a href="#main" className="skip-link">
+								Skip to content
+							</a>
 							<Navbar categories={navCategories} />
-							<main className="grow">{children}</main>
+							<main id="main" className="grow">{children}</main>
 							<Footer categories={navCategories} />
 						</StoreProvider>
 					</AuthProvider>

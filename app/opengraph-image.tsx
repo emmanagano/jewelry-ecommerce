@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { SITE_NAME, SITE_TAGLINE } from "@/app/lib/site";
 
@@ -7,7 +9,12 @@ export const alt = `${SITE_NAME} | ${SITE_TAGLINE}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpengraphImage() {
+export default async function OpengraphImage() {
+	const logo = await readFile(
+		join(process.cwd(), "public/logo/vaelore-logo-stacked-ink.svg"),
+	);
+	const logoSrc = `data:image/svg+xml;base64,${logo.toString("base64")}`;
+
 	return new ImageResponse(
 		(
 			<div
@@ -18,26 +25,18 @@ export default function OpengraphImage() {
 					flexDirection: "column",
 					alignItems: "center",
 					justifyContent: "center",
-					background: "#f7f3ee",
-					color: "#1f1a17",
+					background: "#f6f2ea",
+					color: "#14181f",
 					fontFamily: "serif",
 				}}
 			>
-				<div
-					style={{
-						fontSize: 88,
-						letterSpacing: "0.2em",
-						textTransform: "uppercase",
-					}}
-				>
-					{SITE_NAME}
-				</div>
+				<img src={logoSrc} alt="" width={760} height={289} />
 				<div
 					style={{
 						marginTop: 28,
 						width: 96,
 						height: 1,
-						background: "#5a1a24",
+						background: "#846432",
 						opacity: 0.4,
 					}}
 				/>

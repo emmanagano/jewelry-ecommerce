@@ -46,7 +46,7 @@ async function CollectionContent({ params }: PageProps) {
 
 	return (
 		<ProductListing
-			eyebrow="Curated Edit"
+			eyebrow="The Collection"
 			title={collection.name}
 			description={collection.description}
 			bannerImage={collection.banner_image ?? products[0]?.images?.[0] ?? null}

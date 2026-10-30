@@ -42,8 +42,8 @@ export default function BestSellersSlider({
 	return (
 		<section className="w-full px-4 sm:px-8 pt-20 lg:pt-28 max-w-screen-2xl mx-auto">
 			<SectionHeading
-				eyebrow="Curated Essentials"
-				title="Most Coveted Pieces"
+				eyebrow="Chosen again and again"
+				title="Client Favourites"
 				action={
 					<div className="flex items-center gap-6">
 						<Button href="/collections/best-sellers" variant="link">

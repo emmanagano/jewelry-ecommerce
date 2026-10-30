@@ -45,7 +45,7 @@ export function AccountCard({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className={`${className} rounded-2xl bg-(--surface) border border-(--border-color) shadow-[0_20px_50px_rgba(30,6,10,0.04)] p-6 sm:p-8`}>
+		<section className={`${className} border-t border-(--border-color) pt-8`}>
 			<div className="flex items-center justify-between gap-4 mb-6">
 				<h2 className="text-label uppercase font-medium text-(--text-headline)">
 					{title}
@@ -125,7 +125,7 @@ function Detail({ label, value }: { label: string; value: React.ReactNode }) {
 	return (
 		<div>
 			<dt className={LABEL_CLASS}>{label}</dt>
-			<dd className="mt-1.5 font-body text-sm text-(--text-headline)">
+			<dd className="mt-1.5 font-body text-copy-sm text-(--text-headline)">
 				{value}
 			</dd>
 		</div>
@@ -316,7 +316,7 @@ function EmptyPreview({
 			<div className="w-12 h-12 rounded-full border border-(--border-color) bg-(--card-sub)/50 flex items-center justify-center mb-4 text-(--text-muted)">
 				{icon}
 			</div>
-			<p className="font-body text-xs text-(--text-muted) mb-4">{text}</p>
+			<p className="font-body text-copy-sm text-(--text-muted) mb-4">{text}</p>
 			<ViewAllLink href={href} label={cta} />
 		</div>
 	);
@@ -351,7 +351,7 @@ export function SavedPiecesPreview() {
 			) : preview.length === 0 ? (
 				<EmptyPreview
 					icon={<Heart size={16} className="stroke-[1.5]" />}
-					text="Tap the heart on any piece to save it here."
+					text="Select the heart on any piece to keep it here."
 					href="/collections/new-and-featured"
 					cta="Discover New Pieces"
 				/>
@@ -371,10 +371,10 @@ export function SavedPiecesPreview() {
 										/>
 									)}
 								</div>
-								<p className="mt-2 font-primary text-xs text-(--text-headline) truncate group-hover:opacity-70 transition-opacity">
+								<p className="mt-2 font-primary text-copy-sm text-(--text-headline) truncate group-hover:opacity-70 transition-opacity">
 									{product.name}
 								</p>
-								<p className="font-secondary text-xs text-(--text-muted)">
+								<p className="font-secondary text-copy-sm text-(--text-muted)">
 									{formatPrice(product.price)}
 								</p>
 							</Link>
@@ -393,7 +393,7 @@ export function BagPreview() {
 
 	return (
 		<AccountCard
-			title={`Shopping Bag${totalCartCount ? ` (${totalCartCount})` : ""}`}
+			title={`Your Bag${totalCartCount ? ` (${totalCartCount})` : ""}`}
 		>
 			{!isHydrated ? (
 				<div className="space-y-3 animate-pulse">
@@ -405,7 +405,7 @@ export function BagPreview() {
 					icon={<ShoppingBag size={16} className="stroke-[1.5]" />}
 					text="Your bag is empty."
 					href="/collections/best-sellers"
-					cta="Shop Best Sellers"
+					cta="Discover Best Sellers"
 				/>
 			) : (
 				<>
@@ -430,7 +430,7 @@ export function BagPreview() {
 									)}
 								</Link>
 								<div className="flex-1 min-w-0">
-									<p className="font-primary text-sm text-(--text-headline) truncate">
+									<p className="font-primary text-copy-sm text-(--text-headline) truncate">
 										{item.name}
 									</p>
 									<p className="font-secondary eyebrow text-(--text-muted)">
@@ -438,7 +438,7 @@ export function BagPreview() {
 										{item.quantity}
 									</p>
 								</div>
-								<span className="font-serif text-sm text-(--text-headline)">
+								<span className="font-serif text-copy-sm text-(--text-headline)">
 									{formatPrice(item.price * item.quantity)}
 								</span>
 							</li>
@@ -491,12 +491,12 @@ export function NewsletterCard({ initial }: { initial: boolean }) {
 			)}
 			<form action={formAction} className="flex items-start justify-between gap-6">
 				<div>
-					<p className="font-body text-sm text-(--text-headline)">
-						The Atelier Letter
+					<p className="font-body text-copy-sm text-(--text-headline)">
+						The Vaelore Letter
 					</p>
 					<p className="mt-1 text-copy-sm text-(--text-muted)">
-						New collections, private previews and care notes. No more
-						than twice a month.
+						Private previews, new collections and care notes. Never
+						more than twice a month.
 					</p>
 				</div>
 				<input type="hidden" name="subscribe" value={String(!subscribed)} />
@@ -504,7 +504,7 @@ export function NewsletterCard({ initial }: { initial: boolean }) {
 					type="submit"
 					role="switch"
 					aria-checked={subscribed}
-					aria-label="Subscribe to The Atelier Letter"
+					aria-label="Subscribe to The Vaelore Letter"
 					disabled={pending}
 					className={`relative shrink-0 w-11 h-6 rounded-full border transition-colors cursor-pointer disabled:opacity-50 ${
 						subscribed
@@ -580,9 +580,9 @@ export function OrderHistoryCard({ orders }: { orders: OrderSummary[] }) {
 			{orders.length === 0 ? (
 				<EmptyPreview
 					icon={<ShoppingBag size={16} className="stroke-[1.5]" />}
-					text="Orders you place while signed in appear here."
+					text="Your orders will appear here."
 					href="/shopping-bag"
-					cta="Go to Bag"
+					cta="View Your Bag"
 				/>
 			) : (
 				<ul className="divide-y divide-(--border-color)/60">
@@ -605,7 +605,7 @@ export function OrderHistoryCard({ orders }: { orders: OrderSummary[] }) {
 										· {order.itemCount} {order.itemCount === 1 ? "piece" : "pieces"}
 									</p>
 								</div>
-								<span className="flex items-center gap-3 font-serif text-sm text-(--text-headline)">
+								<span className="flex items-center gap-3 font-serif text-copy-sm text-(--text-headline)">
 									{formatPrice(order.totalCents)}
 									<ArrowRight
 										size={12}

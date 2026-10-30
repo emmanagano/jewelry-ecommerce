@@ -2,25 +2,28 @@
 
 :root {
 	/* LIGHT THEME: warm editorial. Contrast (WCAG) on --bg-base:
-	   ink 15.6, body 9.1, muted 5.3, wine 11.8 */
-	--bg-base: #f7f3ee; /* Warm ivory canvas */
+	   ink 16.6, body 9.1, muted 5.3, deep gold 4.9 */
+	--bg-base: #f6f2ea; /* Pearl White canvas */
 	--surface: #fffdf9; /* Paper, for the few raised cards */
-	--card-main: #e9dfd3; /* Notice / badge fill */
+	--card-main: #e8d5c8; /* Nacre Rose: notice / badge fill */
 	--card-sub: #efe8df; /* Image placeholder, subtle fill */
 	--card-wide: #f1ebe3; /* Footer band */
 
-	--accent-blue: #5a1a24; /* Wine (historical name; prefer --accent) */
-	--accent-light: #5a1a24;
+	--accent-blue: #846432; /* Deep gold (historical name; prefer --accent) */
+	--accent-light: #846432;
 	--accent: var(--accent-blue);
 
-	--text-headline: #1f1a17; /* Ink */
+	--text-headline: #14181f; /* Abyss Ink */
 	--text-body: #4a403a; /* Body copy */
 	--text-muted: #6e625a; /* Taupe, for secondary text */
 
 	--border-color: #e6ddd3; /* Hairlines */
 
+	--gold: #b8955a; /* Vaelore Gold: rules, fills, dark bands. Not for text on light (2.5:1) */
+	--lagoon: #1f3a3d; /* Deep Lagoon: rare dark accent */
+
 	/* Status colors */
-	--accent-love: #c2364f; /* Wishlist hearts & discounts */
+	--accent-love: var(--accent); /* Saved-piece hearts: deep gold, no off-palette pink */
 	--success: #2f7a4f;
 	--error-text: #9f1239;
 	--error-bg: #fbeeee;
@@ -104,4 +107,33 @@ body {
 ::selection {
 	background-color: var(--card-main);
 	color: var(--text-headline);
+}
+
+/* Keyboard focus: a hairline ring on anything focusable (inputs keep their
+   own border-color change). Pointer clicks don't show it. */
+:where(a, button, summary, [role="button"], [role="switch"], select):focus-visible {
+	outline: 1px solid var(--text-headline);
+	outline-offset: 3px;
+}
+
+/* Over photography, where ink would disappear */
+.on-photo :where(a, button):focus-visible {
+	outline-color: var(--bg-base);
+}
+
+/* Visible only when focused, so keyboard users can skip the header */
+.skip-link {
+	position: absolute;
+	left: 1rem;
+	top: -4rem;
+	z-index: 100;
+	padding: 0.75rem 1.25rem;
+	background: var(--text-headline);
+	color: var(--bg-base);
+	font-size: var(--text-label);
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+.skip-link:focus {
+	top: 1rem;
 }

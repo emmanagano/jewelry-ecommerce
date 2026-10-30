@@ -13,7 +13,7 @@ export default async function CategoryTiles() {
 
 	return (
 		<section className="max-w-screen-2xl mx-auto px-4 sm:px-8 pt-20 lg:pt-28">
-			<SectionHeading eyebrow="The Collections" title="Shop by Category" />
+			<SectionHeading eyebrow="The Collections" title="Discover by Piece" />
 			<ul className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
 				{categories.map((category) => (
 					<li key={category.slug}>
@@ -34,7 +34,7 @@ export default async function CategoryTiles() {
 									{category.name}
 								</span>
 								<span className="text-label uppercase text-(--text-muted) group-hover:text-(--text-headline) transition-colors">
-									Shop
+									Discover
 								</span>
 							</div>
 						</Link>

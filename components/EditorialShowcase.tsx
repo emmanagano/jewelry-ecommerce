@@ -40,12 +40,12 @@ export default function EditorialShowcase({
 
 	const displayImg =
 		currentItem.images?.[0] ||
-		"https://images.unsplash.com/photo-1599458349289-18f0ee82e6ed?q=80&w=1200&auto=format&fit=crop";
+		"https://images.pexels.com/photos/5984625/pexels-photo-5984625.jpeg?auto=compress&cs=tinysrgb&w=2000";
 
 	const counter = (n: number) => String(n).padStart(2, "0");
 
 	return (
-		<div className="relative w-full h-full flex flex-col justify-end p-8 lg:p-12 text-white overflow-hidden select-none">
+		<div className="on-photo relative w-full h-full flex flex-col justify-end p-8 lg:p-12 text-white overflow-hidden select-none">
 			<Image
 				key={displayImg}
 				src={displayImg}

@@ -87,7 +87,7 @@ export default function ResetPasswordForm() {
 	return (
 		<form onSubmit={handleSubmit} className="space-y-4">
 			{errorMessage && <AuthMessage tone="error">{errorMessage}</AuthMessage>}
-			<p className="font-body text-xs leading-relaxed text-(--text-body) text-center mb-2">
+			<p className="font-body text-copy-sm leading-relaxed text-(--text-body) text-center mb-2">
 				Choose a new password for {user.email ?? "your account"}.
 			</p>
 			<input

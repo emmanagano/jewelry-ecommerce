@@ -50,7 +50,7 @@ async function CategoryContent({ params }: PageProps) {
 
 	return (
 		<ProductListing
-			eyebrow="The Collection"
+			eyebrow="Maison Vaelore"
 			title={category.name}
 			description={category.description}
 			bannerImage={category.banner_image}

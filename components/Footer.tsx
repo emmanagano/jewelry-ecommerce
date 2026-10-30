@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { luxurySpring, staggerContainer, fadeSlide } from "@/app/lib/motion";
@@ -22,12 +23,13 @@ export default function Footer({ categories }: FooterProps) {
 
 	const columns = [
 		{
-			title: "Shop",
+			title: "Discover",
 			links: [
 				{ name: "New & Featured", href: "/collections/new-and-featured" },
 				{ name: "Best Sellers", href: "/collections/best-sellers" },
 				{ name: "Gifts", href: "/collections/gifts" },
 				{ name: "Search", href: "/search" },
+				{ name: "The House", href: "/the-house" },
 			],
 		},
 		{
@@ -38,13 +40,13 @@ export default function Footer({ categories }: FooterProps) {
 			})),
 		},
 		{
-			title: "Your Account",
+			title: "Client Care",
 			links: [
 				user
 					? { name: "Account & Orders", href: "/account" }
 					: { name: "Sign In", href: "/login" },
 				{ name: "Saved Pieces", href: "/my-wishlist" },
-				{ name: "Shopping Bag", href: "/shopping-bag" },
+				{ name: "Your Bag", href: "/shopping-bag" },
 			],
 		},
 	].filter((column) => column.links.length > 0);
@@ -89,13 +91,18 @@ export default function Footer({ categories }: FooterProps) {
 						variants={footerColumn}
 						className="lg:col-span-5 pr-0 lg:pr-12 flex flex-col space-y-6"
 					>
-						<span className="font-primary text-2xl font-medium tracking-[0.2em] uppercase text-(--text-headline)">
-							{SITE_NAME}
-						</span>
-						<p className="font-body text-xs text-(--text-muted) max-w-sm leading-relaxed font-light">
-							Handcrafted heirlooms designed for modern longevity.
-							Subscribe to receive private collection previews and
-							editorial journals.
+						<Image
+							src="/logo/vaelore-logo-horizontal-ink.svg"
+							alt={SITE_NAME}
+							width={936}
+							height={214}
+							unoptimized
+							className="h-10 w-auto self-start"
+						/>
+						<p className="font-body text-copy-sm text-(--text-muted) max-w-sm leading-relaxed font-light">
+							Modern heirlooms in golden pearls and 18k gold, made by hand to be
+							passed down. Join for private previews and notes from the
+							atelier, two letters a month.
 						</p>
 
 						{/* Enclosed Newsletter Signup Form */}
@@ -108,16 +115,16 @@ export default function Footer({ categories }: FooterProps) {
 								required
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
-								placeholder="Enter your email address"
+								placeholder="Your email address"
 								aria-label="Email address"
 								aria-describedby={message ? "newsletter-message" : undefined}
-								className="w-full bg-transparent border border-(--border-color) py-2.5 pl-4 pr-32 font-body text-xs text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 transition-colors rounded-xs"
+								className="w-full bg-transparent border border-(--border-color) py-2.5 pl-4 pr-32 font-body text-copy-sm text-(--text-headline) placeholder:text-(--text-muted) focus:outline-none focus:border-(--text-headline)/40 transition-colors rounded-xs"
 							/>
 							<motion.button
 								transition={luxurySpring}
 								type="submit"
 								disabled={isSubmitting}
-								aria-label="Join private client list"
+								aria-label="Join the Vaelore Letter"
 								className="absolute right-1 top-1 bottom-1 px-4 bg-(--bg-base) hover:bg-(--text-headline) hover:text-(--bg-base) text-(--text-headline) eyebrow transition-colors border border-(--border-color) cursor-pointer flex items-center gap-1.5 rounded-xs"
 							>
 								<AnimatePresence mode="wait">
@@ -143,7 +150,7 @@ export default function Footer({ categories }: FooterProps) {
 											exit={{ opacity: 0 }}
 											className="flex items-center gap-1.5"
 										>
-											<span>Subscribe</span>
+											<span>Join</span>
 											<ArrowRight
 												size={10}
 												className="stroke-[1.5] transition-transform duration-200 group-hover:translate-x-0.5"
