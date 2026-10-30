@@ -4,7 +4,14 @@ import React, { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, CreditCard, Lock, ShoppingBag, Sparkles } from "lucide-react";
+import {
+	ArrowLeft,
+	ChevronDown,
+	CreditCard,
+	Lock,
+	ShoppingBag,
+	Sparkles,
+} from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useStore } from "@/context/StoreContext";
 import { formatPrice } from "@/app/lib/format";
@@ -351,6 +358,41 @@ export default function CheckoutForm() {
 			</div>
 
 			{formError && <AuthMessage tone="error">{formError}</AuthMessage>}
+
+			{/* Phones: the full summary sits below the form, so show the total
+			    up front with the pieces one tap away */}
+			<details className="group lg:hidden mb-8 border-y border-(--border-color)">
+				<summary className="flex items-center justify-between gap-4 py-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+					<span className="flex items-center gap-2 text-label uppercase text-(--text-headline)">
+						Order Summary ({totalCartCount})
+						<ChevronDown
+							size={14}
+							className="stroke-[1.5] transition-transform group-open:rotate-180"
+						/>
+					</span>
+					<span className="font-primary text-copy text-(--text-headline)">
+						{formatPrice(totals.totalCents)}
+					</span>
+				</summary>
+				<ul className="pb-4 space-y-3">
+					{cart.map((item) => (
+						<li
+							key={`${item.id}-${item.size}`}
+							className="flex items-baseline justify-between gap-4 text-copy-sm"
+						>
+							<span className="min-w-0 truncate text-(--text-body)">
+								{item.name}
+								<span className="text-(--text-muted)">
+									{item.size === ONE_SIZE ? "" : ` · ${item.size}`} × {item.quantity}
+								</span>
+							</span>
+							<span className="shrink-0 text-(--text-headline)">
+								{formatPrice(item.price * item.quantity)}
+							</span>
+						</li>
+					))}
+				</ul>
+			</details>
 
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 				{/* Left: details */}

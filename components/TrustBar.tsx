@@ -11,9 +11,9 @@ const PROMISES = [
 export default function TrustBar() {
 	return (
 		<section aria-label="The Vaelore promise" className="border-b border-(--border-color)">
-			<ul className="max-w-screen-2xl mx-auto px-4 sm:px-8 py-8 grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
+			<ul className="max-w-screen-2xl mx-auto px-4 sm:px-8 py-7 sm:py-8 grid grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-7 sm:gap-x-6 sm:gap-y-8">
 				{PROMISES.map(({ icon: Icon, title, text }) => (
-					<li key={title} className="flex items-start gap-3">
+					<li key={title} className="flex flex-col sm:flex-row items-start gap-2 sm:gap-3">
 						<Icon className="w-5 h-5 mt-0.5 shrink-0 stroke-[1.25] text-(--accent)" />
 						<div>
 							<p className="text-label uppercase text-(--text-headline)">{title}</p>

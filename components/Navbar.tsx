@@ -88,6 +88,7 @@ export default function Navbar({ categories }: NavbarProps) {
 	];
 
 	return (
+		<>
 		<header className="w-full bg-(--bg-base)/95 text-(--text-headline) border-b border-(--border-color) sticky top-0 z-50 backdrop-blur-sm">
 			{/* --- TOP ROW: search | centered wordmark | actions --- */}
 			<div className="max-w-screen-2xl mx-auto grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:px-8 py-4 sm:py-5">
@@ -100,7 +101,7 @@ export default function Navbar({ categories }: NavbarProps) {
 						aria-label="Open navigation menu"
 						aria-expanded={isOpen}
 						aria-controls="mobile-menu"
-						className="md:hidden p-1 -ml-1 text-(--text-headline) hover:text-(--accent) transition-colors cursor-pointer"
+						className="md:hidden p-3 -my-2 -ml-3 text-(--text-headline) hover:text-(--accent) transition-colors cursor-pointer"
 					>
 						<Menu className="w-5 h-5 stroke-[1.5]" />
 					</button>
@@ -140,11 +141,11 @@ export default function Navbar({ categories }: NavbarProps) {
 					<Link
 						href="/my-wishlist"
 						aria-label={`Saved pieces${totalWishlistCount ? `, ${totalWishlistCount} saved` : ""}`}
-						className="relative p-1 text-(--text-headline) hover:text-(--accent) transition-colors"
+						className="relative p-3 -m-2 text-(--text-headline) hover:text-(--accent) transition-colors"
 					>
 						<Heart className="w-5 h-5 stroke-[1.25]" />
 						{totalWishlistCount > 0 && (
-							<span className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/4 min-w-4 h-4 px-1 text-[10px] leading-none font-medium rounded-full flex items-center justify-center bg-(--text-headline) text-(--bg-base)">
+							<span className="absolute top-2 right-2 translate-x-1/3 -translate-y-1/4 min-w-4 h-4 px-1 text-[10px] leading-none font-medium rounded-full flex items-center justify-center bg-(--text-headline) text-(--bg-base)">
 								{totalWishlistCount}
 							</span>
 						)}
@@ -153,11 +154,11 @@ export default function Navbar({ categories }: NavbarProps) {
 					<Link
 						href="/shopping-bag"
 						aria-label={`Your bag${totalCartCount ? `, ${totalCartCount} items` : ""}`}
-						className="relative p-1 text-(--text-headline) hover:text-(--accent) transition-colors"
+						className="relative p-3 -m-2 text-(--text-headline) hover:text-(--accent) transition-colors"
 					>
 						<ShoppingBag className="w-5 h-5 stroke-[1.25]" />
 						{totalCartCount > 0 && (
-							<span className="absolute top-0 right-0 translate-x-1/3 -translate-y-1/4 min-w-4 h-4 px-1 text-[10px] leading-none font-medium rounded-full flex items-center justify-center bg-(--accent) text-(--bg-base)">
+							<span className="absolute top-2 right-2 translate-x-1/3 -translate-y-1/4 min-w-4 h-4 px-1 text-[10px] leading-none font-medium rounded-full flex items-center justify-center bg-(--accent) text-(--bg-base)">
 								{totalCartCount}
 							</span>
 						)}
@@ -167,11 +168,11 @@ export default function Navbar({ categories }: NavbarProps) {
 					<Link
 						href={accountHref}
 						aria-label={user ? "Your account" : "Sign in"}
-						className="relative p-1 text-(--text-headline) hover:text-(--accent) transition-colors"
+						className="relative p-3 -m-2 text-(--text-headline) hover:text-(--accent) transition-colors"
 					>
 						<User className="w-5 h-5 stroke-[1.25]" />
 						{user && (
-							<span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-(--success)" />
+							<span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 rounded-full bg-(--success)" />
 						)}
 					</Link>
 				</div>
@@ -200,8 +201,11 @@ export default function Navbar({ categories }: NavbarProps) {
 					</motion.ul>
 				</div>
 			</nav>
+		</header>
 
-			{/* --- MOBILE DRAWER OVERLAY & PANEL --- */}
+			{/* --- MOBILE DRAWER OVERLAY & PANEL ---
+			    Kept outside <header>: its backdrop-blur would otherwise become the
+			    containing block for these fixed elements and shrink them to the header. */}
 			<AnimatePresence>
 				{isOpen && (
 					<>
@@ -250,7 +254,7 @@ export default function Navbar({ categories }: NavbarProps) {
 										type="button"
 										onClick={() => setIsOpen(false)}
 										aria-label="Close menu"
-										className="p-1 -mr-1 text-(--text-headline) hover:text-(--accent) transition-colors cursor-pointer"
+										className="p-3 -my-2 -mr-3 text-(--text-headline) hover:text-(--accent) transition-colors cursor-pointer"
 									>
 										<X className="w-5 h-5 stroke-[1.5]" />
 									</button>
@@ -340,6 +344,6 @@ export default function Navbar({ categories }: NavbarProps) {
 					</>
 				)}
 			</AnimatePresence>
-		</header>
+		</>
 	);
 }

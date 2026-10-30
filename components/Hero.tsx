@@ -13,10 +13,10 @@ const heroItem = fadeSlide(16, { duration: 1 });
 // One full-bleed campaign image with a single focal message
 export default function Hero() {
 	return (
-		<section className="on-photo relative w-full h-[78vh] min-h-130 max-h-220 overflow-hidden bg-(--card-sub)">
+		<section className="on-photo relative w-full h-[70svh] sm:h-[78svh] min-h-130 max-h-220 overflow-hidden bg-(--card-sub)">
 			<Image
-				src="https://images.pexels.com/photos/5984625/pexels-photo-5984625.jpeg?auto=compress&cs=tinysrgb&w=2000"
-				alt="A fine gold chain worn with an open white shirt"
+				src="https://images.pexels.com/photos/17940328/pexels-photo-17940328.jpeg?auto=compress&cs=tinysrgb&w=2000"
+				alt="A strand of cream pearls worn with an open white shirt"
 				fill
 				sizes="100vw"
 				loading="eager"
@@ -24,7 +24,7 @@ export default function Hero() {
 				className="object-cover object-center"
 			/>
 			{/* Scrim for legible type over the photo */}
-			<div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/25 to-black/5" />
+			<div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/35 to-black/5 sm:from-black/65 sm:via-black/25" />
 
 			<motion.div
 				variants={heroContainer}
@@ -48,7 +48,7 @@ export default function Hero() {
 					Golden South Sea pearls and sculptural 18k gold, made by hand
 					to be passed down.
 				</motion.p>
-				<motion.div variants={heroItem} className="mt-8 flex flex-wrap gap-3">
+				<motion.div variants={heroItem} className="mt-8 flex flex-col sm:flex-row gap-3 [&>a]:w-full sm:[&>a]:w-auto">
 					<Button href="/collections/new-and-featured" variant="inverse">
 						Discover New &amp; Featured
 					</Button>

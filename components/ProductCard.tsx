@@ -112,13 +112,16 @@ export default function ProductCard({
 					onClick={handleWishlist}
 					aria-label={liked ? `Remove ${product.name} from saved pieces` : `Save ${product.name}`}
 					aria-pressed={liked}
-					className="absolute top-3 right-3 w-9 h-9 rounded-full bg-(--bg-base)/90 flex items-center justify-center z-10 cursor-pointer text-(--text-body) hover:text-(--accent-love) transition-colors"
+					className="absolute top-1.5 right-1.5 w-12 h-12 flex items-center justify-center z-10 cursor-pointer text-(--text-body) hover:text-(--accent-love) transition-colors"
 				>
-					<Heart
-						className={`w-4 h-4 stroke-[1.5] transition-colors duration-200 ${
-							liked ? "fill-(--accent-love) text-(--accent-love)" : ""
-						}`}
-					/>
+					{/* 36px circle inside a 48px touch target */}
+					<span className="w-9 h-9 rounded-full bg-(--bg-base)/90 flex items-center justify-center">
+						<Heart
+							className={`w-4 h-4 stroke-[1.5] transition-colors duration-200 ${
+								liked ? "fill-(--accent-love) text-(--accent-love)" : ""
+							}`}
+						/>
+					</span>
 				</button>
 
 				{/* Image Container with Dual-Angle Hover Reveal */}
@@ -183,7 +186,7 @@ export default function ProductCard({
 									type="button"
 									onClick={closeSizePicker}
 									aria-label="Close size picker"
-									className="text-(--text-muted) hover:text-(--text-headline) p-0.5 cursor-pointer"
+									className="text-(--text-muted) hover:text-(--text-headline) p-3 -m-3 cursor-pointer"
 								>
 									<X size={14} />
 								</button>
@@ -197,7 +200,7 @@ export default function ProductCard({
 										type="button"
 										onClick={() => triggerAddToCart(sz)}
 										aria-label={sz === savedSize ? `${sz} (your saved size)` : undefined}
-										className={`min-w-10 px-3 py-1.5 text-label border hover:bg-(--text-headline) hover:text-(--bg-base) hover:border-(--text-headline) transition-colors cursor-pointer rounded-xs ${
+										className={`min-w-11 min-h-11 sm:min-h-0 px-3 py-1.5 flex items-center justify-center text-label border hover:bg-(--text-headline) hover:text-(--bg-base) hover:border-(--text-headline) transition-colors cursor-pointer rounded-xs ${
 											sz === savedSize
 												? "border-(--text-headline) font-semibold"
 												: "border-(--border-color)"
@@ -236,7 +239,7 @@ export default function ProductCard({
 						onClick={handleAddClick}
 						disabled={justAdded}
 						aria-expanded={hasMultipleSizes ? showSizePicker : undefined}
-						className={`text-label uppercase text-(--text-headline) hover:text-(--accent) border-b border-current pb-0.5 cursor-pointer flex items-center gap-1 transition-[opacity,color] duration-200 focus-visible:opacity-100 ${
+						className={`text-label uppercase text-(--text-headline) hover:text-(--accent) border-b border-current pb-0.5 cursor-pointer relative after:absolute after:-inset-3 after:content-[''] flex items-center gap-1 transition-[opacity,color] duration-200 focus-visible:opacity-100 ${
 							justAdded || showSizePicker
 								? "opacity-100"
 								: "[@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100"

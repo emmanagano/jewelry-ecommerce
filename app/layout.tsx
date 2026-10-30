@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
@@ -39,6 +39,13 @@ export const metadata: Metadata = {
 		locale: "en_US",
 	},
 	twitter: { card: "summary_large_image" },
+};
+
+export const viewport: Viewport = {
+	// Browser chrome matches the Pearl White canvas (--bg-base)
+	themeColor: "#f6f2ea",
+	// Lets sticky bottom bars pad for the iPhone home indicator
+	viewportFit: "cover",
 };
 
 export default async function RootLayout({

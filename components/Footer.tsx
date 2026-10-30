@@ -76,7 +76,7 @@ export default function Footer({ categories }: FooterProps) {
 	};
 
 	return (
-		<footer className="w-full bg-(--card-wide) text-(--text-headline) border-t border-(--border-color) mt-24">
+		<footer className="w-full bg-(--card-wide) text-(--text-headline) border-t border-(--border-color) mt-8 sm:mt-24">
 			<motion.div
 				variants={footerContainer}
 				initial="hidden"
@@ -207,7 +207,7 @@ export default function Footer({ categories }: FooterProps) {
 					className="pt-8 flex flex-col md:flex-row items-center justify-between eyebrow text-(--text-muted) space-y-4 md:space-y-0"
 				>
 					<span>© 2026 {SITE_NAME}. All rights reserved.</span>
-					<div className="flex items-center space-x-6 md:space-x-8">
+					<div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-0 sm:space-x-6 md:space-x-8 text-center">
 						<span>Demo storefront · No real orders ship</span>
 						<span>United States (USD $)</span>
 					</div>

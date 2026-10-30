@@ -14,7 +14,7 @@ export function useAccountTab() {
 }
 
 const NAV_ITEM_CLASS =
-	"shrink-0 text-left py-2 text-label uppercase font-medium transition-colors cursor-pointer";
+	"shrink-0 snap-start text-left py-3 lg:py-2 text-label uppercase font-medium transition-colors cursor-pointer";
 
 // Side navigation (a scrolling row on small screens) with one panel at a
 // time. All panels stay mounted, so an edit in progress survives a tab switch.
@@ -51,7 +51,10 @@ export default function AccountTabs({
 			<div className="grid grid-cols-1 lg:grid-cols-[13rem_1fr] gap-x-16 gap-y-8">
 				<nav
 					aria-label="Account"
-					className="flex lg:flex-col gap-x-8 lg:gap-x-0 lg:gap-y-1 overflow-x-auto lg:overflow-visible border-b lg:border-b-0 border-(--border-color) lg:sticky lg:top-40 lg:self-start"
+					// Phones: a full-bleed scrolling row that fades at the right edge,
+					// so it reads as scrollable; extra end padding lets the last tab
+					// clear the fade
+					className="flex lg:flex-col gap-x-8 lg:gap-x-0 lg:gap-y-1 overflow-x-auto lg:overflow-visible snap-x scroll-pl-4 sm:scroll-pl-8 [scrollbar-width:none] -mx-4 sm:-mx-8 lg:mx-0 pl-4 pr-12 sm:pl-8 lg:px-0 mask-[linear-gradient(to_right,black_85%,transparent)] lg:mask-none border-b lg:border-b-0 border-(--border-color) lg:sticky lg:top-40 lg:self-start"
 				>
 					{ACCOUNT_TABS.map(({ id, label }) => {
 						const active = tab === id;

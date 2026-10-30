@@ -12,7 +12,7 @@ export default async function CategoryTiles() {
 	if (categories.length === 0) return null;
 
 	return (
-		<section className="max-w-screen-2xl mx-auto px-4 sm:px-8 pt-20 lg:pt-28">
+		<section className="max-w-screen-2xl mx-auto px-4 sm:px-8 pt-14 sm:pt-20 lg:pt-28">
 			<SectionHeading eyebrow="The Collections" title="Discover by Piece" />
 			<ul className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
 				{categories.map((category) => (

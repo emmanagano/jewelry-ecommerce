@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Heart, ChevronDown, ShieldCheck, Gift, Truck } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
 import { useAuth } from "@/context/AuthContext";
@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { luxurySpring, staggerContainer, fadeSlide } from "@/app/lib/motion";
 import { formatPrice } from "@/app/lib/format";
 import { ONE_SIZE, sortVariants, type Product } from "@/app/lib/products";
+import MobileActionBar, { useMobileActionBar } from "@/components/MobileActionBar";
 
 // Entrance stagger configuration
 const staggerContainerVariants = staggerContainer(0.1);
@@ -46,6 +47,10 @@ export default function ProductInteractive({ product }: { product: Product }) {
 	);
 
 	const formattedPrice = formatPrice(unitPrice);
+
+	// Phone sticky bar appears once the inline Acquire button is off screen
+	const [mobileBarRef, showMobileBar] = useMobileActionBar();
+	const sizePickerRef = useRef<HTMLDivElement>(null);
 
 	const sections = [
 		{
@@ -126,7 +131,11 @@ export default function ProductInteractive({ product }: { product: Product }) {
 
 			{/* Size Selector with Sliding Layout Indicator */}
 			{sizes.length > 1 && (
-				<motion.div variants={staggerItem} className="mb-8">
+				<motion.div
+					ref={sizePickerRef}
+					variants={staggerItem}
+					className="mb-8 scroll-mt-32"
+				>
 					<div className="text-label uppercase mb-4 text-(--text-headline)">
 						Select {product.category.size_label ?? "Size"}
 						{savedSize && sizes.includes(savedSize) && (
@@ -142,7 +151,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 								type="button"
 								onClick={() => setSelectedSize(size)}
 								aria-pressed={selectedSize === size}
-								className="relative min-w-14 px-4 py-3 text-label rounded-xs border border-(--border-color) hover:border-(--text-headline) transition-colors cursor-pointer"
+								className="relative min-w-14 min-h-11 px-4 py-3 text-label rounded-xs border border-(--border-color) hover:border-(--text-headline) transition-colors cursor-pointer"
 								style={{
 									color:
 										selectedSize === size
@@ -171,6 +180,7 @@ export default function ProductInteractive({ product }: { product: Product }) {
 
 			{/* Button Actions: Split Add to Bag & Interactive Pink Wishlist */}
 			<motion.div
+				ref={mobileBarRef}
 				variants={staggerItem}
 				className="flex items-stretch gap-3 mb-6"
 			>
@@ -285,6 +295,33 @@ export default function ProductInteractive({ product }: { product: Product }) {
 					);
 				})}
 			</motion.div>
+
+			<MobileActionBar visible={showMobileBar}>
+				<div className="min-w-0 flex-1">
+					<p className="font-serif text-copy text-(--text-headline) truncate">
+						{product.name}
+					</p>
+					<p className="text-copy-sm text-(--text-muted)">
+						{formattedPrice}
+						{selectedSize && selectedSize !== ONE_SIZE && ` · ${selectedSize}`}
+					</p>
+				</div>
+				<button
+					type="button"
+					onClick={
+						selectedSize
+							? handleAddToBag
+							: () =>
+									sizePickerRef.current?.scrollIntoView({
+										behavior: "smooth",
+										block: "start",
+									})
+					}
+					className="shrink-0 min-h-11 px-5 text-label uppercase text-(--bg-base) bg-(--text-headline) hover:bg-(--accent) transition-colors rounded-xs cursor-pointer"
+				>
+					{addedNotice ? "Added to Bag" : selectedSize ? "Acquire" : "Select a Size"}
+				</button>
+			</MobileActionBar>
 		</motion.div>
 	);
 }

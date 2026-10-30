@@ -109,6 +109,16 @@ body {
 	color: var(--text-headline);
 }
 
+/* iOS Safari zooms into any field under 16px on focus. Unlayered, so it
+   overrides the text-copy utilities on phones only. */
+@media (max-width: 639px) {
+	input,
+	select,
+	textarea {
+		font-size: 16px;
+	}
+}
+
 /* Keyboard focus: a hairline ring on anything focusable (inputs keep their
    own border-color change). Pointer clicks don't show it. */
 :where(a, button, summary, [role="button"], [role="switch"], select):focus-visible {

@@ -29,14 +29,14 @@ export default function EditorialSplit({
 	reverse?: boolean;
 }) {
 	return (
-		<section className="max-w-screen-2xl mx-auto px-4 sm:px-8 py-14 lg:py-20">
-			<div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20 items-center">
+		<section className="max-w-screen-2xl mx-auto px-4 sm:px-8 py-10 lg:py-20">
+			<div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-center">
 				<motion.div
 					variants={reveal}
 					initial="hidden"
 					whileInView="show"
 					viewport={{ once: true, margin: "-60px" }}
-					className={`lg:col-span-6 relative aspect-4/5 sm:aspect-5/4 lg:aspect-square overflow-hidden rounded-xs bg-(--card-sub) ${
+					className={`lg:col-span-6 relative aspect-4/3 sm:aspect-5/4 lg:aspect-square overflow-hidden rounded-xs bg-(--card-sub) ${
 						reverse ? "lg:order-2 lg:col-start-7" : ""
 					}`}
 				>

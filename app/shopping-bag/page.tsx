@@ -35,6 +35,7 @@ import {
 	readCheckoutOptions,
 	saveCheckoutOptions,
 } from "@/app/lib/checkout-options";
+import MobileActionBar, { useMobileActionBar } from "@/components/MobileActionBar";
 
 const staggerContainerVariants = staggerContainer(0.1);
 const staggerItem = fadeSlide(20);
@@ -91,6 +92,9 @@ export default function BagPage() {
 		(subtotalCents / FREE_COURIER_THRESHOLD_CENTS) * 100,
 		100,
 	);
+
+	// Phone sticky bar appears once the summary's checkout button is off screen
+	const [mobileBarRef, showMobileBar] = useMobileActionBar();
 
 	// Codes are checked on the server against the promo_codes table
 	const handleApplyPromo = (e: React.FormEvent) => {
@@ -638,6 +642,7 @@ export default function BagPage() {
 							</motion.div>
 
 							<Link
+								ref={mobileBarRef}
 								href="/checkout"
 								className="w-full py-4 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-95 transition-opacity rounded-xs cursor-pointer flex items-center justify-center gap-2 shadow-xs"
 							>
@@ -685,6 +690,22 @@ export default function BagPage() {
 					</motion.div>
 				</div>
 			)}
+
+			<MobileActionBar visible={showMobileBar}>
+				<div className="min-w-0 flex-1">
+					<p className="eyebrow text-(--text-muted)">Total Investment</p>
+					<p className="font-serif text-copy text-(--text-headline)">
+						{formatPrice(totals.totalCents)}
+					</p>
+				</div>
+				<Link
+					href="/checkout"
+					className="shrink-0 min-h-11 px-5 text-label uppercase font-medium bg-(--text-headline) text-(--bg-base) hover:opacity-95 transition-opacity rounded-xs flex items-center gap-2"
+				>
+					Checkout
+					<ArrowRight size={14} className="stroke-[1.5]" />
+				</Link>
+			</MobileActionBar>
 		</div>
 	);
 }
